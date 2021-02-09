@@ -53,9 +53,11 @@ class M3u8Downloader:
         self.notebook.add(self.f1, text='首页')
         self.notebook.add(self.f2, text='下载页面')
         self.notebook.add(self.f3, text='源码地址')
+        self.label=Label(self.f3,text='Github地址:https://github.com/\nWBB2193128367/multimedia_downloader',font=('华为宋体',15))
+        self.label.place(x=70,y=150)
         self.notebook.add(self.f4,text='问题反馈')
         self.label=Label(self.f4,text="邮箱地址:2193128367@qq.com",font=('华为宋体',15))
-        self.label.place(x=100,y=150)
+        self.label.place(x=90,y=150)
         self.notebook.pack()
 ###############################################################################################################################
 
