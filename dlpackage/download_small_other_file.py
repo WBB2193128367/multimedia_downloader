@@ -142,3 +142,4 @@ def download_mp4(m3u8_href, video_name):
         share.m3.alert('下载完成！')
         share.m3.show_info("下载完成！")
         share.set_progress(0)
+        share.m3.clear_alert()

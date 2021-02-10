@@ -128,33 +128,31 @@ class M3u8Downloader:
             self.frm, textvariable=self.m, width=8, font=(
                 "Lucida Grande", 11),bg='purple')
         self.m.set('暂停下载')
-        self.button_pause.place(x=330, y=15)
+        #self.button_pause.place(x=330, y=15)
 
 
 
         self.button_start = Button(
             self.frm, text="开始下载", width=8, font=(
                 "Lucida Grande", 11),bg='purple')
-        self.button_start.place(x=330, y=46)
+        self.button_start.place(x=330, y=23)
+
         self.button_cancel = Button(
             self.frm, text="取消下载", width=8, font=(
                 "Lucida Grande", 11),bg='purple')
-        self.button_cancel.place(x=330, y=77)
-        self.button_exit = Button(
-            self.frm, text="退出", width=8, font=(
-                "Lucida Grande", 11))
-        #self.button_exit.place(x=330, y=70)
+        #self.button_cancel.place(x=330, y=77)
+
+        self.button_again = Button(
+            self.frm, text="重试", width=8, font=(
+                "Lucida Grande", 11),bg='purple')
+        self.button_again.place(x=330, y=73)
 
 
-        Label(
-                   self.frm,
-                  text="下载进度:",
-                   font=(
-        "Lucida Grande",
-        11)).place(
-    x=0,
-    y=125)
-        s=ttk.Style()
+
+
+
+
+        Label(self.frm,text="下载进度:",font=("Lucida Grande",11)).place(x=0,y=125)
         self.progress = ttk.Progressbar(
             self.frm,
             orient="horizontal",

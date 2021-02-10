@@ -89,13 +89,28 @@ def download_fail_file1():
                     end),
                 max_retry_time=50)
             if response is None:
-                share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name))
+                #share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name))
                 continue
-            with open(file_name, 'wb') as file:
-                file.write(response.content)
-                p = calculate(share.get_save_path(file_name)) / content_length * 100
-                share.set_progress(p)
+            else:
+                download_fail_list1.remove(info)
+                with open(file_name, 'wb') as file:
+                    file.write(response.content)
+                    p = calculate(share.get_save_path(file_name)) / content_length * 100
+                    share.set_progress(p)
+                    share.m3.str.set('%.2f%%' % p)
+        if len(download_fail_list1)==0:
+            merge_file1(video_path)
+            # 删除下载的视频片段
+            shutil.rmtree(video_path)
 
+            share.m3.alert("下载完成")
+            share.m3.show_info("下载完成")
+            share.set_progress(0)
+            share.m3.str.set('')
+            share.m3.clear_alert()
+        else:
+            share.m3.alert("有部分文件没有下载完成，请点击重试！")
+            share.m3.show_info("有部分文件没有下载完成，请点击重试！")
 
 # 进行文件的拼接
 def merge_file1(dir_name):
@@ -189,8 +204,8 @@ def start1(content_size, video_name):
     share.m3.alert('[文件大小]:%0.2f MB' % (content_size / 1024 / 1024))
     # 启动线程池进行下载
     start_download_in_pool1(params)
-    while len(download_fail_list1)!=0:
-        download_fail_file1()
+    # while len(download_fail_list1)!=0:
+    #     download_fail_file1()
     # 用来检查文件片段是否都下载完成
     if check_file_count1(video_name):
         # 合并视频
@@ -201,12 +216,12 @@ def start1(content_size, video_name):
         share.m3.alert("下载完成")
         share.m3.show_info("下载完成")
         share.set_progress(0)
+        share.m3.str.set('')
+        share.m3.clear_alert()
+        download_fail_list1 = []
     else:
-        share.m3.alert("下载失败！")
-        share.m3.show_info("下载失败！")
+        share.m3.alert("有部分文件没有下载完成，请点击重试！")
+        share.m3.show_info("有部分文件没有下载完成，请点击重试！")
     # 清空下载失败视频列表
-    download_fail_list1 = []
     start = [0, ]
     end = []
-    content_length = None
-    share.m3.str.set('')

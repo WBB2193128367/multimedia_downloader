@@ -10,6 +10,7 @@ import re
 
 
 # 定义的全局变量
+video_path=None
 download_fail_list = []
 url_list = []
 order_increase = False
@@ -18,6 +19,7 @@ save_source_file = False
 url_host = None
 url_path = None
 key = None #用来存储秘钥，用于视频的解码
+iv=None
 
 
 #重复下载失败的.ts文件
@@ -31,13 +33,29 @@ def download_fail_file():
             response = dm.easy_download(
                 url=url, stream=False ,header=requests_header.get_user_agent(),max_retry_time=50)
             if response is None:
-                share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name, url))
+                #share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name, url))
                 continue
             with open(file_name, 'wb') as file:
                 file.write(response.content)
                 p = share.count_file(file_name) / len(url_list) * 100
                 share.set_progress(p)
-
+                share.m3.str.set('%.2f%%' % p)
+        if len(download_fail_list)==0:
+            if merge_file(video_path):
+                if save_source_file is False:
+                    # 删除文件夹
+                    shutil.rmtree(video_path)
+                share.m3.alert("下载完成")
+                share.m3.show_info("下载完成")
+                share.set_progress(0)
+                share.m3.str.set('')
+                share.m3.clear_alert()
+            else:
+                share.m3.alert("视频文件合并失败,请查看消息列表")
+                share.m3.show_info("视频文件合并失败,请查看消息列表")
+        else:
+            share.m3.alert("有部分文件没有下载完成，请点击重试！")
+            share.m3.show_info("有部分文件没有下载完成，请点击重试！")
 
 #合并.ts文件片段
 def merge_file(dir_name):
@@ -46,8 +64,11 @@ def merge_file(dir_name):
     file_list = share.file_walker(dir_name)
     with open(dir_name + ".mp4", 'wb+') as fw:
         for i in range(len(file_list)):
-            if key is not None:
+            if key is not None and iv is None:
                 cryptor = AES.new(key, AES.MODE_CBC, key)
+                fw.write(cryptor.decrypt(open(file_list[i], 'rb').read()))
+            elif key is not None and iv is not None:
+                cryptor = AES.new(key, AES.MODE_CBC, iv)
                 fw.write(cryptor.decrypt(open(file_list[i], 'rb').read()))
             else:
                 fw.write(open(file_list[i], 'rb').read())
@@ -153,6 +174,7 @@ def get_ts_add(m3u8_href):
     global key
     global url_path
     global url_host
+    global iv
     share.m3.alert("获取ts下载地址，m3u8地址:\n%s" % m3u8_href)
     url_host = get_host(m3u8_href)
     url_path = get_path(m3u8_href)
@@ -171,6 +193,7 @@ def get_ts_add(m3u8_href):
         if res_obj.startswith("EXT-X-KEY"):
             # 利用正则表达式获得秘钥链接
             url = re.findall(r'URI=\"(.*?)\"', res_obj, re.S)[0]
+            iv=re.findall(r'IV=(.*?)',res_obj,re.S)[0]
             if url.startswith('key'):
                 response = dm.easy_download(url_path + url, stream=False, header=requests_header.get_user_agent())
                 key = response.content
@@ -238,6 +261,7 @@ def start(m3u8_href, video_name):
     global url_list
     global url_path
     global url_host
+    global video_path
     # 清空消息框中的消息
     share.m3.clear_alert()
     # 进度条归零
@@ -254,6 +278,7 @@ def start(m3u8_href, video_name):
         running = False
         return
     video_name = setting_gui.path + "/" + video_name
+    video_path=video_name
     if not os.path.exists(video_name):
         os.makedirs(video_name)
     share.m3.alert("总计%s个视频" % str(len(url_list)))
@@ -272,8 +297,8 @@ def start(m3u8_href, video_name):
         running = False
         return
     # 重新下载先前下载失败的.ts文件
-    while len(download_fail_file())!=0:
-        download_fail_file()
+    # while len(download_fail_file())!=0:
+    #     download_fail_file()
     # 检查ts文件总数是否对应
     if check_file(video_name):
         # 合并视频
@@ -285,13 +310,15 @@ def start(m3u8_href, video_name):
             share.m3.show_info("下载完成")
             share.set_progress(0)
             share.m3.str.set('')
+            share.m3.clear_alert()
+            # 清空下载失败视频列表
+            download_fail_list = []
         else:
             share.m3.alert("视频文件合并失败,请查看消息列表")
             share.m3.show_info("视频文件合并失败,请查看消息列表")
     else:
-        share.m3.alert("有部分.ts文件下载失败！")
-        share.m3.show_info("有部分.ts文件下载失败！")
-    # 清空下载失败视频列表
-    download_fail_list = []
+        share.m3.alert("有部分文件没有下载完成，请点击重试！")
+        share.m3.show_info("有部分文件没有下载完成，请点击重试！")
+
     # 重置任务开始标志
     running = False

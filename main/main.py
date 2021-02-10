@@ -108,7 +108,24 @@ def s_thread():
     t.setDaemon(True)
     t.start()
 
-    
+#重试触发的事件
+def again():
+    m3u8_href = share.m3.button_url.get().rstrip()
+    if re.match(r'^http.*?\.m3u8.*', m3u8_href) :
+        t = threading.Thread(
+            target=download_m3u8_file.download_fail_file)
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
+    else:
+        t = threading.Thread(
+            target=download_big_other_file.download_fail_file1)
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
+
+
+
 def run():
 
     share.m3 = multimedia_downloader_gui.M3u8Downloader()
@@ -122,6 +139,7 @@ def run():
     share.m3.cb.bind("<Button-1>", lambda x: download_m3u8_file.save_source())
     #开始下载的事件
     share.m3.button_start.bind("<Button-1>", lambda x: s_thread())
+    share.m3.button_again.bind("<Button-1>",lambda x:again())
     #share.m3.button_exit.bind("<Button-1>", lambda x: e())
     # 手动加入消息队列
     share.m3.root.mainloop()
