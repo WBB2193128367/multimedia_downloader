@@ -1,4 +1,6 @@
+from dlpackage import setting_gui
 import tkinter.messagebox
+import shutil
 import sys
 import os
 
@@ -58,5 +60,10 @@ def e():
 
 #关闭主窗口时进行提示
 def close_windows(root):
-    if tkinter.messagebox.askokcancel('退出', '确认要退出吗？'):
-        root.destroy()
+    if  os.path.exists(setting_gui.path+'/'+m3.button_video_name.get().strip()) and m3.button_video_name.get().strip() !='':
+        if tkinter.messagebox.askokcancel('退出', '已经下载部分文件，确认退出吗？'):
+            root.destroy()
+    else:
+
+        if tkinter.messagebox.askokcancel('退出', '确认要退出吗？'):
+            root.destroy()

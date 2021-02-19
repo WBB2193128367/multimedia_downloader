@@ -7,7 +7,7 @@ from tkinter import *
 # 默认的媒体文件存储位置
 path = '../videos'
 # 默认的线程数
-threading_count = 6
+threading_count = 40
 
 # 关于的驱动方法
 
@@ -116,7 +116,8 @@ def set(root):
         "12",
         "13",
         "14",
-        "15")
+        "15",
+    "16","17","18","19","20","50")
     combobox.current(5)
     combobox.place(x=180, y=180)
     lb3 = Label(top1, text="(1-15)")

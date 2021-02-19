@@ -3,6 +3,7 @@ from dlpackage import share
 import tkinter.messagebox
 from tkinter import ttk
 from tkinter import *
+import tkinter.font as tf
 
 
 
@@ -53,8 +54,11 @@ class M3u8Downloader:
         self.notebook.add(self.f1, text='首页')
         self.notebook.add(self.f2, text='下载页面')
         self.notebook.add(self.f3, text='源码地址')
-        self.label=Label(self.f3,text='Github地址:https://github.com/\nWBB2193128367/multimedia_downloader',font=('华为宋体',15))
-        self.label.place(x=70,y=150)
+        self.label=Label(self.f3,text='Github地址:',font=('华为宋体',15))
+        self.ft=tf.Font(family='华为宋体',size=15,underline=1)
+        self.label1=Label(self.f3,text='https://github.com/\nWBB2193128367/\nmultimedia_downloader',font=self.ft,justify='left',fg='blue')
+        self.label.place(x=60,y=150)
+        self.label1.place(x=170,y=150)
         self.notebook.add(self.f4,text='问题反馈')
         self.label=Label(self.f4,text="邮箱地址:2193128367@qq.com",font=('华为宋体',15))
         self.label.place(x=90,y=150)

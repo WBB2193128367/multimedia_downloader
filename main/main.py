@@ -1,10 +1,10 @@
 from dlpackage import multimedia_downloader_gui
-from dlpackage import download_small_other_file
-from dlpackage import download_big_other_file
-from dlpackage import model_download as dm
+from dlpackage import download_other_file
+from dlpackage import model_requests as dm
 from dlpackage import download_m3u8_file
 from dlpackage import requests_header
 from dlpackage import share
+import webbrowser
 import threading
 import re
 
@@ -51,45 +51,48 @@ def s():
             # 当为其它类型的文件时
             elif check==True and check1==True:
                 response = dm.easy_download(url=m3u8_href, stream=True, header=requests_header.get_user_agent())
-                content_size = int(response.headers['content-length'])
-                #如果小于10MB
-                if content_size<=5242880:
-                    share.m3.alert('开始下载')
+                if response is not None:
+                    content_size = int(response.headers['content-length'])
+                    #如果小于10MB
+                    # if content_size<=5242880:
+                    #     share.m3.alert('开始下载')
+                    #     t = threading.Thread(
+                    #         target=download_small_other_file.download_mp4, args=(
+                    #             m3u8_href, video_name,))
+                    #     # 设置守护线程，进程退出不用等待子线程完成
+                    #     t.setDaemon(True)
+                    #     t.start()
+                    # else:
                     t = threading.Thread(
-                        target=download_small_other_file.download_mp4, args=(
-                            m3u8_href, video_name,))
+                            target=download_other_file.start1, args=(
+                               content_size, video_name,))
                     # 设置守护线程，进程退出不用等待子线程完成
                     t.setDaemon(True)
                     t.start()
                 else:
+                    pass
+            elif check==False and check1==False:
                     t = threading.Thread(
-                        target=download_big_other_file.start1, args=(
-                           content_size, video_name,))
-                    # 设置守护线程，进程退出不用等待子线程完成
+                                    target=share.m3.show_info, args=(
+                                       '地址不合法\n文件名不能为空', ))
+                                # 设置守护线程，进程退出不用等待子线程完成
                     t.setDaemon(True)
                     t.start()
-            elif check==False and check1==False:
-                t = threading.Thread(
-                                target=share.m3.show_info, args=(
-                                   '地址不合法\n文件名不能为空', ))
-                            # 设置守护线程，进程退出不用等待子线程完成
-                t.setDaemon(True)
-                t.start()
             elif check==False and check1==True:
-                t = threading.Thread(
-                                target=share.m3.show_info, args=(
-                                   '地址不合法', ))
-                            # 设置守护线程，进程退出不用等待子线程完成
-                t.setDaemon(True)
-                t.start()
+                    t = threading.Thread(
+                                    target=share.m3.show_info, args=(
+                                       '地址不合法', ))
+                                # 设置守护线程，进程退出不用等待子线程完成
+                    t.setDaemon(True)
+                    t.start()
 
             elif check==True and check1==False:
-                t = threading.Thread(
-                                target=share.m3.show_info, args=(
-                                   '文件名不能为空', ))
-                            # 设置守护线程，进程退出不用等待子线程完成
-                t.setDaemon(True)
-                t.start()
+                    t = threading.Thread(
+                                    target=share.m3.show_info, args=(
+                                       '文件名不能为空', ))
+                                # 设置守护线程，进程退出不用等待子线程完成
+                    t.setDaemon(True)
+                    t.start()
 
             running=False
     else:
@@ -99,7 +102,8 @@ def s():
             # 设置守护线程，进程退出不用等待子线程完成
             t.setDaemon(True)
             t.start()
-
+def open_url():
+    webbrowser.open('https://github.com/WBB2193128367/multimedia_downloader',new=0)
 
 def s_thread():
     t = threading.Thread(
@@ -119,7 +123,7 @@ def again():
         t.start()
     else:
         t = threading.Thread(
-            target=download_big_other_file.download_fail_file1)
+            target=download_other_file.download_fail_file1)
         # 设置守护线程，进程退出不用等待子线程完成
         t.setDaemon(True)
         t.start()
@@ -140,6 +144,7 @@ def run():
     #开始下载的事件
     share.m3.button_start.bind("<Button-1>", lambda x: s_thread())
     share.m3.button_again.bind("<Button-1>",lambda x:again())
+    share.m3.label1.bind("<Button-1>",lambda x:open_url())
     #share.m3.button_exit.bind("<Button-1>", lambda x: e())
     # 手动加入消息队列
     share.m3.root.mainloop()

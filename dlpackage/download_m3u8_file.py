@@ -1,6 +1,7 @@
-from dlpackage import model_download as dm
+from dlpackage import model_requests as dm
 from dlpackage import requests_header
 from Crypto.Cipher import AES
+from dlpackage import proxy_ip_pool
 from dlpackage import setting_gui
 from dlpackage import share
 import threadpool
@@ -31,15 +32,17 @@ def download_fail_file():
             file_name = info[1]
             share.m3.alert("正在尝试重新下载%s" % file_name)
             response = dm.easy_download(
-                url=url, stream=False ,header=requests_header.get_user_agent(),max_retry_time=50)
+                url=url, stream=False ,header=requests_header.get_user_agent())
             if response is None:
                 #share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name, url))
                 continue
-            with open(file_name, 'wb') as file:
-                file.write(response.content)
-                p = share.count_file(file_name) / len(url_list) * 100
-                share.set_progress(p)
-                share.m3.str.set('%.2f%%' % p)
+            else:
+                download_fail_list.remove(info)
+                with open(file_name, 'wb') as file:
+                    file.write(response.content)
+                    p = share.count_file(file_name) / len(url_list) * 100
+                    share.set_progress(p)
+                    share.m3.str.set('%.2f%%' % p)
         if len(download_fail_list)==0:
             if merge_file(video_path):
                 if save_source_file is False:
@@ -56,6 +59,8 @@ def download_fail_file():
         else:
             share.m3.alert("有部分文件没有下载完成，请点击重试！")
             share.m3.show_info("有部分文件没有下载完成，请点击重试！")
+    else:
+        share.m3.show_info("还没有下载失败的文件噢！")
 
 #合并.ts文件片段
 def merge_file(dir_name):
@@ -120,7 +125,7 @@ def check_file(dir_name):
 # 测试拼接的下载地址是否正确
 def test_download_url(url):
     share.m3.alert("尝试使用%s下载视频" % url)
-    res = dm.easy_download(url, stream=False, header=requests_header.get_user_agent(), max_retry_time=10)
+    res = dm.easy_download(url, stream=False, header=requests_header.get_user_agent(), max_retry_time=5)
     return res is not None
 
 #进行速度优先和画质优先的触发事件

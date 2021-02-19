@@ -1,6 +1,7 @@
-from dlpackage import model_download as dm
+from dlpackage import model_requests as dm
 from dlpackage import requests_header
 from dlpackage import setting_gui
+from  dlpackage import  proxy_ip_pool
 from dlpackage import share
 import threadpool
 import shutil
@@ -53,6 +54,7 @@ def download_to_file1(start, end, file_name):
     response = dm.easy_download(
             url=share.m3.button_url.get().rstrip(),
             stream=True,
+            #proxies=proxy_ip_pool.get_proxy(),
             header=requests_header.get_user_agent2(
                 start,
                 end))
@@ -84,10 +86,10 @@ def download_fail_file1():
             response = dm.easy_download(
                 url=share.m3.button_url.get().rstrip(),
                 stream=True,
+                #proxies=proxy_ip_pool.get_proxy(),
                 header=requests_header.get_user_agent2(
                     start,
-                    end),
-                max_retry_time=50)
+                    end))
             if response is None:
                 #share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name))
                 continue
@@ -111,6 +113,9 @@ def download_fail_file1():
         else:
             share.m3.alert("有部分文件没有下载完成，请点击重试！")
             share.m3.show_info("有部分文件没有下载完成，请点击重试！")
+    else:
+        share.m3.show_info("还没有下载失败的文件噢！")
+
 
 # 进行文件的拼接
 def merge_file1(dir_name):
