@@ -22,27 +22,28 @@ url_path = None
 key = None #用来存储秘钥，用于视频的解码
 iv=None
 
+def try_again_download(url,file_name):
+    global download_fail_list
+    share.m3.alert("正在尝试重新下载%s" % file_name)
+    response = dm.easy_download(
+        url=url, stream=False, header=requests_header.get_user_agent())
+    if response is None:
+        # share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name, url))
+        return
+    else:
+        download_fail_list.remove(([url, file_name], None))
+        with open(file_name, 'wb') as file:
+            file.write(response.content)
+            p = share.count_file(file_name) / len(url_list) * 100
+            share.set_progress(p)
+            share.m3.str.set('%.2f%%' % p)
+
 
 #重复下载失败的.ts文件
 def download_fail_file():
     global download_fail_list
     if len(download_fail_list) > 0:
-        for info in download_fail_list:
-            url = info[0]
-            file_name = info[1]
-            share.m3.alert("正在尝试重新下载%s" % file_name)
-            response = dm.easy_download(
-                url=url, stream=False ,header=requests_header.get_user_agent())
-            if response is None:
-                #share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name, url))
-                continue
-            else:
-                download_fail_list.remove(info)
-                with open(file_name, 'wb') as file:
-                    file.write(response.content)
-                    p = share.count_file(file_name) / len(url_list) * 100
-                    share.set_progress(p)
-                    share.m3.str.set('%.2f%%' % p)
+        start_download_in_pool(try_again_download,download_fail_list)
         if len(download_fail_list)==0:
             if merge_file(video_path):
                 if save_source_file is False:
@@ -64,6 +65,7 @@ def download_fail_file():
 
 #合并.ts文件片段
 def merge_file(dir_name):
+    global iv
     global key
     #根据文件名对.ts文件进行排序
     file_list = share.file_walker(dir_name)
@@ -77,6 +79,7 @@ def merge_file(dir_name):
                 fw.write(cryptor.decrypt(open(file_list[i], 'rb').read()))
             else:
                 fw.write(open(file_list[i], 'rb').read())
+    iv=None
     key = None
     return True
 
@@ -99,11 +102,11 @@ def get_download_params(head, dir_name):
 
 
 # 设置线程池开始下载
-def start_download_in_pool(params):
+def start_download_in_pool(function,params):
     # 线程数
     share.m3.alert("已确认正确地址，开始下载")
     pool = threadpool.ThreadPool(setting_gui.threading_count)
-    thread_requests = threadpool.makeRequests(download_to_file, params)
+    thread_requests = threadpool.makeRequests(function, params)
     [pool.putRequest(req) for req in thread_requests]
     pool.wait()
 
@@ -198,7 +201,11 @@ def get_ts_add(m3u8_href):
         if res_obj.startswith("EXT-X-KEY"):
             # 利用正则表达式获得秘钥链接
             url = re.findall(r'URI=\"(.*?)\"', res_obj, re.S)[0]
-            iv=re.findall(r'IV=(.*?)',res_obj,re.S)[0]
+            if len(re.findall(r'IV=(.*?)',res_obj,re.S))!=0:
+                iv=re.findall(r'IV=(.*?)',res_obj,re.S)[0]
+            else:
+                iv=None
+
             if url.startswith('key'):
                 response = dm.easy_download(url_path + url, stream=False, header=requests_header.get_user_agent())
                 key = response.content
@@ -250,7 +257,7 @@ def download_to_file(url, file_name):
 
     response = dm.easy_download(url=url, stream=False, header=requests_header.get_user_agent())
     if response is None:
-        download_fail_list.append((url, file_name))  # 将下载失败的视频连接加入列表
+        download_fail_list.append(([url, file_name], None))  # 将下载失败的视频连接加入列表
         return
     else:
         with open(file_name, 'wb') as file:
@@ -292,11 +299,11 @@ def start(m3u8_href, video_name):
         # 获取.ts文件的链接和命名
         params = get_download_params(head=url_host, dir_name=video_name)
         # 获得参数后线程池开启线程下载视频
-        start_download_in_pool(params)
+        start_download_in_pool(download_to_file,params)
     elif test_download_url(url_path + url_list[0]):
         params = get_download_params(head=url_path, dir_name=video_name)
         # 线程池开启线程下载视频
-        start_download_in_pool(params)
+        start_download_in_pool(download_to_file,params)
     else:
         share.m3.alert("地址连接失败")
         running = False

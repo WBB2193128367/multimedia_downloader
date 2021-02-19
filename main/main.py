@@ -136,8 +136,8 @@ def run():
     # 绑定点击事件
     #
     share.m3.rb1.bind("<Button-1>", lambda x: download_m3u8_file.order_type(False))
-    share.m3.button_cancel.bind('<Button-1>',lambda x:download_small_other_file.cancel_thread())
-    share.m3.button_pause.bind('<Button-1>', lambda x: download_small_other_file.pause_or_continue())
+    #share.m3.button_cancel.bind('<Button-1>',lambda x:download_small_other_file.cancel_thread())
+    #share.m3.button_pause.bind('<Button-1>', lambda x: download_small_other_file.pause_or_continue())
     share.m3.rb2.bind("<Button-1>", lambda x: download_m3u8_file.order_type(True))
     #点击将进行源文件的保存
     share.m3.cb.bind("<Button-1>", lambda x: download_m3u8_file.save_source())
