@@ -7,7 +7,7 @@ from tkinter import *
 # 默认的媒体文件存储位置
 path = '../videos'
 # 默认的线程数
-threading_count = 40
+threading_count = 60
 
 # 关于的驱动方法
 
@@ -16,8 +16,11 @@ def guanyu():
     tkinter.messagebox.showinfo('提示', '该软件由WBB开发，仅供学习使用！！！')
 
 
-
-
+def generate_list(arg):
+    a=[]
+    for i in range(1,arg+1):
+        a.append(i)
+    return a
 #点击确认按钮时的事件
 def print_selection(root, top1, entry, combobox, v):
     global path
@@ -101,26 +104,10 @@ def set(root):
     lb3 = Label(top1, text="最大线程数为")
     lb3.place(x=100, y=180)
     combobox = ttk.Combobox(top1, width=5, state='readonly')
-    combobox['values'] = (
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-    "16","17","18","19","20","50")
-    combobox.current(5)
+    combobox['values'] = generate_list(100)
+    combobox.current(threading_count-1)
     combobox.place(x=180, y=180)
-    lb3 = Label(top1, text="(1-15)")
+    lb3 = Label(top1, text="(1-100)")
     lb3.place(x=238, y=180)
     # 确认按钮
     btn = Button(
