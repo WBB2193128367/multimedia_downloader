@@ -15,12 +15,14 @@ threading_count = 60
 def guanyu():
     tkinter.messagebox.showinfo('提示', '该软件由WBB开发，仅供学习使用！！！')
 
-
+#生成线程数范围列表
 def generate_list(arg):
     a=[]
     for i in range(1,arg+1):
         a.append(i)
     return a
+
+
 #点击确认按钮时的事件
 def print_selection(root, top1, entry, combobox, v):
     global path
