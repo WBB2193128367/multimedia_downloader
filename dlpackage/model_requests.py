@@ -34,5 +34,5 @@ def easy_download(
             i += 1
         except Exception as e:
             share.m3.alert("出现其它异常！")
-            return None
+            i += 1
     return None

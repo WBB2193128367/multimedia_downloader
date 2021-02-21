@@ -251,9 +251,6 @@ def save_source():
 def download_to_file(url, file_name):
     global download_fail_list
     global url_list
-    global exit_flag
-    if exit_flag:
-        return
 
     response = dm.easy_download(url=url, stream=False, header=requests_header.get_user_agent())
     if response is None:
@@ -269,7 +266,6 @@ def download_to_file(url, file_name):
 def start(m3u8_href, video_name):
     global key
     global download_fail_list
-    global running
     global url_list
     global url_path
     global url_host
@@ -287,7 +283,6 @@ def start(m3u8_href, video_name):
     if len(url_list) == 0:
         share.m3.alert("获取地址失败")
         # 重置任务开始标志
-        running = False
         return
     video_name = setting_gui.path + "/" + video_name
     video_path=video_name
@@ -306,7 +301,6 @@ def start(m3u8_href, video_name):
         start_download_in_pool(download_to_file,params)
     else:
         share.m3.alert("地址连接失败")
-        running = False
         return
     # 重新下载先前下载失败的.ts文件
     # while len(download_fail_file())!=0:
@@ -333,4 +327,3 @@ def start(m3u8_href, video_name):
         share.m3.show_info("有部分文件没有下载完成，请点击重试！")
 
     # 重置任务开始标志
-    running = False

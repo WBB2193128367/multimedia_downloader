@@ -6,6 +6,7 @@ from dlpackage import requests_header
 from dlpackage import share
 import webbrowser
 import threading
+import requests
 import re
 
 
@@ -22,6 +23,8 @@ def check_href(m3u8_href):
         return True
     else:
         return False
+
+    
 #检验文件名是否为空
 def check_video_name(video_name):
     if "" != video_name:
@@ -32,8 +35,7 @@ def check_video_name(video_name):
 
 #开始下载的触发事件
 def s():
-    global running
-    if running == False:
+
             m3u8_href = share.m3.button_url.get().rstrip()
             video_name = share.m3.button_video_name.get().rstrip()
             check=check_href(m3u8_href)
@@ -94,23 +96,42 @@ def s():
                     t.setDaemon(True)
                     t.start()
 
-            running=False
-    else:
-            t = threading.Thread(
-                target=share.m3.waring_info, args=(
-                    '正在下载中，请勿重复开启！',))
-            # 设置守护线程，进程退出不用等待子线程完成
-            t.setDaemon(True)
-            t.start()
+
+#打开Githu链接
 def open_url():
     webbrowser.open('https://github.com/WBB2193128367/multimedia_downloader',new=0)
 
 def s_thread():
-    t = threading.Thread(
-        target=s)
-    # 设置守护线程，进程退出不用等待子线程完成
-    t.setDaemon(True)
-    t.start()
+    global running
+    if running == False:
+
+        try:
+            yyy=requests.get(url='https://www.baidu.com',timeout=3)
+        except BaseException:
+            t = threading.Thread(
+                target=share.m3.waring_info, args=(
+                    '网络未连接！！！',))
+            # 设置守护线程，进程退出不用等待子线程完成
+            t.setDaemon(True)
+            t.start()
+            return
+        else:
+            running = True
+            t = threading.Thread(
+                target=s)
+            # 设置守护线程，进程退出不用等待子线程完成
+            t.setDaemon(True)
+            t.start()
+            running==False
+
+    else:
+        t = threading.Thread(
+            target=share.m3.waring_info, args=(
+                '正在下载中，请勿重复开启！',))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
+
 
 #重试触发的事件
 def again():

@@ -37,6 +37,10 @@ def get_user_agent():
 def get_user_agent1(length):
     header = {
         'Range': 'bytes=%d-' % length,
+        'Accept-Encoding': 'gzip, deflate',
+        'content-type': 'application/json',
+        'x-requested-with': 'XMLHttpRequest',
+        'Accept-Language': 'zh-CN,zh;q=0.8',
         'User-Agent': random.choice(user_agent_list)
     }
     return header
@@ -45,6 +49,10 @@ def get_user_agent1(length):
 def get_user_agent2(m, n):
     header = {
         'Range': 'bytes=%d-%d' % (m, n),
+        'Accept-Encoding': 'gzip, deflate',
+        'content-type': 'application/json',
+        'x-requested-with': 'XMLHttpRequest',
+        'Accept-Language': 'zh-CN,zh;q=0.8',
         'User-Agent': random.choice(user_agent_list)
     }
     return header
