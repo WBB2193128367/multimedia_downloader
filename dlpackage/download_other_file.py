@@ -153,19 +153,19 @@ def start_download_in_pool1(function,params):
 
 # 将大于5MB的文件进行划分
 def file_divide(content_lenths):
-    if content_lenths <=209715200:
-        divide_length=2097152
-    elif content_lenths >209715200 and content_lenths <=419430400:
-        divide_length=4094304
-    elif content_lenths >419430400 and content_lenths <=629145600:
-        divide_length = 6291456
-    elif content_lenths >629145600 and content_lenths <=838860800:
-        divide_length = 8388608
-    elif content_lenths >838860800 and content_lenths <=1048576000:
-        divide_length = 10485760
-    else:
-        divide_length = 10485760
-    for i in range(0, content_lenths, divide_length):
+    # if content_lenths <=209715200:
+    #     divide_length=2097152
+    # elif content_lenths >209715200 and content_lenths <=419430400:
+    #     divide_length=4094304
+    # elif content_lenths >419430400 and content_lenths <=629145600:
+    #     divide_length = 6291456
+    # elif content_lenths >629145600 and content_lenths <=838860800:
+    #     divide_length = 8388608
+    # elif content_lenths >838860800 and content_lenths <=1048576000:
+    #     divide_length = 10485760
+    # else:
+    #     divide_length = 10485760
+    for i in range(0, content_lenths, 1048576):
         if int(i) != 0:
             end.append(i)
     for i in end:
