@@ -108,12 +108,12 @@ def download_fail_file1():
             share.set_progress(0)
             share.m3.str.set('')
             share.m3.clear_alert()
+            share.running = False
         else:
             share.m3.alert("有部分文件没有下载完成，请点击重试！")
             share.m3.show_info("有部分文件没有下载完成，请点击重试！")
     else:
         share.m3.show_info("还没有下载失败的文件噢！")
-
 
 # 进行文件的拼接
 def merge_file1(dir_name):
@@ -222,6 +222,7 @@ def start1(content_size, video_name):
         share.m3.str.set('')
         share.m3.clear_alert()
         download_fail_list1 = []
+        share.running = False
     else:
         share.m3.alert("有部分文件没有下载完成，请点击重试！")
         share.m3.show_info("有部分文件没有下载完成，请点击重试！")

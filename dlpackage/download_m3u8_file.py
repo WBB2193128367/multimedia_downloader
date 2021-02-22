@@ -22,6 +22,7 @@ url_path = None
 key = None #用来存储秘钥，用于视频的解码
 iv=None
 
+
 def try_again_download(url,file_name):
     global download_fail_list
     share.m3.alert("正在尝试重新下载%s" % file_name)
@@ -54,6 +55,7 @@ def download_fail_file():
                 share.set_progress(0)
                 share.m3.str.set('')
                 share.m3.clear_alert()
+                share.running=False
             else:
                 share.m3.alert("视频文件合并失败,请查看消息列表")
                 share.m3.show_info("视频文件合并失败,请查看消息列表")
@@ -277,12 +279,11 @@ def start(m3u8_href, video_name):
     # 格式化文件名
     video_name = share.check_video_name(video_name)
     # 任务开始标志，防止重复开启下载任务
-    running = True
     # 获取所有ts视频下载地址
     url_list = get_ts_add(m3u8_href)
     if len(url_list) == 0:
         share.m3.alert("获取地址失败")
-        # 重置任务开始标志
+        share.running=False        # 重置任务开始标志
         return
     video_name = setting_gui.path + "/" + video_name
     video_path=video_name
@@ -301,6 +302,7 @@ def start(m3u8_href, video_name):
         start_download_in_pool(download_to_file,params)
     else:
         share.m3.alert("地址连接失败")
+        share.running=False
         return
     # 重新下载先前下载失败的.ts文件
     # while len(download_fail_file())!=0:
@@ -317,6 +319,7 @@ def start(m3u8_href, video_name):
             share.set_progress(0)
             share.m3.str.set('')
             share.m3.clear_alert()
+            share.running=False
             # 清空下载失败视频列表
             download_fail_list = []
         else:

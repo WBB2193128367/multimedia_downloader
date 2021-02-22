@@ -8,7 +8,7 @@ def easy_download(
         header,
         proxies=None,
         timeout=(
-            10,
+            12,
             30),
         max_retry_time=5):
     i = 1

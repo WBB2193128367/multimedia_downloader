@@ -12,7 +12,6 @@ import re
 
 #全局变量
 content_size=None
-running=False
 
 # 利用正则表达式检查输入的地址是否正确
 def check_href(m3u8_href):
@@ -35,7 +34,6 @@ def check_video_name(video_name):
 
 #开始下载的触发事件
 def s():
-
             m3u8_href = share.m3.button_url.get().rstrip()
             video_name = share.m3.button_video_name.get().rstrip()
             check=check_href(m3u8_href)
@@ -43,7 +41,6 @@ def s():
 
             # 当为m3u8文件时
             if check==True and check1==True and re.match(r'^http.*?\.m3u8.*', m3u8_href):
-                running = True
                 # start(m3u8_href,video_name)
                 # 开启线程执行耗时操作，防止GUI卡顿
                 t = threading.Thread(target=download_m3u8_file.start, args=(m3u8_href, video_name,))
@@ -74,6 +71,7 @@ def s():
                 else:
                     pass
             elif check==False and check1==False:
+                    share.running = False
                     t = threading.Thread(
                                     target=share.m3.show_info, args=(
                                        '地址不合法\n文件名不能为空', ))
@@ -81,6 +79,7 @@ def s():
                     t.setDaemon(True)
                     t.start()
             elif check==False and check1==True:
+                    share.running = False
                     t = threading.Thread(
                                     target=share.m3.show_info, args=(
                                        '地址不合法', ))
@@ -89,6 +88,7 @@ def s():
                     t.start()
 
             elif check==True and check1==False:
+                    share.running = False
                     t = threading.Thread(
                                     target=share.m3.show_info, args=(
                                        '文件名不能为空', ))
@@ -96,14 +96,14 @@ def s():
                     t.setDaemon(True)
                     t.start()
 
-
+            #share.running=False
 #打开Githu链接
 def open_url():
     webbrowser.open('https://github.com/WBB2193128367/multimedia_downloader',new=0)
 
 def s_thread():
-    global running
-    if running == False:
+    #global running
+    if share.running == False:
 
         try:
             yyy=requests.get(url='https://www.baidu.com',timeout=3)
@@ -116,13 +116,12 @@ def s_thread():
             t.start()
             return
         else:
-            running = True
+            share.running = True
             t = threading.Thread(
                 target=s)
             # 设置守护线程，进程退出不用等待子线程完成
             t.setDaemon(True)
             t.start()
-            running==False
 
     else:
         t = threading.Thread(

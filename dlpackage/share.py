@@ -8,6 +8,7 @@ import os
 # 定义的全局变量
 
 m3 = None
+running=False
 
 
 # 对下载的.ts文件进行排序
