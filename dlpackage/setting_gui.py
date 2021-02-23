@@ -105,7 +105,7 @@ def set(root):
     lb2.place(x=100, y=150)
     lb3 = Label(top1, text="最大线程数为")
     lb3.place(x=100, y=180)
-    combobox = ttk.Combobox(top1, width=5, state='readonly')
+    combobox = ttk.Combobox(top1, width=5)
     combobox['values'] = generate_list(100)
     combobox.current(threading_count-1)
     combobox.place(x=180, y=180)
