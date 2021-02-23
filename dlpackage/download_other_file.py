@@ -4,6 +4,7 @@ from dlpackage import setting_gui
 from  dlpackage import  proxy_ip_pool
 from dlpackage import share
 import threadpool
+import threading
 import shutil
 import os
 
@@ -13,6 +14,7 @@ import os
 
 
 # 定义的全局变量
+link=None
 video_path=None
 cancel_flag=False
 pause_flag=False
@@ -99,6 +101,12 @@ def download_fail_file1():
     if len(download_fail_list1) > 0:
         start_download_in_pool1(try_again_download,download_fail_list1)
         if len(download_fail_list1)==0:
+            share.log_content = {'time': share.get_time(), 'link': link, 'status': '下载成功'}
+            t = threading.Thread(
+                target=share.write, args=(share.log_content,))
+            # 设置守护线程，进程退出不用等待子线程完成
+            t.setDaemon(True)
+            t.start()
             merge_file1(video_path)
             # 删除下载的视频片段
             shutil.rmtree(video_path)
@@ -151,7 +159,7 @@ def start_download_in_pool1(function,params):
     pool.wait()
 
 
-# 将大于5MB的文件进行划分
+
 def file_divide(content_lenths):
     # if content_lenths <=209715200:
     #     divide_length=2097152
@@ -189,6 +197,7 @@ def check_file_count1(dir_name):
 
 
 def start1(content_size, video_name):
+    global link
     global content_length
     global download_fail_list1
     global start
@@ -198,6 +207,7 @@ def start1(content_size, video_name):
     video_name = share.check_video_name(video_name)
     video_name = setting_gui.path + "/" + video_name
     video_path=video_name
+    link=share.m3.button_url.get().rstrip()
     if not os.path.exists(video_name):
         os.makedirs(video_name)
     # 对文件进行划分
@@ -211,6 +221,12 @@ def start1(content_size, video_name):
     #     download_fail_file1()
     # 用来检查文件片段是否都下载完成
     if check_file_count1(video_name):
+        share.log_content = {'time':share.get_time(),'link':link,'status':'下载成功'}
+        t = threading.Thread(
+            target=share.write, args=(share.log_content,))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
         # 合并视频
         merge_file1(video_name)
         # 删除下载的视频片段

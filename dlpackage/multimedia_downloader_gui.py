@@ -1,5 +1,6 @@
 from dlpackage import setting_gui
 from dlpackage import share
+from dlpackage import log_gui
 import tkinter.messagebox
 from tkinter import ttk
 from tkinter import *
@@ -34,6 +35,10 @@ class M3u8Downloader:
         self.menubar.add_cascade(
             label='设置',
             command=lambda: setting_gui.set(
+                self.root))
+        self.menubar.add_cascade(
+            label='日志',
+            command=lambda: log_gui.log_gui(
                 self.root))
         self.menubar.add_cascade(label='关于', command=setting_gui.guanyu)
         self.root.config(menu=self.menubar)

@@ -1,6 +1,7 @@
 from dlpackage import setting_gui
 import tkinter.messagebox
-import shutil
+import json
+import time
 import sys
 import os
 
@@ -9,6 +10,7 @@ import os
 
 m3 = None
 running=False
+log_content={}
 
 
 # 对下载的.ts文件进行排序
@@ -68,3 +70,14 @@ def close_windows(root):
 
         if tkinter.messagebox.askokcancel('退出', '确认要退出吗？'):
             root.destroy()
+
+
+def get_time():
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+
+def write(file):
+    ff = json.dumps(file)
+    with open(r'../log.json', 'a+') as f:
+        f.write(ff)
+        f.write('\n')

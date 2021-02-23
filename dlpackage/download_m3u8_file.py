@@ -5,13 +5,16 @@ from dlpackage import proxy_ip_pool
 from dlpackage import setting_gui
 from dlpackage import share
 import threadpool
+import threading
 import shutil
+import json
 import os
 import re
 
 
 # 定义的全局变量
 video_path=None
+link=None
 download_fail_list = []
 url_list = []
 order_increase = False
@@ -46,12 +49,19 @@ def download_fail_file():
     if len(download_fail_list) > 0:
         start_download_in_pool(try_again_download,download_fail_list)
         if len(download_fail_list)==0:
+            share.log_content = {'time':share.get_time(),'link':link,'status':'下载成功'}
+            t = threading.Thread(
+                target=share.write, args=(share.log_content,))
+            # 设置守护线程，进程退出不用等待子线程完成
+            t.setDaemon(True)
+            t.start()
             if merge_file(video_path):
                 if save_source_file is False:
                     # 删除文件夹
                     shutil.rmtree(video_path)
                 share.m3.alert("下载完成")
                 share.m3.show_info("下载完成")
+
                 share.set_progress(0)
                 share.m3.str.set('')
                 share.m3.clear_alert()
@@ -266,6 +276,7 @@ def download_to_file(url, file_name):
             share.m3.str.set('%.2f%%' % p)
 
 def start(m3u8_href, video_name):
+    global link
     global key
     global download_fail_list
     global url_list
@@ -276,6 +287,7 @@ def start(m3u8_href, video_name):
     share.m3.clear_alert()
     # 进度条归零
     share.set_progress(0)
+    link=m3u8_href
     # 格式化文件名
     video_name = share.check_video_name(video_name)
     # 任务开始标志，防止重复开启下载任务
@@ -309,6 +321,12 @@ def start(m3u8_href, video_name):
     #     download_fail_file()
     # 检查ts文件总数是否对应
     if check_file(video_name):
+        share.log_content = {'time':share.get_time(),'link':link,'status':'下载成功'}
+        t = threading.Thread(
+            target=share.write,args=(share.log_content,))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
         # 合并视频
         if merge_file(video_name):
             if save_source_file is False:
@@ -316,6 +334,7 @@ def start(m3u8_href, video_name):
                 shutil.rmtree(video_name)
             share.m3.alert("下载完成")
             share.m3.show_info("下载完成")
+
             share.set_progress(0)
             share.m3.str.set('')
             share.m3.clear_alert()
