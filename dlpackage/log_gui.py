@@ -23,7 +23,7 @@ def log_gui(root):
 
     scrollBar.pack(side=RIGHT, fill=Y)
     #定义表格界面
-    tree_date = ttk.Treeview(top1,columns=('time', 'link', 'status'), show="headings",yscrollcommand=scrollBar.set)
+    tree_date = ttk.Treeview(top1,columns=('time', 'link', 'status'), show="headings")
     tree_date.pack()
     #设置列宽度
     tree_date.column('time', width=100, anchor='center')
@@ -36,15 +36,12 @@ def log_gui(root):
     tree_date.pack(side=LEFT, fill=Y)
     # Treeview组件与垂直滚动条结合
     scrollBar.config(command=tree_date.yview)
-    tree_date.bind("<Button-1>", lambda x: read_file(tree_date))
-
-    top1.mainloop()
-
-
-
-def read_file(tree_data):
+    tree_date.config(yscrollcommand=scrollBar.set)
+    # 将日志数据写入界面
     with open(r'../log.json', 'r+') as f:
         m = f.readlines()
     for i in range(len(m)):
         n=json.loads(m[i])
-        tree_data.insert('',i,values=(n["time"],n["link"],n["status"]))
+        tree_date.insert('',i,values=(n["time"],n["link"],n["status"]))
+
+    top1.mainloop()
