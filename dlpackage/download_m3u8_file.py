@@ -29,7 +29,8 @@ def try_again_download(url, file_name):
     global download_fail_list
     share.m3.alert("正在尝试重新下载%s" % file_name)
     response = dm.easy_download(
-        url=url, stream=False, header=requests_header.get_user_agent())
+        url=url, stream=False, header=requests_header.get_user_agent(),
+    timeout=(18,30))
     if response is None:
         # share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name, url))
         return
