@@ -5,25 +5,29 @@ from tkinter import *
 
 
 # 默认的媒体文件存储位置
-path = '../videos'
+path = '../downloads'
 # 默认的线程数
 threading_count = 60
 
 # 关于的驱动方法
 
-#关于的事件
+# 关于的事件
+
+
 def guanyu():
     tkinter.messagebox.showinfo('提示', '该软件由WBB开发，仅供学习使用！！！')
 
-#生成线程数范围列表
+# 生成线程数范围列表
+
+
 def generate_list(arg):
-    a=[]
-    for i in range(1,arg+1):
+    a = []
+    for i in range(1, arg + 1):
         a.append(i)
     return a
 
 
-#点击确认按钮时的事件
+# 点击确认按钮时的事件
 def print_selection(root, top1, entry, combobox, v):
     global path
     global threading_count
@@ -36,8 +40,7 @@ def print_selection(root, top1, entry, combobox, v):
     top1.destroy()
 
 
-
-#浏览的事件
+# 浏览的事件
 def liulan(str4):
     m = tkinter.filedialog.askdirectory()
     str4.set(m)
@@ -48,9 +51,9 @@ def set(root):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     # top1.attributes("-toolwindow", 1)
     # top1.wm_attributes("-topmost", 1)
-    #使弹出窗口一直处于主窗口前面
+    # 使弹出窗口一直处于主窗口前面
     top1.transient(root)
-    #将top1设置为模式对话框，top1不关闭无法操作主窗口
+    # 将top1设置为模式对话框，top1不关闭无法操作主窗口
     top1.grab_set()
     top1.title('设置页面')
     top1.iconbitmap(r'../image/设置窗口.ico')
@@ -107,7 +110,7 @@ def set(root):
     lb3.place(x=100, y=180)
     combobox = ttk.Combobox(top1, width=5)
     combobox['values'] = generate_list(100)
-    combobox.current(threading_count-1)
+    combobox.current(threading_count - 1)
     combobox.place(x=180, y=180)
     lb3 = Label(top1, text="(1-100)")
     lb3.place(x=238, y=180)

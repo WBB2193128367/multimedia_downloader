@@ -1,7 +1,7 @@
 from dlpackage import model_requests as dm
 from dlpackage import requests_header
 from dlpackage import setting_gui
-from  dlpackage import  proxy_ip_pool
+from dlpackage import proxy_ip_pool
 from dlpackage import share
 import threadpool
 import threading
@@ -9,15 +9,11 @@ import shutil
 import os
 
 
-
-
-
-
 # 定义的全局变量
-link=None
-video_path=None
-cancel_flag=False
-pause_flag=False
+link = None
+video_path = None
+cancel_flag = False
+pause_flag = False
 content_length = None  # 用来存储待下载文件的大小
 start = [0, ]  # 用来存储断点续传的开始点
 end = []  # 用来存储断点续传的结束点
@@ -51,30 +47,33 @@ def calculate(folder_path):
 #     share.m3.show_info("取消成功！")
 
 # 下载文件
+
+
 def download_to_file1(start, end, file_name):
     global download_fail_list1
     response = dm.easy_download(
-            url=share.m3.button_url.get().rstrip(),
-            stream=True,
-            #proxies=proxy_ip_pool.get_proxy(),
-            header=requests_header.get_user_agent2(
-                start,
-                end))
+        url=share.m3.button_url.get().rstrip(),
+        stream=True,
+        # proxies=proxy_ip_pool.get_proxy(),
+        header=requests_header.get_user_agent2(
+            start,
+            end))
     if response is None:
-            download_fail_list1.append(([start, end, file_name], None))  # 将下载失败的视频连接加入列表
-            return
+        download_fail_list1.append(
+            ([start, end, file_name], None))  # 将下载失败的视频连接加入列表
+        return
     else:
 
         with open(file_name, 'wb') as file:
             file.write(response.content)
             print(share.get_save_path(file_name))
-            p = (calculate(share.get_save_path(file_name)) / content_length ) * 100
+            p = (calculate(share.get_save_path(file_name)) / content_length) * 100
             print(p)
             share.set_progress(p)  # 设置进度条
             share.m3.str.set('%.2f%%' % p)
 
 
-def try_again_download(start,end,file_name):
+def try_again_download(start, end, file_name):
     global download_fail_list1
     share.m3.alert("正在尝试重新下载%s" % file_name)
     response = dm.easy_download(
@@ -91,17 +90,23 @@ def try_again_download(start,end,file_name):
         download_fail_list1.remove(([start, end, file_name], None))
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            p = calculate(share.get_save_path(file_name)) / content_length * 100
+            p = calculate(share.get_save_path(file_name)) / \
+                content_length * 100
             share.set_progress(p)
             share.m3.str.set('%.2f%%' % p)
 
 # 再次下载失败的文件
+
+
 def download_fail_file1():
     global download_fail_list1
     if len(download_fail_list1) > 0:
-        start_download_in_pool1(try_again_download,download_fail_list1)
-        if len(download_fail_list1)==0:
-            share.log_content = {'time': share.get_time(), 'link': link, 'status': '下载成功'}
+        start_download_in_pool1(try_again_download, download_fail_list1)
+        if len(download_fail_list1) == 0:
+            share.log_content = {
+                'time': share.get_time(),
+                'link': link,
+                'status': '下载成功'}
             t = threading.Thread(
                 target=share.write, args=(share.log_content,))
             # 设置守护线程，进程退出不用等待子线程完成
@@ -124,6 +129,8 @@ def download_fail_file1():
         share.m3.show_info("还没有下载失败的文件噢！")
 
 # 进行文件的拼接
+
+
 def merge_file1(dir_name):
     file_list = share.file_walker(dir_name)
     with open(dir_name + share.m3.button_url.get()[share.m3.button_url.get().rfind('.'):share.m3.button_url.get().rfind('.') + 4], 'wb+') as fw:
@@ -146,7 +153,7 @@ def get_download_params1(dir_name):
 
 
 # 进行线程池的创建
-def start_download_in_pool1(function,params):
+def start_download_in_pool1(function, params):
     share.m3.alert("开始下载")
     # 设置线程池中线程的数量
     pool = threadpool.ThreadPool(setting_gui.threading_count)
@@ -157,7 +164,6 @@ def start_download_in_pool1(function,params):
         pool.putRequest(req)
 
     pool.wait()
-
 
 
 def file_divide(content_lenths):
@@ -206,8 +212,8 @@ def start1(content_size, video_name):
     content_length = content_size
     video_name = share.check_video_name(video_name)
     video_name = setting_gui.path + "/" + video_name
-    video_path=video_name
-    link=share.m3.button_url.get().rstrip()
+    video_path = video_name
+    link = share.m3.button_url.get().rstrip()
     if not os.path.exists(video_name):
         os.makedirs(video_name)
     # 对文件进行划分
@@ -216,12 +222,15 @@ def start1(content_size, video_name):
     params = get_download_params1(video_name)
     share.m3.alert('[文件大小]:%0.2f MB' % (content_size / 1024 / 1024))
     # 启动线程池进行下载
-    start_download_in_pool1(download_to_file1,params)
+    start_download_in_pool1(download_to_file1, params)
     # while len(download_fail_list1)!=0:
     #     download_fail_file1()
     # 用来检查文件片段是否都下载完成
     if check_file_count1(video_name):
-        share.log_content = {'time':share.get_time(),'link':link,'status':'下载成功'}
+        share.log_content = {
+            'time': share.get_time(),
+            'link': link,
+            'status': '下载成功'}
         t = threading.Thread(
             target=share.write, args=(share.log_content,))
         # 设置守护线程，进程退出不用等待子线程完成

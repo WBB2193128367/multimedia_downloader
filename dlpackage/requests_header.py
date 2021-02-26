@@ -33,7 +33,9 @@ def get_user_agent():
         'User-Agent': random.choice(user_agent_list)}
     return header
 
-#进行断点续传的请求头
+# 进行断点续传的请求头
+
+
 def get_user_agent1(length):
     header = {
         'Range': 'bytes=%d-' % length,

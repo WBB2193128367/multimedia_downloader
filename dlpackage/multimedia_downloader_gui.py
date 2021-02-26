@@ -7,29 +7,29 @@ from tkinter import *
 import tkinter.font as tf
 
 
-
-
-
-
-class M3u8Downloader:
+class Multimedia_Downloader:
     def __init__(self, title="多媒体下载器"):
-#########################################      对主窗口的设置     ############################################################################################################################
+        #########################################      对主窗口的设置     ############
         self.root = Tk()
         self.w = 550
         self.h = 450
-        self.title = title#主窗口的标题
+        self.title = title  # 主窗口的标题
         self.root.title("%s" % (self.title))
-        self.root.iconbitmap(r'../image/主窗口.ico')#对主窗口图标进行设置
-        ws, hs = self.root.winfo_screenwidth(), self.root.winfo_screenheight() #获取屏幕的的大小
-        self.root.geometry('%dx%d+%d+%d' % (self.w, self.h,
-                                    (ws / 2) - (self.w / 2), (hs / 2) - (self.h / 2)))#设置主窗口的大小和默认显示位置
-        self.root.resizable(0, 0)#固定主窗口的大小
-        self.root.protocol("WM_DELETE_WINDOW", lambda: share.close_windows(self.root))#关闭窗口时进行提示是否关闭，防止误操作
-#################################################################################################################################
+        self.root.iconbitmap(r'../image/主窗口.ico')  # 对主窗口图标进行设置
+        ws, hs = self.root.winfo_screenwidth(), self.root.winfo_screenheight()  # 获取屏幕的的大小
+        self.root.geometry('%dx%d+%d+%d' % (self.w,
+                                            self.h,
+                                            (ws / 2) - (self.w / 2),
+                                            (hs / 2) - (self.h / 2)))  # 设置主窗口的大小和默认显示位置
+        self.root.resizable(0, 0)  # 固定主窗口的大小
+        self.root.protocol(
+            "WM_DELETE_WINDOW",
+            lambda: share.close_windows(
+                self.root))  # 关闭窗口时进行提示是否关闭，防止误操作
+##########################################################################
 
 
-
-####################################################   对菜单栏的设计   ###########################################################
+####################################################   对菜单栏的设计   #########
         self.menubar = Menu(self.root)  # 定义一个菜单栏
         #self.file = Menu( self.menubar,tearoff=0)
         self.menubar.add_cascade(
@@ -42,37 +42,54 @@ class M3u8Downloader:
                 self.root))
         self.menubar.add_cascade(label='关于', command=setting_gui.guanyu)
         self.root.config(menu=self.menubar)
-###################################################################################################################################
+##########################################################################
 
 
-
-##################################################   对界面进行布局    ###############################################################################
+##################################################   对界面进行布局    ##########
         style = ttk.Style(self.root)
         style.configure('lefttab.TNotebook', tabposition='wn')
-        self.notebook = ttk.Notebook(self.root, style='lefttab.TNotebook',width='450',height='425')
+        self.notebook = ttk.Notebook(
+            self.root,
+            style='lefttab.TNotebook',
+            width='450',
+            height='425')
         self.f1 = Frame(self.notebook)
-        self.label=Label(self.f1,text="多媒体下载器\n作者：WBB\n指导老师:李慧旻",font=('华为宋体',20))
-        self.label.place(x=110,y=150)
+        self.label = Label(
+            self.f1,
+            text="多媒体下载器\n作者：WBB\n指导老师:李慧旻",
+            font=(
+                '华为宋体',
+                20))
+        self.label.place(x=110, y=150)
         self.f2 = Frame(self.notebook)
         self.f3 = Frame(self.notebook)
         self.f4 = Frame(self.notebook)
         self.notebook.add(self.f1, text='首页')
         self.notebook.add(self.f2, text='下载页面')
         self.notebook.add(self.f3, text='源码地址')
-        self.label=Label(self.f3,text='Github地址:',font=('华为宋体',15))
-        self.ft=tf.Font(family='华为宋体',size=15,underline=1)
-        self.label1=Label(self.f3,text='https://github.com/\nWBB2193128367/\nmultimedia_downloader',font=self.ft,justify='left',fg='blue')
-        self.label.place(x=60,y=150)
-        self.label1.place(x=170,y=150)
-        self.notebook.add(self.f4,text='问题反馈')
-        self.label=Label(self.f4,text="邮箱地址:2193128367@qq.com",font=('华为宋体',15))
-        self.label.place(x=90,y=150)
+        self.label = Label(self.f3, text='Github地址:', font=('华为宋体', 15))
+        self.ft = tf.Font(family='华为宋体', size=15, underline=1)
+        self.label1 = Label(
+            self.f3,
+            text='https://github.com/\nWBB2193128367/\nmultimedia_downloader',
+            font=self.ft,
+            justify='left',
+            fg='blue')
+        self.label.place(x=60, y=150)
+        self.label1.place(x=170, y=150)
+        self.notebook.add(self.f4, text='问题反馈')
+        self.label = Label(
+            self.f4,
+            text="邮箱地址:2193128367@qq.com",
+            font=(
+                '华为宋体',
+                15))
+        self.label.place(x=90, y=150)
         self.notebook.pack()
-###############################################################################################################################
+##########################################################################
 
 
-
-################################################    功能区界面的设计    #########################################################################
+################################################    功能区界面的设计    ##########
 
         self.frm = LabelFrame(
             self.f2,
@@ -135,33 +152,33 @@ class M3u8Downloader:
         self.m = StringVar()
         self.button_pause = Button(
             self.frm, textvariable=self.m, width=8, font=(
-                "Lucida Grande", 11),bg='purple')
+                "Lucida Grande", 11), bg='purple')
         self.m.set('暂停下载')
         #self.button_pause.place(x=330, y=15)
 
-
-
         self.button_start = Button(
             self.frm, text="开始下载", width=8, font=(
-                "Lucida Grande", 11),bg='purple')
+                "Lucida Grande", 11), bg='purple')
         self.button_start.place(x=330, y=23)
 
         self.button_cancel = Button(
             self.frm, text="取消下载", width=8, font=(
-                "Lucida Grande", 11),bg='purple')
+                "Lucida Grande", 11), bg='purple')
         #self.button_cancel.place(x=330, y=77)
 
         self.button_again = Button(
             self.frm, text="重试", width=8, font=(
-                "Lucida Grande", 11),bg='purple')
+                "Lucida Grande", 11), bg='purple')
         self.button_again.place(x=330, y=73)
 
-
-
-
-
-
-        Label(self.frm,text="下载进度:",font=("Lucida Grande",11)).place(x=0,y=125)
+        Label(
+            self.frm,
+            text="下载进度:",
+            font=(
+                "Lucida Grande",
+                11)).place(
+            x=0,
+            y=125)
         self.progress = ttk.Progressbar(
             self.frm,
             orient="horizontal",
@@ -170,14 +187,13 @@ class M3u8Downloader:
         self.progress.place(x=0, y=150)
         self.progress["maximum"] = 100
         self.progress["value"] = 0
-        self.str=StringVar()
+        self.str = StringVar()
         self.lb = Label(self.frm, textvariable=self.str)
         self.lb.place(x=357, y=150)
-##################################################################################################################################
+##########################################################################
 
 
-
-###########################################################   消息界面的设计   ########################################################
+###########################################################   消息界面的设计   ##
 
         self.message_frm = LabelFrame(
             self.f2,
@@ -200,12 +216,10 @@ class M3u8Downloader:
         self.scrollbar.config(command=self.message.yview)
         self.message.config(yscrollcommand=self.scrollbar.set)
         self.message.config(state=DISABLED)
-#############################################################################################################################3####
+# 3####
 
+    # 给消息框输入消息并且保证消息一直在底部
 
-
-
-    #给消息框输入消息并且保证消息一直在底部
     def alert(self, m):
         print("%s" % m)
         if m:
@@ -216,17 +230,18 @@ class M3u8Downloader:
             self.message.config(state=DISABLED)
         self.root.update()
 
-    #清空消息框
+    # 清空消息框
     def clear_alert(self):
         self.message.config(state=NORMAL)
         self.message.delete('1.0', 'end')
         self.message.config(state=DISABLED)
         self.root.update()
 
+    # 弹出提示框
 
-    #弹出提示框
     def show_info(self, m):
         tkinter.messagebox.showinfo(self.title, m)
-    #弹出警告框
-    def waring_info(self,m):
-        tkinter.messagebox.showwarning('警告！',m)
+    # 弹出警告框
+
+    def waring_info(self, m):
+        tkinter.messagebox.showwarning('警告！', m)

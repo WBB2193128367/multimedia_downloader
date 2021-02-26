@@ -7,14 +7,13 @@ from dlpackage import share
 import threadpool
 import threading
 import shutil
-import json
 import os
 import re
 
 
 # 定义的全局变量
-video_path=None
-link=None
+video_path = None
+link = None
 download_fail_list = []
 url_list = []
 order_increase = False
@@ -22,11 +21,11 @@ exit_flag = False
 save_source_file = False
 url_host = None
 url_path = None
-key = None #用来存储秘钥，用于视频的解码
-iv=None
+key = None  # 用来存储秘钥，用于视频的解码
+iv = None
 
 
-def try_again_download(url,file_name):
+def try_again_download(url, file_name):
     global download_fail_list
     share.m3.alert("正在尝试重新下载%s" % file_name)
     response = dm.easy_download(
@@ -43,13 +42,16 @@ def try_again_download(url,file_name):
             share.m3.str.set('%.2f%%' % p)
 
 
-#重复下载失败的.ts文件
+# 重复下载失败的.ts文件
 def download_fail_file():
     global download_fail_list
     if len(download_fail_list) > 0:
-        start_download_in_pool(try_again_download,download_fail_list)
-        if len(download_fail_list)==0:
-            share.log_content = {'time':share.get_time(),'link':link,'status':'下载成功'}
+        start_download_in_pool(try_again_download, download_fail_list)
+        if len(download_fail_list) == 0:
+            share.log_content = {
+                'time': share.get_time(),
+                'link': link,
+                'status': '下载成功'}
             t = threading.Thread(
                 target=share.write, args=(share.log_content,))
             # 设置守护线程，进程退出不用等待子线程完成
@@ -65,7 +67,7 @@ def download_fail_file():
                 share.set_progress(0)
                 share.m3.str.set('')
                 share.m3.clear_alert()
-                share.running=False
+                share.running = False
             else:
                 share.m3.alert("视频文件合并失败,请查看消息列表")
                 share.m3.show_info("视频文件合并失败,请查看消息列表")
@@ -75,11 +77,13 @@ def download_fail_file():
     else:
         share.m3.show_info("还没有下载失败的文件噢！")
 
-#合并.ts文件片段
+# 合并.ts文件片段
+
+
 def merge_file(dir_name):
     global iv
     global key
-    #根据文件名对.ts文件进行排序
+    # 根据文件名对.ts文件进行排序
     file_list = share.file_walker(dir_name)
     with open(dir_name + ".mp4", 'wb+') as fw:
         for i in range(len(file_list)):
@@ -91,10 +95,9 @@ def merge_file(dir_name):
                 fw.write(cryptor.decrypt(open(file_list[i], 'rb').read()))
             else:
                 fw.write(open(file_list[i], 'rb').read())
-    iv=None
+    iv = None
     key = None
     return True
-
 
 
 # 拼接下载用的参数
@@ -110,11 +113,8 @@ def get_download_params(head, dir_name):
     return params
 
 
-
-
-
 # 设置线程池开始下载
-def start_download_in_pool(function,params):
+def start_download_in_pool(function, params):
     # 线程数
     share.m3.alert("已确认正确地址，开始下载")
     pool = threadpool.ThreadPool(setting_gui.threading_count)
@@ -123,9 +123,7 @@ def start_download_in_pool(function,params):
     pool.wait()
 
 
-
-
-#检查.ts文件是否都下载完成
+# 检查.ts文件是否都下载完成
 def check_file(dir_name):
     path = dir_name
     file_num = 0
@@ -136,34 +134,39 @@ def check_file(dir_name):
     return file_num == len(url_list)
 
 
-
 # 测试拼接的下载地址是否正确
 def test_download_url(url):
     share.m3.alert("尝试使用%s下载视频" % url)
-    res = dm.easy_download(url, stream=False, header=requests_header.get_user_agent(), max_retry_time=5)
+    res = dm.easy_download(
+        url,
+        stream=False,
+        header=requests_header.get_user_agent(),
+        max_retry_time=5)
     return res is not None
 
-#进行速度优先和画质优先的触发事件
+# 进行速度优先和画质优先的触发事件
+
+
 def order_type(type_):
     global order_increase
     order_increase = type_
     if type_:
-       share.m3.alert("设置速度优先")
+        share.m3.alert("设置速度优先")
     else:
         share.m3.alert("设置画质优先")
 
 # 获取域名
+
+
 def get_host(url):
     url_param = url.split("//")
     return url_param[0] + "//" + url_param[1].split("/")[0] + "/"
-
 
 
 def get_dir(url):
     host = get_host(url)
     url = url.replace(host, '')
     return ("/" + url[0:url.rfind("/")] + "/").replace("//", "/")
-
 
 
 # 获取带宽
@@ -180,7 +183,9 @@ def order_list(o_type, o_list):
     o_list.sort(key=get_band_width, reverse=o_type)
     return o_list
 
-#获得域名路径
+# 获得域名路径
+
+
 def get_path(url):
     if url.rfind("/") != -1:
         return url[0:url.rfind("/")] + "/"
@@ -188,8 +193,7 @@ def get_path(url):
         return url[0:url.rfind("\\")] + "\\"
 
 
-
-#获得.ts文件列表
+# 获得.ts文件列表
 def get_ts_add(m3u8_href):
     global key
     global url_path
@@ -198,7 +202,10 @@ def get_ts_add(m3u8_href):
     share.m3.alert("获取ts下载地址，m3u8地址:\n%s" % m3u8_href)
     url_host = get_host(m3u8_href)
     url_path = get_path(m3u8_href)
-    response = dm.easy_download(url=m3u8_href, stream=False, header=requests_header.get_user_agent())
+    response = dm.easy_download(
+        url=m3u8_href,
+        stream=False,
+        header=requests_header.get_user_agent())
     if response is not None:
         response = response.text
     else:
@@ -213,16 +220,20 @@ def get_ts_add(m3u8_href):
         if res_obj.startswith("EXT-X-KEY"):
             # 利用正则表达式获得秘钥链接
             url = re.findall(r'URI=\"(.*?)\"', res_obj, re.S)[0]
-            if len(re.findall(r'IV=(.*?)',res_obj,re.S))!=0:
-                iv=re.findall(r'IV=(.*?)',res_obj,re.S)[0]
+            if len(re.findall(r'IV=(.*?)', res_obj, re.S)) != 0:
+                iv = re.findall(r'IV=(.*?)', res_obj, re.S)[0]
             else:
-                iv=None
+                iv = None
 
             if url.startswith('key'):
-                response = dm.easy_download(url_path + url, stream=False, header=requests_header.get_user_agent())
+                response = dm.easy_download(
+                    url_path + url,
+                    stream=False,
+                    header=requests_header.get_user_agent())
                 key = response.content
             elif url.startswith('http'):
-                response = dm.easy_download(url, stream=False, header=requests_header.get_user_agent())
+                response = dm.easy_download(
+                    url, stream=False, header=requests_header.get_user_agent())
                 key = response.content
 
         # 说明有二级m3u8文件
@@ -247,6 +258,8 @@ def get_ts_add(m3u8_href):
     return ts_add
 
 # 是否保存源文件的事件
+
+
 def save_source():
     global save_source_file
     if share.m3.cb_status.get() == 0:
@@ -257,14 +270,15 @@ def save_source():
         share.m3.alert("下载完成后删除源文件")
 
 
-
-
 # 下载视频并保存为文件
 def download_to_file(url, file_name):
     global download_fail_list
     global url_list
 
-    response = dm.easy_download(url=url, stream=False, header=requests_header.get_user_agent())
+    response = dm.easy_download(
+        url=url,
+        stream=False,
+        header=requests_header.get_user_agent())
     if response is None:
         download_fail_list.append(([url, file_name], None))  # 将下载失败的视频连接加入列表
         return
@@ -274,6 +288,7 @@ def download_to_file(url, file_name):
             p = share.count_file(file_name) / len(url_list) * 100
             share.set_progress(p)  # 设置进度条
             share.m3.str.set('%.2f%%' % p)
+
 
 def start(m3u8_href, video_name):
     global link
@@ -287,7 +302,7 @@ def start(m3u8_href, video_name):
     share.m3.clear_alert()
     # 进度条归零
     share.set_progress(0)
-    link=m3u8_href
+    link = m3u8_href
     # 格式化文件名
     video_name = share.check_video_name(video_name)
     # 任务开始标志，防止重复开启下载任务
@@ -295,10 +310,10 @@ def start(m3u8_href, video_name):
     url_list = get_ts_add(m3u8_href)
     if len(url_list) == 0:
         share.m3.alert("获取地址失败")
-        share.running=False        # 重置任务开始标志
+        share.running = False        # 重置任务开始标志
         return
     video_name = setting_gui.path + "/" + video_name
-    video_path=video_name
+    video_path = video_name
     if not os.path.exists(video_name):
         os.makedirs(video_name)
     share.m3.alert("总计%s个视频" % str(len(url_list)))
@@ -307,23 +322,26 @@ def start(m3u8_href, video_name):
         # 获取.ts文件的链接和命名
         params = get_download_params(head=url_host, dir_name=video_name)
         # 获得参数后线程池开启线程下载视频
-        start_download_in_pool(download_to_file,params)
+        start_download_in_pool(download_to_file, params)
     elif test_download_url(url_path + url_list[0]):
         params = get_download_params(head=url_path, dir_name=video_name)
         # 线程池开启线程下载视频
-        start_download_in_pool(download_to_file,params)
+        start_download_in_pool(download_to_file, params)
     else:
         share.m3.alert("地址连接失败")
-        share.running=False
+        share.running = False
         return
     # 重新下载先前下载失败的.ts文件
     # while len(download_fail_file())!=0:
     #     download_fail_file()
     # 检查ts文件总数是否对应
     if check_file(video_name):
-        share.log_content = {'time':share.get_time(),'link':link,'status':'下载成功'}
+        share.log_content = {
+            'time': share.get_time(),
+            'link': link,
+            'status': '下载成功'}
         t = threading.Thread(
-            target=share.write,args=(share.log_content,))
+            target=share.write, args=(share.log_content,))
         # 设置守护线程，进程退出不用等待子线程完成
         t.setDaemon(True)
         t.start()
@@ -338,7 +356,7 @@ def start(m3u8_href, video_name):
             share.set_progress(0)
             share.m3.str.set('')
             share.m3.clear_alert()
-            share.running=False
+            share.running = False
             # 清空下载失败视频列表
             download_fail_list = []
         else:

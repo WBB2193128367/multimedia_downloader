@@ -2,6 +2,7 @@ import requests
 from dlpackage import share
 from dlpackage import proxy_ip_pool
 
+
 def easy_download(
         url,
         stream,
@@ -21,14 +22,14 @@ def easy_download(
                 headers=header,
                 proxies=proxies,
                 timeout=timeout)
-            if res.status_code == 200 or res.status_code ==206:
+            if res.status_code == 200 or res.status_code == 206:
                 return res
             else:
                 return None
         except requests.exceptions.ConnectionError:
             share.m3.alert("请求连接异常！")
-            i+=1
-            #return None
+            i += 1
+            # return None
         except requests.exceptions.Timeout:
             share.m3.alert("请求超时！")
             i += 1

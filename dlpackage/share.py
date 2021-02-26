@@ -8,9 +8,9 @@ import os
 
 # 定义的全局变量
 
-m3 = None
-running=False
-log_content={}
+m3 = None  # 定义的一个Multimedia_Downloader的对象
+running = False  # 开始下载的标志
+log_content = {}  # 用来存储给日志文件中写入的内容
 
 
 # 对下载的.ts文件进行排序
@@ -26,7 +26,7 @@ def file_walker(path):
 
 # 获取视频文件数量
 def count_file(file_name):
-    video_name=get_save_path(file_name)
+    video_name = get_save_path(file_name)
     file_num = 0
     for f_path, f_dir_name, f_names in os.walk(video_name):
         for name in f_names:
@@ -37,11 +37,10 @@ def count_file(file_name):
 
 # 返回一个经过出处理的文件名
 def check_video_name(name):
-        return name.replace("\t", "").replace("\n", "")
+    return name.replace("\t", "").replace("\n", "")
 
 
-
-#得到文件的保存路径，不包括文件名
+# 得到文件的保存路径，不包括文件名
 def get_save_path(video_name):
     if video_name.rfind("/") != -1:
         return video_name[0:video_name.rfind("/")]
@@ -49,21 +48,19 @@ def get_save_path(video_name):
         return video_name[0:video_name.rfind("\\")]
 
 # 设置进度条
+
+
 def set_progress(v):
     m3.progress["value"] = v
     m3.root.update()
 
 
-def e():
-    global exit_flag
-    exit_flag = True
-    sys.exit(0)
-
-
-
-#关闭主窗口时进行提示
+# 关闭主窗口时进行提示
 def close_windows(root):
-    if  os.path.exists(setting_gui.path+'/'+m3.button_video_name.get().strip()) and m3.button_video_name.get().strip() !='':
+    if os.path.exists(
+        setting_gui.path +
+        '/' +
+            m3.button_video_name.get().strip()) and m3.button_video_name.get().strip() != '':
         if tkinter.messagebox.askokcancel('退出', '已经下载部分文件，确认退出吗？'):
             root.destroy()
     else:
@@ -71,13 +68,16 @@ def close_windows(root):
         if tkinter.messagebox.askokcancel('退出', '确认要退出吗？'):
             root.destroy()
 
+# 获取当前电脑上的时间，并且进行格式话
+
 
 def get_time():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
 
+# 将log_content中临时存储的日志信息写入json文件中
 def write(file):
-    ff = json.dumps(file)
+    ff = json.dumps(file)  # 将字典转换为字符串
     with open(r'../log.json', 'a+') as f:
         f.write(ff)
         f.write('\n')
