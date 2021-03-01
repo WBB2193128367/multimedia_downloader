@@ -290,7 +290,6 @@ def download_to_file(url, file_name):
             share.set_progress(p)  # 设置进度条
             share.m3.str.set('%.2f%%' % p)
 
-
 def start(m3u8_href, video_name):
     global link
     global key
@@ -311,6 +310,15 @@ def start(m3u8_href, video_name):
     url_list = get_ts_add(m3u8_href)
     if len(url_list) == 0:
         share.m3.alert("获取地址失败")
+        share.log_content = {
+            'time': share.get_time(),
+            'link': link,
+            'status': '下载失败'}
+        t = threading.Thread(
+            target=share.write, args=(share.log_content,))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
         share.running = False        # 重置任务开始标志
         return
     video_name = setting_gui.path + "/" + video_name
@@ -330,6 +338,15 @@ def start(m3u8_href, video_name):
         start_download_in_pool(download_to_file, params)
     else:
         share.m3.alert("地址连接失败")
+        share.log_content = {
+            'time': share.get_time(),
+            'link': link,
+            'status': '下载失败'}
+        t = threading.Thread(
+            target=share.write, args=(share.log_content,))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
         share.running = False
         return
     # 重新下载先前下载失败的.ts文件

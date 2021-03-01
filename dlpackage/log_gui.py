@@ -13,12 +13,14 @@ def log_gui(root):
     top1.grab_set()
     top1.title('下载日志')
     top1.iconbitmap(r'../image/下载日志.ico')
+    top1.withdraw()
+    top1.update()
     w = 400
     h = 300
     ws, hs = top1.winfo_screenwidth(), top1.winfo_screenheight()
     top1.geometry("%dx%d+%d+%d" %
                   (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
-    #top1.resizable(0, 0)
+    top1.deiconify()
     # 滚动条
     scrollBar = Scrollbar(top1)
 

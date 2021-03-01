@@ -11,20 +11,21 @@ class Multimedia_Downloader:
     def __init__(self, title="多媒体下载器"):
         #########################################      对主窗口的设置     ############
         self.root = Tk()
-        self.w = 550
-        self.h = 450
-        self.title = title  # 主窗口的标题
         self.root.withdraw()
         self.root.update()
-        self.root.title("%s" % (self.title))
-        self.root.iconbitmap(r'../image/主窗口.ico')  # 对主窗口图标进行设置
+        self.w = 550
+        self.h = 450
         ws, hs = self.root.winfo_screenwidth(), self.root.winfo_screenheight()  # 获取屏幕的的大小
         self.root.geometry('%dx%d+%d+%d' % (self.w,
                                             self.h,
                                             (ws / 2) - (self.w / 2),
                                             (hs / 2) - (self.h / 2)))  # 设置主窗口的大小和默认显示位置
-        self.root.resizable(0, 0) # 固定主窗口的大小
         self.root.deiconify()
+        self.title = title  # 主窗口的标题
+        self.root.title("%s" % (self.title))
+        self.root.iconbitmap(r'../image/主窗口.ico')  # 对主窗口图标进行设置
+
+        self.root.resizable(0, 0) # 固定主窗口的大小
         self.root.protocol(
             "WM_DELETE_WINDOW",
             lambda: share.close_windows(
