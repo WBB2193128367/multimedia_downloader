@@ -14,6 +14,8 @@ class Multimedia_Downloader:
         self.w = 550
         self.h = 450
         self.title = title  # 主窗口的标题
+        self.root.withdraw()
+        self.root.update()
         self.root.title("%s" % (self.title))
         self.root.iconbitmap(r'../image/主窗口.ico')  # 对主窗口图标进行设置
         ws, hs = self.root.winfo_screenwidth(), self.root.winfo_screenheight()  # 获取屏幕的的大小
@@ -21,7 +23,8 @@ class Multimedia_Downloader:
                                             self.h,
                                             (ws / 2) - (self.w / 2),
                                             (hs / 2) - (self.h / 2)))  # 设置主窗口的大小和默认显示位置
-        self.root.resizable(0, 0)  # 固定主窗口的大小
+        self.root.resizable(0, 0) # 固定主窗口的大小
+        self.root.deiconify()
         self.root.protocol(
             "WM_DELETE_WINDOW",
             lambda: share.close_windows(
@@ -71,6 +74,7 @@ class Multimedia_Downloader:
         self.ft = tf.Font(family='华为宋体', size=15, underline=1)
         self.label1 = Label(
             self.f3,
+            cursor='plus',
             text='https://github.com/\nWBB2193128367/\nmultimedia_downloader',
             font=self.ft,
             justify='left',

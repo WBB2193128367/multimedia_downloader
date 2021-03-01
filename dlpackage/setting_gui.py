@@ -59,10 +59,13 @@ def set(root):
     top1.iconbitmap(r'../image/设置窗口.ico')
     w = 400
     h = 300
+    top1.withdraw()
+    top1.update()
     ws, hs = top1.winfo_screenwidth(), top1.winfo_screenheight()
     top1.geometry("%dx%d+%d+%d" %
                   (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
     top1.resizable(0, 0)
+    top1.deiconify()
     # 设置透明度
     lb0 = Label(top1, text="透明度设置:")
     lb0.place(x=3, y=10)

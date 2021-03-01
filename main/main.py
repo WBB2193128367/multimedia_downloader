@@ -118,7 +118,7 @@ def s_thread():
     if not share.running:
 
         try:
-            yyy = requests.get(url='https://www.baidu.com', timeout=3)
+            yyy = requests.get(url='https://www.baidu.com', timeout=10)
         except BaseException:
             t = threading.Thread(
                 target=share.m3.waring_info, args=(
