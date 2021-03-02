@@ -221,7 +221,10 @@ class Multimedia_Downloader:
         self.scrollbar.config(command=self.message.yview)
         self.message.config(yscrollcommand=self.scrollbar.set)
         self.message.config(state=DISABLED)
-# 3####
+#########################################################################点击右键后的界面############################3######
+
+
+        self.menubar = Menu(self.root, tearoff=False)
 
     # 给消息框输入消息并且保证消息一直在底部
 

@@ -1,18 +1,11 @@
 from tkinter import *
 from tkinter import ttk
+from dlpackage import right_kye
 import json
 
 
 def log_gui(root):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
-    # top1.attributes("-toolwindow", 1)
-    # top1.wm_attributes("-topmost", 1)
-    # 使弹出窗口一直处于主窗口前面
-    top1.transient(root)
-    # 将top1设置为模式对话框，top1不关闭无法操作主窗口
-    top1.grab_set()
-    top1.title('下载日志')
-    top1.iconbitmap(r'../image/下载日志.ico')
     top1.withdraw()
     top1.update()
     w = 400
@@ -21,10 +14,19 @@ def log_gui(root):
     top1.geometry("%dx%d+%d+%d" %
                   (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
     top1.deiconify()
+    # top1.attributes("-toolwindow", 1)
+    # top1.wm_attributes("-topmost", 1)
+    # 使弹出窗口一直处于主窗口前面
+    top1.transient(root)
+    # 将top1设置为模式对话框，top1不关闭无法操作主窗口
+    top1.grab_set()
+    top1.title('下载日志')
+    top1.iconbitmap(r'../image/下载日志.ico')
     # 滚动条
-    scrollBar = Scrollbar(top1)
-
-    scrollBar.pack(side=RIGHT, fill=Y)
+    scrollBary = Scrollbar(top1,orient=VERTICAL)
+    scrollBarx=Scrollbar(top1,orient=HORIZONTAL)
+    scrollBary.pack(side=RIGHT, fill=Y)
+    scrollBarx.pack(side=BOTTOM,fill=X)
     # 定义表格界面
     tree_date = ttk.Treeview(
         top1,
@@ -42,10 +44,12 @@ def log_gui(root):
     tree_date.heading('time', text='下载时间')
     tree_date.heading('link', text='下载链接')
     tree_date.heading('status', text='下载状态')
-    tree_date.pack(side=LEFT, fill=Y)
+    tree_date.pack(fill=BOTH, expand=True)
     # Treeview组件与垂直滚动条结合
-    scrollBar.config(command=tree_date.yview)
-    tree_date.config(yscrollcommand=scrollBar.set)
+    scrollBary.config(command=tree_date.yview)
+    scrollBarx.config(command=tree_date.xview)
+    tree_date.config(yscrollcommand=scrollBary.set)
+    tree_date.config(xscrollcommand=scrollBarx.set)
     # 将日志数据写入界面
     with open(r'../log.json', 'r+') as f:
         m = f.readlines()

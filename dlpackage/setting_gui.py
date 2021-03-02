@@ -1,6 +1,7 @@
 from tkinter import messagebox
 import tkinter.filedialog
 from tkinter import ttk
+from dlpackage import right_kye
 from tkinter import *
 
 
@@ -51,12 +52,6 @@ def set(root):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     # top1.attributes("-toolwindow", 1)
     # top1.wm_attributes("-topmost", 1)
-    # 使弹出窗口一直处于主窗口前面
-    top1.transient(root)
-    # 将top1设置为模式对话框，top1不关闭无法操作主窗口
-    top1.grab_set()
-    top1.title('设置页面')
-    top1.iconbitmap(r'../image/设置窗口.ico')
     top1.withdraw()
     top1.update()
     w = 400
@@ -65,6 +60,13 @@ def set(root):
     top1.geometry("%dx%d+%d+%d" %
                   (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
     top1.deiconify()
+    # 使弹出窗口一直处于主窗口前面
+    top1.transient(root)
+    # 将top1设置为模式对话框，top1不关闭无法操作主窗口
+    top1.grab_set()
+    top1.title('设置页面')
+    top1.iconbitmap(r'../image/设置窗口.ico')
+
     # 设置透明度
     lb0 = Label(top1, text="透明度设置:")
     lb0.place(x=3, y=10)
@@ -89,11 +91,16 @@ def set(root):
     lb0.place(x=3, y=80)
     lb2 = Label(top1, text="使用指定的视频下载目录")
     lb2.place(x=100, y=80)
+
+
     # 存储路径
     str3 = StringVar()
     str3.set(path)
     entry = Entry(top1, textvariable=str3, width=14)
     entry.place(x=100, y=110)
+    menubar = Menu(top1, tearoff=False)
+    #将entry和rightkey事件绑定
+    entry.bind("<Button-3>", lambda x: right_kye.rightKey(menubar,x, entry))
     btn2 = Button(
         top1,
         text="选择目录",
@@ -111,11 +118,14 @@ def set(root):
     lb3 = Label(top1, text="最大线程数为")
     lb3.place(x=100, y=180)
     combobox = ttk.Combobox(top1, width=5)
+    combobox.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, combobox))
     combobox['values'] = generate_list(100)
     combobox.current(threading_count - 1)
     combobox.place(x=180, y=180)
     lb3 = Label(top1, text="(1-100)")
     lb3.place(x=238, y=180)
+
+
     # 确认按钮
     btn = Button(
         top1,

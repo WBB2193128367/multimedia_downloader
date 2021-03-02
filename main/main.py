@@ -4,6 +4,7 @@ from dlpackage import model_requests as dm
 from dlpackage import download_m3u8_file
 from dlpackage import requests_header
 from dlpackage import share
+from dlpackage import right_kye
 import webbrowser
 import threading
 import requests
@@ -180,6 +181,8 @@ def run():
     share.m3.button_start.bind("<Button-1>", lambda x: s_thread())
     share.m3.button_again.bind("<Button-1>", lambda x: again())
     share.m3.label1.bind("<Button-1>", lambda x: open_url())
+    share.m3.button_url.bind("<Button-3>", lambda x: right_kye.rightKey(share.m3.menubar,x, share.m3.button_url))
+    share.m3.button_video_name.bind("<Button-3>", lambda x: right_kye.rightKey(share.m3.menubar, x, share.m3.button_video_name))
     #share.m3.button_exit.bind("<Button-1>", lambda x: e())
     # 手动加入消息队列
     share.m3.root.mainloop()
