@@ -36,7 +36,7 @@ def check_video_name(video_name):
 
 
 # 开始下载的触发事件
-def s():
+def inspect_user_input():
     m3u8_href = share.m3.button_url.get().rstrip()
     video_name = share.m3.button_video_name.get().rstrip()
     check = check_href(m3u8_href)
@@ -113,13 +113,12 @@ def open_url():
         'https://github.com/WBB2193128367/multimedia_downloader',
         new=0)
 
-
-def s_thread():
+def test_network():
     #global running
     if not share.running:
 
         try:
-            yyy = requests.get(url='https://www.baidu.com', timeout=10)
+            yyy = requests.get(url='https://www.baidu.com', timeout=5)
         except BaseException:
             t = threading.Thread(
                 target=share.m3.waring_info, args=(
@@ -131,7 +130,7 @@ def s_thread():
         else:
             share.running = True
             t = threading.Thread(
-                target=s)
+                target=inspect_user_input)
             # 设置守护线程，进程退出不用等待子线程完成
             t.setDaemon(True)
             t.start()
@@ -144,9 +143,16 @@ def s_thread():
         t.setDaemon(True)
         t.start()
 
+def start_download():
+    t = threading.Thread(
+        target=test_network)
+    # 设置守护线程，进程退出不用等待子线程完成
+    t.setDaemon(True)
+    t.start()
+
 
 # 重试触发的事件
-def again():
+def try_again():
     m3u8_href = share.m3.button_url.get().rstrip()
     if re.match(r'^http.*?\.m3u8.*', m3u8_href):
         t = threading.Thread(
@@ -178,8 +184,8 @@ def run():
     # 点击将进行源文件的保存
     share.m3.cb.bind("<Button-1>", lambda x: download_m3u8_file.save_source())
     # 开始下载的事件
-    share.m3.button_start.bind("<Button-1>", lambda x: s_thread())
-    share.m3.button_again.bind("<Button-1>", lambda x: again())
+    share.m3.button_start.bind("<Button-1>", lambda x: start_download())
+    share.m3.button_again.bind("<Button-1>", lambda x: try_again())
     share.m3.label1.bind("<Button-1>", lambda x: open_url())
     share.m3.button_url.bind("<Button-3>", lambda x: right_kye.rightKey(share.m3.menubar,x,share.m3.button_url))
     share.m3.button_video_name.bind("<Button-3>", lambda x: right_kye.rightKey(share.m3.menubar, x, share.m3.button_video_name))
