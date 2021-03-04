@@ -30,7 +30,7 @@ def try_again_download(url, file_name):
     share.m3.alert("正在尝试重新下载%s" % file_name)
     response = dm.easy_download(
         url=url, stream=False, header=requests_header.get_user_agent(),
-    timeout=(18,30))
+        timeout=(18, 30))
     if response is None:
         # share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name, url))
         return
@@ -290,6 +290,7 @@ def download_to_file(url, file_name):
             share.set_progress(p)  # 设置进度条
             share.m3.str.set('%.2f%%' % p)
 
+
 def start(m3u8_href, video_name):
     global link
     global key
@@ -309,7 +310,7 @@ def start(m3u8_href, video_name):
     # 获取所有ts视频下载地址
     url_list = get_ts_add(m3u8_href)
     if len(url_list) == 0:
-        share.m3.alert("获取地址失败")
+        share.m3.waring_info("获取地址失败!")
         share.log_content = {
             'time': share.get_time(),
             'link': link,
@@ -337,7 +338,7 @@ def start(m3u8_href, video_name):
         # 线程池开启线程下载视频
         start_download_in_pool(download_to_file, params)
     else:
-        share.m3.alert("地址连接失败")
+        share.m3.waring_info("地址连接失败!")
         share.log_content = {
             'time': share.get_time(),
             'link': link,

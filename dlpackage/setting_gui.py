@@ -92,15 +92,14 @@ def set(root):
     lb2 = Label(top1, text="使用指定的视频下载目录")
     lb2.place(x=100, y=80)
 
-
     # 存储路径
     str3 = StringVar()
     str3.set(path)
     entry = Entry(top1, textvariable=str3, width=14)
     entry.place(x=100, y=110)
     menubar = Menu(top1, tearoff=False)
-    #将entry和rightkey事件绑定
-    entry.bind("<Button-3>", lambda x: right_kye.rightKey(menubar,x, entry))
+    # 将entry和rightkey事件绑定
+    entry.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, entry))
     btn2 = Button(
         top1,
         text="选择目录",
@@ -118,13 +117,17 @@ def set(root):
     lb3 = Label(top1, text="最大线程数为")
     lb3.place(x=100, y=180)
     combobox = ttk.Combobox(top1, width=5)
-    combobox.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, combobox))
+    combobox.bind(
+        "<Button-3>",
+        lambda x: right_kye.rightKey(
+            menubar,
+            x,
+            combobox))
     combobox['values'] = generate_list(100)
     combobox.current(threading_count - 1)
     combobox.place(x=180, y=180)
     lb3 = Label(top1, text="(1-100)")
     lb3.place(x=238, y=180)
-
 
     # 确认按钮
     btn = Button(

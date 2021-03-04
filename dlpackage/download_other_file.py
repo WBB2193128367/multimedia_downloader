@@ -83,7 +83,7 @@ def try_again_download(start, end, file_name):
         header=requests_header.get_user_agent2(
             start,
             end),
-        timeout=(18,30))
+        timeout=(18, 30))
     if response is None:
         # share.m3.alert("%s下载失败，请手动下载:\n%s" % (file_name))
         return

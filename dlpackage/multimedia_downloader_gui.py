@@ -25,7 +25,7 @@ class Multimedia_Downloader:
         self.root.title("%s" % (self.title))
         self.root.iconbitmap(r'../image/主窗口.ico')  # 对主窗口图标进行设置
 
-        self.root.resizable(0, 0) # 固定主窗口的大小
+        self.root.resizable(0, 0)  # 固定主窗口的大小
         self.root.protocol(
             "WM_DELETE_WINDOW",
             lambda: share.close_windows(
@@ -221,8 +221,7 @@ class Multimedia_Downloader:
         self.scrollbar.config(command=self.message.yview)
         self.message.config(yscrollcommand=self.scrollbar.set)
         self.message.config(state=DISABLED)
-#########################################################################点击右键后的界面############################3######
-
+#########################################################################点
 
         self.menubar = Menu(self.root, tearoff=False)
 
@@ -248,7 +247,7 @@ class Multimedia_Downloader:
     # 弹出提示框
 
     def show_info(self, m):
-        tkinter.messagebox.showinfo(self.title, m)
+        tkinter.messagebox.showinfo("提示", m)
     # 弹出警告框
 
     def waring_info(self, m):

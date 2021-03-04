@@ -23,10 +23,10 @@ def log_gui(root):
     top1.title('下载日志')
     top1.iconbitmap(r'../image/下载日志.ico')
     # 滚动条
-    scrollBary = Scrollbar(top1,orient=VERTICAL)
-    scrollBarx=Scrollbar(top1,orient=HORIZONTAL)
+    scrollBary = Scrollbar(top1, orient=VERTICAL)
+    scrollBarx = Scrollbar(top1, orient=HORIZONTAL)
     scrollBary.pack(side=RIGHT, fill=Y)
-    scrollBarx.pack(side=BOTTOM,fill=X)
+    scrollBarx.pack(side=BOTTOM, fill=X)
     # 定义表格界面
     tree_date = ttk.Treeview(
         top1,
