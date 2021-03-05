@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from dlpackage import right_kye
+import threading
 import json
 
 
@@ -50,11 +50,20 @@ def log_gui(root):
     scrollBarx.config(command=tree_date.xview)
     tree_date.config(yscrollcommand=scrollBary.set)
     tree_date.config(xscrollcommand=scrollBarx.set)
-    # 将日志数据写入界面
+    # 将日志数据写入界面(使用一个线程，防止日志界面卡死)
+    t = threading.Thread(
+        target=read_log, args=(
+            tree_date,))
+    # 设置守护线程，进程退出不用等待子线程完成
+    t.setDaemon(True)
+    t.start()
+
+    top1.mainloop()
+
+
+def read_log(tree_date):
     with open(r'../log.json', 'r+') as f:
         m = f.readlines()
     for i in range(len(m)):
         n = json.loads(m[i])
         tree_date.insert('', i, values=(n["time"], n["link"], n["status"]))
-
-    top1.mainloop()
