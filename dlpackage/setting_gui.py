@@ -1,6 +1,7 @@
 from tkinter import messagebox
 import tkinter.filedialog
 from tkinter import ttk
+from dlpackage import share
 from dlpackage import right_kye
 from tkinter import *
 
@@ -9,6 +10,9 @@ from tkinter import *
 path = '../downloads'
 # 默认的线程数
 threading_count = 60
+download_model1='单例下载'
+download_model=0
+
 
 # 关于的驱动方法
 
@@ -16,7 +20,7 @@ threading_count = 60
 
 
 def guanyu():
-    tkinter.messagebox.showinfo('提示', '该软件由WBB开发，仅供学习使用！！！')
+    tkinter.messagebox.showinfo('关于', '该软件由WBB开发，仅供学习使用！！！')
 
 # 生成线程数范围列表
 
@@ -29,14 +33,23 @@ def generate_list(arg):
 
 
 # 点击确认按钮时的事件
-def print_selection(root, top1, entry, combobox, v):
+def print_selection(root, top1, entry, combobox, combobox1,v):
     global path
     global threading_count
+    global download_model
+    global download_model1
     threading_count = int(combobox.get())
     if entry.get() == '':
         pass
     else:
         path = entry.get()
+    if combobox1.get()=='列表下载':
+        download_model=1
+        download_model1='列表下载'
+
+    else:
+        download_model=0
+        download_model1 = '单例下载'
     root.attributes("-alpha", 1 - v)
     top1.destroy()
 
@@ -55,7 +68,7 @@ def set(root):
     top1.withdraw()
     top1.update()
     w = 400
-    h = 300
+    h = 320
     ws, hs = top1.winfo_screenwidth(), top1.winfo_screenheight()
     top1.geometry("%dx%d+%d+%d" %
                   (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
@@ -103,7 +116,7 @@ def set(root):
     btn2 = Button(
         top1,
         text="选择目录",
-        bg="purple",
+        bg="blue",
         width=8,
         height=1,
         cursor='pirate',
@@ -129,18 +142,27 @@ def set(root):
     lb3 = Label(top1, text="(1-100)")
     lb3.place(x=238, y=180)
 
+
+    #下载模式设置
+    lb4 = Label(top1, text="下载模式设置:")
+    lb4.place(x=3, y=220)
+    combobox1 = ttk.Combobox(top1,width=10)
+    combobox1['values'] = ['单例下载', '列表下载']
+    combobox1.current(download_model)
+    combobox1.place(x=100, y=225)
+
     # 确认按钮
     btn = Button(
         top1,
         text="确认",
         bd=5,
-        bg="purple",
+        bg="blue",
         cursor='pirate',
         relief="raised",
         fg='black',
         width=5,
         height=1,
         compound=tkinter.CENTER,
-        command=lambda: print_selection(root, top1, entry, combobox, S.get()))
-    btn.place(x=170, y=230)
+        command=lambda: print_selection(root, top1, entry, combobox,combobox1, S.get()))
+    btn.place(x=170, y=270)
     top1.mainloop()

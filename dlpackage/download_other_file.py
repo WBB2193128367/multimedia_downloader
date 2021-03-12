@@ -10,8 +10,8 @@ import os
 
 
 # 定义的全局变量
-link = None
 video_path = None
+url_path=None
 cancel_flag = False
 pause_flag = False
 content_length = None  # 用来存储待下载文件的大小
@@ -52,7 +52,7 @@ def calculate(folder_path):
 def download_to_file1(start, end, file_name):
     global download_fail_list1
     response = dm.easy_download(
-        url=share.m3.button_url.get().rstrip(),
+        url=url_path,
         stream=True,
         # proxies=proxy_ip_pool.get_proxy(),
         header=requests_header.get_user_agent2(
@@ -77,7 +77,7 @@ def try_again_download(start, end, file_name):
     global download_fail_list1
     share.m3.alert("正在尝试重新下载%s" % file_name)
     response = dm.easy_download(
-        url=share.m3.button_url.get().rstrip(),
+        url=url_path,
         stream=True,
         # proxies=proxy_ip_pool.get_proxy(),
         header=requests_header.get_user_agent2(
@@ -134,7 +134,7 @@ def download_fail_file1():
 
 def merge_file1(dir_name):
     file_list = share.file_walker(dir_name)
-    with open(dir_name + share.m3.button_url.get()[share.m3.button_url.get().rfind('.'):share.m3.button_url.get().rfind('.') + 4], 'wb+') as fw:
+    with open(dir_name + url_path[url_path.rfind('.'):url_path.rfind('.') + 4], 'wb+') as fw:
         for i in range(len(file_list)):
             fw.write(open(file_list[i], 'rb').read())
 
@@ -203,17 +203,18 @@ def check_file_count1(dir_name):
     return file_num == len(start)
 
 
-def start1(content_size, video_name):
-    global link
+def start_one(content_size, video_name,m3u8_href):
     global content_length
     global download_fail_list1
     global start
     global end
     global video_path
+    global url_path
     content_length = content_size
     video_name = share.check_video_name(video_name)
     video_name = setting_gui.path + "/" + video_name
     video_path = video_name
+    url_path=m3u8_href
     link = share.m3.button_url.get().rstrip()
     if not os.path.exists(video_name):
         os.makedirs(video_name)
@@ -230,7 +231,7 @@ def start1(content_size, video_name):
     if check_file_count1(video_name):
         share.log_content = {
             'time': share.get_time(),
-            'link': link,
+            'link': url_path,
             'status': '下载成功'}
         t = threading.Thread(
             target=share.write, args=(share.log_content,))
@@ -252,6 +253,57 @@ def start1(content_size, video_name):
     else:
         share.m3.alert("有部分文件没有下载完成，请点击重试！")
         share.m3.show_info("有部分文件没有下载完成，请点击重试！")
+    # 清空下载失败视频列表
+    start = [0, ]
+    end = []
+
+
+
+def start_list(content_size, video_name,m3u8_href):
+    global content_length
+    global download_fail_list1
+    global start
+    global end
+    global video_path
+    global url_path
+    content_length = content_size
+    video_name = share.check_video_name(video_name)
+    video_name = setting_gui.path + "/" + video_name
+    video_path = video_name
+    url_path = m3u8_href
+    if not os.path.exists(video_name):
+        os.makedirs(video_name)
+    # 对文件进行划分
+    file_divide(content_size)
+    # 进行参数的拼接
+    params = get_download_params1(video_name)
+    share.m3.alert('[文件大小]:%0.2f MB' % (content_size / 1024 / 1024))
+    # 启动线程池进行下载
+    start_download_in_pool1(download_to_file1, params)
+    while len(download_fail_list1)!=0:
+        start_download_in_pool1(try_again_download, download_fail_list1)
+    #用来检查文件片段是否都下载完成
+    if check_file_count1(video_name):
+        share.log_content = {
+            'time': share.get_time(),
+            'link': url_path,
+            'status': '下载成功'}
+        t = threading.Thread(
+            target=share.write, args=(share.log_content,))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
+        # 合并视频
+        merge_file1(video_name)
+        # 删除下载的视频片段
+        shutil.rmtree(video_name)
+
+        share.m3.alert("下载完成")
+        share.set_progress(0)
+        share.m3.str.set('')
+        share.m3.clear_alert()
+        download_fail_list1 = []
+        share.running = False
     # 清空下载失败视频列表
     start = [0, ]
     end = []

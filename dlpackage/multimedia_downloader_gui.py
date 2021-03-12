@@ -1,6 +1,7 @@
-from dlpackage import setting_gui
 from dlpackage import share
 from dlpackage import log_gui
+from dlpackage import setting_gui
+from dlpackage import download_list_manage
 import tkinter.messagebox
 from tkinter import ttk
 from tkinter import *
@@ -66,10 +67,51 @@ class Multimedia_Downloader:
                 20))
         self.label.place(x=110, y=150)
         self.f2 = Frame(self.notebook)
+        self.ff=Frame(self.notebook)
         self.f3 = Frame(self.notebook)
         self.f4 = Frame(self.notebook)
         self.notebook.add(self.f1, text='首页')
         self.notebook.add(self.f2, text='下载页面')
+        self.notebook.add(self.ff, text='列表管理')
+
+
+        # 滚动条
+        self.scrollBary = Scrollbar(self.ff, orient=VERTICAL)
+        self.scrollBarx = Scrollbar(self.ff, orient=HORIZONTAL)
+        self.scrollBary.pack(side=RIGHT, fill=Y)
+        self.scrollBarx.pack(side=BOTTOM, fill=X)
+        # 定义表格界面
+        self.tree_date = ttk.Treeview(
+            self.ff,
+            columns=(
+                'name',
+                'url',),
+            height=17,
+            show="headings")
+        self.tree_date.pack()
+        # 设置列宽度
+        self.tree_date.column('name', width=40,anchor='center')
+        self.tree_date.column('url', width=260, anchor='center')
+        # 添加列名
+        self.tree_date.heading('name', text='文件名称')
+        self.tree_date.heading('url', text='下载链接')
+        self.tree_date.pack(fill=BOTH)
+        # Treeview组件与垂直滚动条结合
+        self.scrollBary.config(command=self.tree_date.yview)
+        self.scrollBarx.config(command=self.tree_date.xview)
+        self.tree_date.config(yscrollcommand=self.scrollBary.set)
+        self.tree_date.config(xscrollcommand=self.scrollBarx.set)
+        self.button1 = Button(
+            self.ff, text='添加链接', width=8, font=(
+                "Lucida Grande", 11), bg='blue')
+        self.button1.place(x=120,y=375)
+        self.button2 = Button(
+            self.ff, text='删除链接', width=8, font=(
+                "Lucida Grande", 11), bg='blue')
+        self.button2.place(x=250, y=375)
+        # 将日志数据写入界面(使用一个线程，防止日志界面卡死)
+
+
         self.notebook.add(self.f3, text='源码地址')
         self.label = Label(self.f3, text='Github地址:', font=('华为宋体', 15))
         self.ft = tf.Font(family='华为宋体', size=15, underline=1)
@@ -103,7 +145,7 @@ class Multimedia_Downloader:
             padx=10,
             text="功能区")
         self.frm.place(x=10, y=5)
-        Label(
+        self.label7=Label(
             self.frm,
             text="多媒体地址:",
             font=(
@@ -114,7 +156,7 @@ class Multimedia_Downloader:
         self.button_url = Entry(self.frm, width=45)
         self.button_url.place(x=0, y=25)
 
-        Label(
+        self.label8=Label(
             self.frm,
             text="媒体命名为:(无需后缀名)",
             font=(
@@ -157,23 +199,23 @@ class Multimedia_Downloader:
         self.m = StringVar()
         self.button_pause = Button(
             self.frm, textvariable=self.m, width=8, font=(
-                "Lucida Grande", 11), bg='purple')
+                "Lucida Grande", 11), bg='blue')
         self.m.set('暂停下载')
         #self.button_pause.place(x=330, y=15)
 
         self.button_start = Button(
             self.frm, text="开始下载", width=8, font=(
-                "Lucida Grande", 11), bg='purple')
+                "Lucida Grande", 11), bg='blue')
         self.button_start.place(x=330, y=23)
 
         self.button_cancel = Button(
             self.frm, text="取消下载", width=8, font=(
-                "Lucida Grande", 11), bg='purple')
+                "Lucida Grande", 11), bg='blue')
         #self.button_cancel.place(x=330, y=77)
 
         self.button_again = Button(
             self.frm, text="重试", width=8, font=(
-                "Lucida Grande", 11), bg='purple')
+                "Lucida Grande", 11), bg='blue')
         self.button_again.place(x=330, y=73)
 
         Label(
@@ -183,6 +225,16 @@ class Multimedia_Downloader:
                 "Lucida Grande",
                 11)).place(
             x=0,
+            y=125)
+        self.c=StringVar()
+        Label(
+            self.frm,
+            fg='blue',
+            textvariable=self.c,
+            font=(
+                "Lucida Grande",
+                11)).place(
+            x=70,
             y=125)
         self.progress = ttk.Progressbar(
             self.frm,

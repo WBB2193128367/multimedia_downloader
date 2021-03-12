@@ -38,7 +38,7 @@ def try_again_download(url, file_name):
         download_fail_list.remove(([url, file_name], None))
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            p = share.count_file(file_name) / len(url_list) * 100
+            p = (share.count_file(file_name) / len(url_list)) * 100
             share.set_progress(p)
             share.m3.str.set('%.2f%%' % p)
 
@@ -286,12 +286,12 @@ def download_to_file(url, file_name):
     else:
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            p = share.count_file(file_name) / len(url_list) * 100
+            p = (share.count_file(file_name) / len(url_list)) * 100
             share.set_progress(p)  # 设置进度条
             share.m3.str.set('%.2f%%' % p)
 
 
-def start(m3u8_href, video_name):
+def start_one1(m3u8_href, video_name):
     global link
     global key
     global download_fail_list
@@ -377,6 +377,7 @@ def start(m3u8_href, video_name):
             share.m3.clear_alert()
             share.running = False
             # 清空下载失败视频列表
+            url_list=[]
             download_fail_list = []
         else:
             share.m3.alert("视频文件合并失败,请查看消息列表")
@@ -385,4 +386,98 @@ def start(m3u8_href, video_name):
         share.m3.alert("有部分文件没有下载完成，请点击重试！")
         share.m3.show_info("有部分文件没有下载完成，请点击重试！")
 
+    # 重置任务开始标志
+
+
+def start_list1(m3u8_href, video_name):
+    global link
+    global key
+    global download_fail_list
+    global url_list
+    global url_path
+    global url_host
+    global video_path
+    # 清空消息框中的消息
+    share.m3.clear_alert()
+    # 进度条归零
+    share.set_progress(0)
+    link = m3u8_href
+    # 格式化文件名
+    video_name = share.check_video_name(video_name)
+    # 任务开始标志，防止重复开启下载任务
+    # 获取所有ts视频下载地址
+    url_list = get_ts_add(m3u8_href)
+    if len(url_list) == 0:
+        share.m3.waring_info("获取地址失败!")
+        share.log_content = {
+            'time': share.get_time(),
+            'link': link,
+            'status': '下载失败'}
+        t = threading.Thread(
+            target=share.write, args=(share.log_content,))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
+        share.running = False        # 重置任务开始标志
+        return
+    video_name = setting_gui.path + "/" + video_name
+    video_path = video_name
+    if not os.path.exists(video_name):
+        os.makedirs(video_name)
+    share.m3.alert("总计%s个视频" % str(len(url_list)))
+    # 拼接正确的下载地址开始下载
+    if test_download_url(url_host + url_list[0]):
+        # 获取.ts文件的链接和命名
+        params = get_download_params(head=url_host, dir_name=video_name)
+        # 获得参数后线程池开启线程下载视频
+        start_download_in_pool(download_to_file, params)
+    elif test_download_url(url_path + url_list[0]):
+        params = get_download_params(head=url_path, dir_name=video_name)
+        # 线程池开启线程下载视频
+        start_download_in_pool(download_to_file, params)
+    else:
+        share.m3.waring_info("地址连接失败!")
+        share.log_content = {
+            'time': share.get_time(),
+            'link': link,
+            'status': '下载失败'}
+        t = threading.Thread(
+            target=share.write, args=(share.log_content,))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
+        share.running = False
+        return
+    # 重新下载先前下载失败的.ts文件
+    while len(download_fail_list)!=0:
+        start_download_in_pool(try_again_download, download_fail_list)
+    # 检查ts文件总数是否对应
+    if check_file(video_name):
+        share.log_content = {
+            'time': share.get_time(),
+            'link': link,
+            'status': '下载成功'}
+        t = threading.Thread(
+            target=share.write, args=(share.log_content,))
+        # 设置守护线程，进程退出不用等待子线程完成
+        t.setDaemon(True)
+        t.start()
+        # 合并视频
+        if merge_file(video_name):
+            if save_source_file is False:
+                # 删除文件夹
+                shutil.rmtree(video_name)
+            share.m3.alert("下载完成!")
+
+            share.set_progress(0)
+            share.m3.str.set('')
+            share.m3.clear_alert()
+            share.running = False
+            # 清空下载失败视频列表
+            url_list=[]
+            download_fail_list = []
+        else:
+            share.m3.alert("视频文件合并失败,请查看消息列表")
+    else:
+        share.m3.alert("有部分文件没有下载完成，请点击重试！")
     # 重置任务开始标志

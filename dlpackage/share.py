@@ -2,7 +2,7 @@ from dlpackage import setting_gui
 import tkinter.messagebox
 import json
 import time
-import sys
+import re
 import os
 
 
@@ -81,3 +81,14 @@ def write(file):
     with open(r'../log.json', 'a+') as f:
         f.write(ff)
         f.write('\n')
+
+
+
+def check_href(m3u8_href):
+    if re.match(
+        r'^(http://|https://)?((?:[A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z0-9]+)\.)+([A-Za-z]+)[/\?\:]?.*$',
+        m3u8_href,
+            re.S):
+        return True
+    else:
+        return False
