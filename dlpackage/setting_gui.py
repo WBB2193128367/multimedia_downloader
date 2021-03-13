@@ -146,7 +146,7 @@ def set(root):
     #下载模式设置
     lb4 = Label(top1, text="下载模式设置:")
     lb4.place(x=3, y=220)
-    combobox1 = ttk.Combobox(top1,width=10)
+    combobox1 = ttk.Combobox(top1,width=10,state='readonly')
     combobox1['values'] = ['单例下载', '列表下载']
     combobox1.current(download_model)
     combobox1.place(x=100, y=225)

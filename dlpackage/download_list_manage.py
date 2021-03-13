@@ -61,7 +61,7 @@ def add(top1,tree_date,entry1,entry2):
         t.setDaemon(True)
         t.start()
         return
-    if share.check_href(entry2.get())==False:
+    if share.check_href(entry2.get().strip())==False:
         t = threading.Thread(
                 target=share.m3.waring_info, args=(
                     'URL不合法哦!',))
@@ -70,10 +70,10 @@ def add(top1,tree_date,entry1,entry2):
         t.start()
         return
 
-    name['I%03d' %i]=entry1.get()
-    url['I%03d'%i]=entry2.get()
+    name['I%03d' %i]=entry1.get().strip()
+    url['I%03d'%i]=entry2.get().strip()
     id_list.append('I%03d' %i)
-    tree_date.insert('', 1, values=(entry1.get(),entry2.get()))
+    tree_date.insert('', i, values=(entry1.get().strip(),entry2.get().strip()))
     i+=1
     top1.destroy()
 

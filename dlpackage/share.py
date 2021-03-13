@@ -83,10 +83,10 @@ def write(file):
         f.write('\n')
 
 
-
+#检验用户输入的网址是否正确
 def check_href(m3u8_href):
     if re.match(
-        r'^(http://|https://)?((?:[A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z0-9]+)\.)+([A-Za-z]+)[/\?\:]?.*$',
+        r'^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)([A-Za-z0-9]|-)+\.([A-Za-z0-9]|-)+\.([A-Za-z0-9]|-)+/(.*?)$',
         m3u8_href,
             re.S):
         return True

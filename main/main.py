@@ -44,24 +44,25 @@ def test_network():
         share.m3.clear_alert()
         return False
 
+
+
 def inspect_user_input1():
     global running1
     for i in download_list_manage.id_list:
         video_name=download_list_manage.name[i].strip()
         share.m3.c.set(video_name)
         m3u8_href=download_list_manage.url[i].strip()
-        check = share.check_href(m3u8_href)
         check1 = check_video_name(video_name)
 
         # 当为m3u8文件时
-        if check and check1 and re.match(r'^http.*?\.m3u8.*', m3u8_href):
+        if check1 and re.match(r'^http.*?\.m3u8.*', m3u8_href):
             if test_network():
                 download_m3u8_file.start_list1(m3u8_href, video_name)
                 download_list_manage.delete_item(share.m3.tree_date,i)
                 download_list_manage.name.pop(i)
                 download_list_manage.url.pop(i)
         # 当为其它类型的文件时
-        elif check and check1:
+        elif check1:
             #测试网络是否畅通
             if test_network():
                 response = dm.easy_download(
@@ -78,6 +79,9 @@ def inspect_user_input1():
     running1=False
     download_list_manage.id_list=[]
     share.m3.show_info('所有的链接已经下载完成!')
+
+
+
 # 用来检查用书输入的链接类型并作出响应
 def inspect_user_input():
     m3u8_href = share.m3.button_url.get().strip()
@@ -133,11 +137,7 @@ def check_tesk_repeat_open():
 
         if not share.running:
             share.running = True
-            t = threading.Thread(
-                target=inspect_user_input)
-            # 设置守护线程，进程退出不用等待子线程完成
-            t.setDaemon(True)
-            t.start()
+            inspect_user_input()
 
         else:
             share.m3.waring_info('正在下载中，请勿重复开启!')
@@ -145,11 +145,7 @@ def check_tesk_repeat_open():
          if running1==False:
              if len(download_list_manage.name)!=0:
                  running1=True
-                 t = threading.Thread(
-                     target=inspect_user_input1)
-                 # 设置守护线程，进程退出不用等待子线程完成
-                 t.setDaemon(True)
-                 t.start()
+                 inspect_user_input1()
 
              else:
                  share.m3.show_info('下载列表为空！')

@@ -27,6 +27,7 @@ iv = None
 
 def try_again_download(url, file_name):
     global download_fail_list
+
     share.m3.alert("正在尝试重新下载%s" % file_name)
     response = dm.easy_download(
         url=url, stream=False, header=requests_header.get_user_agent(),
@@ -418,7 +419,6 @@ def start_list1(m3u8_href, video_name):
         # 设置守护线程，进程退出不用等待子线程完成
         t.setDaemon(True)
         t.start()
-        share.running = False        # 重置任务开始标志
         return
     video_name = setting_gui.path + "/" + video_name
     video_path = video_name
@@ -446,7 +446,6 @@ def start_list1(m3u8_href, video_name):
         # 设置守护线程，进程退出不用等待子线程完成
         t.setDaemon(True)
         t.start()
-        share.running = False
         return
     # 重新下载先前下载失败的.ts文件
     while len(download_fail_list)!=0:
