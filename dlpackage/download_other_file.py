@@ -106,7 +106,7 @@ def download_fail_file1():
         if len(download_fail_list1) == 0:
             share.log_content = {
                 'time': share.get_time(),
-                'link': link,
+                'link': url_path,
                 'status': '下载成功'}
             t = threading.Thread(
                 target=share.write, args=(share.log_content,))
@@ -116,9 +116,7 @@ def download_fail_file1():
             merge_file1(video_path)
             # 删除下载的视频片段
             shutil.rmtree(video_path)
-
             share.m3.alert("下载完成")
-            share.m3.show_info("下载完成")
             share.set_progress(0)
             share.m3.str.set('')
             share.m3.clear_alert()
@@ -307,3 +305,4 @@ def start_list(content_size, video_name,m3u8_href):
     # 清空下载失败视频列表
     start = [0, ]
     end = []
+    return True

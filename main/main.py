@@ -48,7 +48,12 @@ def test_network():
 
 def inspect_user_input1():
     global running1
+    count=0
+    error=0
+    success_list=[]
+    error_list=[]
     for i in download_list_manage.id_list:
+        share.exeing_id=i
         video_name=download_list_manage.name[i].strip()
         share.m3.c.set(video_name)
         m3u8_href=download_list_manage.url[i].strip()
@@ -57,10 +62,17 @@ def inspect_user_input1():
         # 当为m3u8文件时
         if check1 and re.match(r'^http.*?\.m3u8.*', m3u8_href):
             if test_network():
-                download_m3u8_file.start_list1(m3u8_href, video_name)
-                download_list_manage.delete_item(share.m3.tree_date,i)
-                download_list_manage.name.pop(i)
-                download_list_manage.url.pop(i)
+                if download_m3u8_file.start_list1(m3u8_href, video_name)==True:
+                    download_list_manage.delete_item(share.m3.tree_date,i)
+                    download_list_manage.name.pop(i)
+                    download_list_manage.url.pop(i)
+                    success_list.append(i)
+                    count+=1
+                else:
+                    error+=1
+                    error_list.append(i)
+            else:
+                break
         # 当为其它类型的文件时
         elif check1:
             #测试网络是否畅通
@@ -71,14 +83,32 @@ def inspect_user_input1():
                     header=requests_header.get_user_agent())
                 if response is not None:
                     content_size = int(response.headers['content-length'])
-                    download_other_file.start_list(content_size, video_name,m3u8_href)
-                    download_list_manage.delete_item(share.m3.tree_date, i)
-                    download_list_manage.name.pop(i)
-                    download_list_manage.url.pop(i)
+                    if download_other_file.start_list(content_size, video_name,m3u8_href)==True:
+                        download_list_manage.delete_item(share.m3.tree_date, i)
+                        download_list_manage.name.pop(i)
+                        download_list_manage.url.pop(i)
+                        success_list.append(i)
+                        count += 1
+                    else:
+                        error_list.append(i)
+                        error+=1
+            else:
+                break
     share.m3.c.set('')
     running1=False
-    download_list_manage.id_list=[]
-    share.m3.show_info('所有的链接已经下载完成!')
+    if count==len(download_list_manage.id_list) and error==0:
+        download_list_manage.id_list = []
+        share.m3.show_info('所有的链接已经下载完成!')
+    elif count!=len(download_list_manage.id_list) and error!=0:
+        download_list_manage.id_list=error_list
+        share.m3.show_info('列表中有部分链接下载失败，详情请查看下载日志!')
+    else:
+        if len(success_list)!=0:
+            for i in success_list:
+                if i in download_list_manage.id_list:
+                    download_list_manage.id_list.remove(i)
+        else:
+            pass
 
 
 

@@ -90,10 +90,13 @@ def delete(tree_date):
         flag=tkinter.messagebox.askyesno('提示信息','确认删除选中数据吗？')
         if flag:
             for item in selection:
-                tree_date.delete(item)
-                name.pop(item)
-                url.pop(item)
-                id_list.remove(item)
+                if share.exeing_id==item:
+                    share.m3.waring_info(name[share.exeing_id]+'正在下载中，不能删除噢!')
+                else:
+                    tree_date.delete(item)
+                    name.pop(item)
+                    url.pop(item)
+                    id_list.remove(item)
 
 
 def delete_item(tree_date,item):

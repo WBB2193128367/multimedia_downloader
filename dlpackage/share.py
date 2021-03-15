@@ -7,7 +7,7 @@ import os
 
 
 # 定义的全局变量
-
+exeing_id=None #用来保存下载链表中正在下载链接的id
 m3 = None  # 定义的一个Multimedia_Downloader的对象
 running = False  # 开始下载的标志
 log_content = {}  # 用来存储给日志文件中写入的内容

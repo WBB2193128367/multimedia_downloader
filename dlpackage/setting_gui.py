@@ -4,10 +4,11 @@ from tkinter import ttk
 from dlpackage import share
 from dlpackage import right_kye
 from tkinter import *
+import os
 
 
 # 默认的媒体文件存储位置
-path = '../downloads'
+path = os.path.abspath(os.path.join(os.getcwd(),"..")).replace('\\','/')+'/downloads'
 # 默认的线程数
 threading_count = 60
 download_model1='单例下载'

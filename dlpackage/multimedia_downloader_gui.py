@@ -10,7 +10,7 @@ import tkinter.font as tf
 
 class Multimedia_Downloader:
     def __init__(self, title="多媒体下载器"):
-        #########################################      对主窗口的设置     ############
+        #########################################      对主窗口的设置     ###############################################################
         self.root = Tk()
         self.root.withdraw()
         self.root.update()
@@ -31,10 +31,10 @@ class Multimedia_Downloader:
             "WM_DELETE_WINDOW",
             lambda: share.close_windows(
                 self.root))  # 关闭窗口时进行提示是否关闭，防止误操作
-##########################################################################
+######################################################################################################################################
 
 
-####################################################   对菜单栏的设计   #########
+####################################################   对菜单栏的设计   #################################################################
         self.menubar = Menu(self.root)  # 定义一个菜单栏
         #self.file = Menu( self.menubar,tearoff=0)
         self.menubar.add_cascade(
@@ -47,10 +47,11 @@ class Multimedia_Downloader:
                 self.root))
         self.menubar.add_cascade(label='关于', command=setting_gui.guanyu)
         self.root.config(menu=self.menubar)
-##########################################################################
+#######################################################################################################################################
 
 
-##################################################   对界面进行布局    ##########
+
+#################################################    对主界面的布局    ###################################################################
         style = ttk.Style(self.root)
         style.configure('lefttab.TNotebook', tabposition='wn')
         self.notebook = ttk.Notebook(
@@ -58,23 +59,195 @@ class Multimedia_Downloader:
             style='lefttab.TNotebook',
             width='450',
             height='425')
+        self.notebook.pack()
+########################################################################################################################################
+
+
+
+################################################   首页的界面         ####################################################################
         self.f1 = Frame(self.notebook)
         self.label = Label(
             self.f1,
-            text="多媒体下载器\n作者：WBB\n指导老师:李慧旻",
+            text="多媒体下载器",
             font=(
-                '华为宋体',
-                20))
-        self.label.place(x=110, y=150)
-        self.f2 = Frame(self.notebook)
-        self.ff=Frame(self.notebook)
-        self.f3 = Frame(self.notebook)
-        self.f4 = Frame(self.notebook)
+                '华文彩云',
+               25))
+        self.label.place(x=125, y=80)
+        self.label = Label(
+            self.f1,
+            text="作者:王保保",
+            font=(
+                '方正舒体',
+                15))
+        self.label.place(x=240, y=220)
+        self.label = Label(
+            self.f1,
+            text="指导老师:李慧旻",
+            font=(
+                '方正舒体',
+                15))
+        self.label.place(x=240, y=255)
         self.notebook.add(self.f1, text='首页')
+#########################################################################################################################################
+
+
+
+
+##############################################   下载页面           #######################################################################
+
+############################    功能区界面的设计     ###########################
+        self.f2 = Frame(self.notebook)
+        self.frm = LabelFrame(
+            self.f2,
+            width=430,
+            height=205,
+            padx=10,
+            text="功能区",
+            font = (
+            "黑体",10)
+               )
+        self.frm.place(x=10, y=5)
+        self.label7 = Label(
+            self.frm,
+            text="多媒体地址:",
+            font=(
+                "黑体",
+                11)).place(
+            x=0,
+            y=0)
+        self.button_url = Entry(self.frm, width=45)
+        self.button_url.place(x=0, y=25)
+
+        self.label8 = Label(
+            self.frm,
+            text="媒体命名为:(无需后缀名)",
+            font=(
+                "黑体",
+                11)).place(
+            x=0,
+            y=50)
+        self.button_video_name = Entry(self.frm, width=45)
+        self.button_video_name.place(x=0, y=75)
+
+        self.v = IntVar()
+        self.cb_status = IntVar()
+        self.v.set(1)
+        self.rb1 = Radiobutton(
+            self.frm,
+            text='速度优先',
+            variable=self.v,
+            value=1,
+            font=(
+                "黑体",
+                11))
+        self.rb2 = Radiobutton(
+            self.frm,
+            text='画质优先',
+            variable=self.v,
+            value=2,
+            font=(
+                "黑体",
+                11))
+        self.cb = Checkbutton(
+            self.frm,
+            text='保存源文件',
+            variable=self.cb_status,
+            font=(
+                "黑体",
+                11))
+        self.rb1.place(x=0, y=95)
+        self.rb2.place(x=100, y=95)
+        self.cb.place(x=200, y=95)
+        self.m = StringVar()
+        self.button_pause = Button(
+            self.frm, textvariable=self.m, width=8, font=(
+                "Lucida Grande", 11), bg='blue')
+        self.m.set('暂停下载')
+        # self.button_pause.place(x=330, y=15)
+
+        self.button_start = Button(
+            self.frm, text="开始下载", width=8, font=(
+                "黑体", 11), bg='blue')
+        self.button_start.place(x=330, y=23)
+
+        self.button_cancel = Button(
+            self.frm, text="取消下载", width=8, font=(
+                "Lucida Grande", 11), bg='blue')
+        # self.button_cancel.place(x=330, y=77)
+
+        self.button_again = Button(
+            self.frm, text="重试", width=8, font=(
+                "黑体", 11), bg='blue')
+        self.button_again.place(x=330, y=73)
+
+        Label(
+            self.frm,
+            text="下载进度:",
+            font=(
+                "黑体",
+                11)).place(
+            x=0,
+            y=125)
+        self.c = StringVar()
+        Label(
+            self.frm,
+            fg='blue',
+            textvariable=self.c,
+            font=(
+                "黑体",
+                11)).place(
+            x=70,
+            y=125)
+        self.progress = ttk.Progressbar(
+            self.frm,
+            orient="horizontal",
+            length=355,
+            mode="determinate")
+        self.progress.place(x=0, y=150)
+        self.progress["maximum"] = 100
+        self.progress["value"] = 0
+        self.str = StringVar()
+        self.lb = Label(self.frm, textvariable=self.str, fg='blue', font=(
+            "黑体",
+            10))
+        self.lb.place(x=357, y=150)
+##########################################################################
+
+#####################    消息区界面的设计   #################################
+
+        self.message_frm = LabelFrame(
+            self.f2,
+            width=430,
+            height=200,
+            padx=10,
+            font=(
+                "黑体",
+                10),
+            text="消息")
+        self.message_frm.place(x=10, y=210)
+
+        self.scrollbar = Scrollbar(self.message_frm)
+        self.scrollbar.pack(side='right', fill='y')
+        self.message_v = StringVar()
+        self.message_s = ""
+        self.message_v.set(self.message_s)
+
+        self.message = Text(self.message_frm, width=55, height=14)
+        self.message.insert('insert', self.message_s)
+        self.message.pack(side='left', fill='y')
+        # 以下两行代码绑定text和scrollbar
+        self.scrollbar.config(command=self.message.yview)
+        self.message.config(yscrollcommand=self.scrollbar.set)
+        self.message.config(state=DISABLED)
+########################################################################
+
         self.notebook.add(self.f2, text='下载页面')
-        self.notebook.add(self.ff, text='列表管理')
+############################################################################################################################
 
 
+
+################################################    列表管理界面的设计   ######################################################
+        self.ff = Frame(self.notebook)
         # 滚动条
         self.scrollBary = Scrollbar(self.ff, orient=VERTICAL)
         self.scrollBarx = Scrollbar(self.ff, orient=HORIZONTAL)
@@ -103,18 +276,23 @@ class Multimedia_Downloader:
         self.tree_date.config(xscrollcommand=self.scrollBarx.set)
         self.button1 = Button(
             self.ff, text='添加链接', width=8, font=(
-                "Lucida Grande", 11), bg='blue')
+                "黑体", 11), bg='blue')
         self.button1.place(x=120,y=375)
         self.button2 = Button(
             self.ff, text='删除链接', width=8, font=(
-                "Lucida Grande", 11), bg='blue')
+                "黑体", 11), bg='blue')
         self.button2.place(x=250, y=375)
-        # 将日志数据写入界面(使用一个线程，防止日志界面卡死)
+
+        self.notebook.add(self.ff, text='列表管理')
+
+########################################################################################################################
 
 
-        self.notebook.add(self.f3, text='源码地址')
-        self.label = Label(self.f3, text='Github地址:', font=('华为宋体', 15))
-        self.ft = tf.Font(family='华为宋体', size=15, underline=1)
+
+############################################    源码地址界面的设计      ####################################################
+        self.f3 = Frame(self.notebook)
+        self.label = Label(self.f3, text='Github地址:', font=('黑体', 15))
+        self.ft = tf.Font(family='黑体', size=15, underline=1)
         self.label1 = Label(
             self.f3,
             cursor='plus',
@@ -124,158 +302,29 @@ class Multimedia_Downloader:
             fg='blue')
         self.label.place(x=60, y=150)
         self.label1.place(x=170, y=150)
-        self.notebook.add(self.f4, text='问题反馈')
+        self.notebook.add(self.f3, text='源码地址')
+########################################################################################################################
+
+
+###########################################    问题反馈界面的设计        ###################################################
+        self.f4 = Frame(self.notebook)
         self.label = Label(
             self.f4,
             text="邮箱地址:2193128367@qq.com",
             font=(
-                '华为宋体',
+                '黑体',
                 15))
         self.label.place(x=90, y=150)
-        self.notebook.pack()
-##########################################################################
+        self.notebook.add(self.f4, text='问题反馈')
 
+#######################################################################################################################
 
-################################################    功能区界面的设计    ##########
-
-        self.frm = LabelFrame(
-            self.f2,
-            width=430,
-            height=205,
-            padx=10,
-            text="功能区")
-        self.frm.place(x=10, y=5)
-        self.label7=Label(
-            self.frm,
-            text="多媒体地址:",
-            font=(
-                "Lucida Grande",
-                11)).place(
-            x=0,
-            y=0)
-        self.button_url = Entry(self.frm, width=45)
-        self.button_url.place(x=0, y=25)
-
-        self.label8=Label(
-            self.frm,
-            text="媒体命名为:(无需后缀名)",
-            font=(
-                "Lucida Grande",
-                11)).place(
-            x=0,
-            y=50)
-        self.button_video_name = Entry(self.frm, width=45)
-        self.button_video_name.place(x=0, y=75)
-
-        self.v = IntVar()
-        self.cb_status = IntVar()
-        self.v.set(1)
-        self.rb1 = Radiobutton(
-            self.frm,
-            text='速度优先',
-            variable=self.v,
-            value=1,
-            font=(
-                "Lucida Grande",
-                11))
-        self.rb2 = Radiobutton(
-            self.frm,
-            text='画质优先',
-            variable=self.v,
-            value=2,
-            font=(
-                "Lucida Grande",
-                11))
-        self.cb = Checkbutton(
-            self.frm,
-            text='保存源文件',
-            variable=self.cb_status,
-            font=(
-                "Lucida Grande",
-                11))
-        self.rb1.place(x=0, y=95)
-        self.rb2.place(x=100, y=95)
-        self.cb.place(x=200, y=95)
-        self.m = StringVar()
-        self.button_pause = Button(
-            self.frm, textvariable=self.m, width=8, font=(
-                "Lucida Grande", 11), bg='blue')
-        self.m.set('暂停下载')
-        #self.button_pause.place(x=330, y=15)
-
-        self.button_start = Button(
-            self.frm, text="开始下载", width=8, font=(
-                "Lucida Grande", 11), bg='blue')
-        self.button_start.place(x=330, y=23)
-
-        self.button_cancel = Button(
-            self.frm, text="取消下载", width=8, font=(
-                "Lucida Grande", 11), bg='blue')
-        #self.button_cancel.place(x=330, y=77)
-
-        self.button_again = Button(
-            self.frm, text="重试", width=8, font=(
-                "Lucida Grande", 11), bg='blue')
-        self.button_again.place(x=330, y=73)
-
-        Label(
-            self.frm,
-            text="下载进度:",
-            font=(
-                "Lucida Grande",
-                11)).place(
-            x=0,
-            y=125)
-        self.c=StringVar()
-        Label(
-            self.frm,
-            fg='blue',
-            textvariable=self.c,
-            font=(
-                "Lucida Grande",
-                11)).place(
-            x=70,
-            y=125)
-        self.progress = ttk.Progressbar(
-            self.frm,
-            orient="horizontal",
-            length=355,
-            mode="determinate")
-        self.progress.place(x=0, y=150)
-        self.progress["maximum"] = 100
-        self.progress["value"] = 0
-        self.str = StringVar()
-        self.lb = Label(self.frm, textvariable=self.str)
-        self.lb.place(x=357, y=150)
-##########################################################################
-
-
-###########################################################   消息界面的设计   ##
-
-        self.message_frm = LabelFrame(
-            self.f2,
-            width=400,
-            height=200,
-            padx=10,
-            text="消息")
-        self.message_frm.place(x=10, y=210)
-
-        self.scrollbar = Scrollbar(self.message_frm)
-        self.scrollbar.pack(side='right', fill='y')
-        self.message_v = StringVar()
-        self.message_s = ""
-        self.message_v.set(self.message_s)
-
-        self.message = Text(self.message_frm, width=55, height=14)
-        self.message.insert('insert', self.message_s)
-        self.message.pack(side='left', fill='y')
-        # 以下两行代码绑定text和scrollbar
-        self.scrollbar.config(command=self.message.yview)
-        self.message.config(yscrollcommand=self.scrollbar.set)
-        self.message.config(state=DISABLED)
-#########################################################################点
-
+        #右键点击弹出框
         self.menubar = Menu(self.root, tearoff=False)
+
+
+
+
 
     # 给消息框输入消息并且保证消息一直在底部
 

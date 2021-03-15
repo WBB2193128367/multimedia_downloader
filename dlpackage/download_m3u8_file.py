@@ -72,7 +72,6 @@ def download_fail_file():
                 share.running = False
             else:
                 share.m3.alert("视频文件合并失败,请查看消息列表")
-                share.m3.show_info("视频文件合并失败,请查看消息列表")
         else:
             share.m3.alert("有部分文件没有下载完成，请点击重试！")
             share.m3.show_info("有部分文件没有下载完成，请点击重试！")
@@ -372,7 +371,6 @@ def start_one1(m3u8_href, video_name):
                 shutil.rmtree(video_name)
             share.m3.alert("下载完成")
             share.m3.show_info("下载完成")
-
             share.set_progress(0)
             share.m3.str.set('')
             share.m3.clear_alert()
@@ -409,7 +407,7 @@ def start_list1(m3u8_href, video_name):
     # 获取所有ts视频下载地址
     url_list = get_ts_add(m3u8_href)
     if len(url_list) == 0:
-        share.m3.waring_info("获取地址失败!")
+        share.m3.alert("获取地址失败!")
         share.log_content = {
             'time': share.get_time(),
             'link': link,
@@ -419,7 +417,7 @@ def start_list1(m3u8_href, video_name):
         # 设置守护线程，进程退出不用等待子线程完成
         t.setDaemon(True)
         t.start()
-        return
+        return False
     video_name = setting_gui.path + "/" + video_name
     video_path = video_name
     if not os.path.exists(video_name):
@@ -436,7 +434,7 @@ def start_list1(m3u8_href, video_name):
         # 线程池开启线程下载视频
         start_download_in_pool(download_to_file, params)
     else:
-        share.m3.waring_info("地址连接失败!")
+        share.m3.alert("地址连接失败!")
         share.log_content = {
             'time': share.get_time(),
             'link': link,
@@ -446,7 +444,7 @@ def start_list1(m3u8_href, video_name):
         # 设置守护线程，进程退出不用等待子线程完成
         t.setDaemon(True)
         t.start()
-        return
+        return False
     # 重新下载先前下载失败的.ts文件
     while len(download_fail_list)!=0:
         start_download_in_pool(try_again_download, download_fail_list)
@@ -467,7 +465,6 @@ def start_list1(m3u8_href, video_name):
                 # 删除文件夹
                 shutil.rmtree(video_name)
             share.m3.alert("下载完成!")
-
             share.set_progress(0)
             share.m3.str.set('')
             share.m3.clear_alert()
@@ -480,3 +477,4 @@ def start_list1(m3u8_href, video_name):
     else:
         share.m3.alert("有部分文件没有下载完成，请点击重试！")
     # 重置任务开始标志
+    return True
