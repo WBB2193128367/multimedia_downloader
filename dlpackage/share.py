@@ -1,5 +1,6 @@
 from dlpackage import setting_gui
 import tkinter.messagebox
+from PIL import Image, ImageTk
 import json
 import time
 import re
@@ -92,3 +93,7 @@ def check_href(m3u8_href):
         return True
     else:
         return False
+
+def get_image(filename, width, height):
+    im =Image.open(filename).resize((width, height))
+    return ImageTk.PhotoImage(im)

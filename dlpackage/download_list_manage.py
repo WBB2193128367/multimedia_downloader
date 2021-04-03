@@ -3,7 +3,7 @@ from dlpackage import share
 from dlpackage import right_kye
 import tkinter.messagebox
 import threading
-
+from PIL import ImageTk, Image
 #定义的一些全局变量
 name={}
 id_list=[]
@@ -28,17 +28,20 @@ def add_url(root,tree_date):
     top1.grab_set()
     top1.title('添加链接')
     top1.iconbitmap(r'../image/主窗口.ico')
-    label1=Label(top1,text='媒体名称:')
+    top1.configure(bg='#bbdefb')
+    label1=Label(top1,text='媒体名称:',bg='#bbdefb')
     label1.place(x=10,y=20)
     entry1=Entry(top1)
     entry1.place(x=70,y=20)
-    label2 = Label(top1, text='URL:')
+    label2 = Label(top1, text='URL:',bg='#bbdefb')
     label2.place(x=10, y=70)
     entry2 = Entry(top1)
     entry2.place(x=70, y=70)
-    button=Button(top1,text='确认添加',bg='blue')
-    button.place(x=95,y=125)
-    button.bind("<Button-1>", lambda x:add(top1,tree_date,entry1,entry2) )
+    load3 = Image.open("../image/8.png")
+    render3 = ImageTk.PhotoImage(load3)
+    img3 = Label(top1, image=render3,bg='#bbdefb')
+    img3.place(x=90, y=120)
+    img3.bind("<Button-1>", lambda x:add(top1,tree_date,entry1,entry2) )
     menubar = Menu(top1, tearoff=False)
     # 将entry和rightkey事件绑定
     entry1.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, entry1))
