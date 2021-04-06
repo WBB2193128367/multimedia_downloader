@@ -9,7 +9,7 @@ name={}
 id_list=[]
 url={}
 i=1
-
+m=[]
 
 
 def add_url(root,tree_date):
@@ -50,6 +50,17 @@ def add_url(root,tree_date):
 
 
 
+# def treeviewClick(tree):  # 单击
+#     global m
+#     for item in tree.selection():
+#         item_text = tree.item(item, "tags")
+#         if item_text[0] not in m:
+#             tree.tag_configure(item_text[0], background='purple')
+#             m.append(item_text[0])
+#         elif item_text[0] in m:
+#             tree.tag_configure(item_text[0], background='white')
+#             m.remove(item_text[0])
+
 
 def add(top1,tree_date,entry1,entry2):
     global name
@@ -77,6 +88,7 @@ def add(top1,tree_date,entry1,entry2):
     url['I%03d'%i]=entry2.get().strip()
     id_list.append('I%03d' %i)
     tree_date.insert('', i, values=(entry1.get().strip(),entry2.get().strip()))
+    # tree_date.tag_bind(i, '<Button-1>', lambda x:treeviewClick(tree_date))
     i+=1
     top1.destroy()
 
@@ -85,6 +97,7 @@ def add(top1,tree_date,entry1,entry2):
 def delete(tree_date):
     global name
     global url
+    global m
     global id_list
     selection=tree_date.selection()
     if selection==():
@@ -100,7 +113,7 @@ def delete(tree_date):
                     name.pop(item)
                     url.pop(item)
                     id_list.remove(item)
-
+            m=[]
 
 def delete_item(tree_date,item):
     selection = tree_date.get_children()
@@ -113,3 +126,4 @@ def delete_thread():
     thread=threading.Thread(target=delete,args=(share.m3.tree_date,))
     thread.setDaemon(True)
     thread.start()
+

@@ -34,7 +34,7 @@ def generate_list(arg):
 
 
 # 点击确认按钮时的事件
-def print_selection(root, top1, entry, combobox, combobox1,v):
+def print_selection(root,button_url,button_video_name,top1, entry, combobox, combobox1,v):
     global path
     global threading_count
     global download_model
@@ -47,10 +47,13 @@ def print_selection(root, top1, entry, combobox, combobox1,v):
     if combobox1.get()=='列表下载':
         download_model=1
         download_model1='列表下载'
-
+        button_url['state'] = 'disabled'
+        button_video_name['state']='disabled'
     else:
         download_model=0
         download_model1 = '单例下载'
+        button_url['state'] = 'normal'
+        button_video_name['state'] = 'normal'
     root.attributes("-alpha", 1 - v)
     top1.destroy()
 
@@ -62,7 +65,7 @@ def liulan(str4):
 
 
 # 设置页面
-def set(root):
+def set(root,button_url,button_video_name):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     # top1.attributes("-toolwindow", 1)
     # top1.wm_attributes("-topmost", 1)
@@ -156,5 +159,5 @@ def set(root):
     render = ImageTk.PhotoImage(load)
     img = Label(top1, image=render,bg='#bbdefb')
     img.place(x=165, y=260)
-    img.bind("<Button-1>",lambda x: print_selection(root, top1, entry, combobox,combobox1, S.get()))
+    img.bind("<Button-1>",lambda x: print_selection(root, button_url,button_video_name,top1, entry, combobox,combobox1, S.get()))
     top1.mainloop()

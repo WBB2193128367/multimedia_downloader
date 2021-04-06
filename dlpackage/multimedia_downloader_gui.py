@@ -31,6 +31,7 @@ class Multimedia_Downloader:
             "WM_DELETE_WINDOW",
             lambda: share.close_windows(
                 self.root))  # 关闭窗口时进行提示是否关闭，防止误操作
+        self.style = ttk.Style(self.root)
 ######################################################################################################################################
 
 
@@ -40,7 +41,7 @@ class Multimedia_Downloader:
         self.menubar.add_cascade(
             label='设置',
             command=lambda: setting_gui.set(
-                self.root))
+                self.root,self.button_url,self.button_video_name))
         self.menubar.add_cascade(
             label='日志',
             command=lambda: log_gui.log_gui(
@@ -53,21 +54,28 @@ class Multimedia_Downloader:
 
 #################################################    对主界面的布局    ###################################################################
 
-        style = ttk.Style(self.root)
-        style.theme_create("yummy", parent="alt", settings={
+
+        self.style.theme_create("wbb", parent="alt", settings={
             "TNotebook.Tab": {
                 "configure": {"padding": [10, 10], "background":"#bbdefb",'font':'仿宋'},
-                "map": {"background": [("selected",  "#00FFFF")],"font": [("selected", '黑体')],"foreground": [("selected", 'blue')],
-                        }}})
-        style.theme_use("yummy")
+                "map": {"background": [("selected","#00FFFF")],"font": [("selected", '黑体')],
+                        }
+            },
+            "myname.Treeview":{
+                "map": {"background": [("selected","#00FFFF")],"font": [("selected", '黑体')],}
+            },
+        })
 
-        style.configure('TNotebook', tabposition='wn',background='#bbdefb')
-        style.configure("Treeview", background="#bbdefb",
-                              foreground="black",selectedbackground='blue')
+
+        self.style.theme_use("wbb")
+
+        self.style.configure('my.TNotebook', tabposition='wn',background='#bbdefb')
+        self.style.configure("Treeview", background="white",
+                        foreground="black", )
         self.notebook = ttk.Notebook(
             self.root,
             padding=2,
-            style='TNotebook',
+            style='my.TNotebook',
             width='470',
             height='425')
         self.notebook.pack(fill=tkinter.BOTH,expand=True)
@@ -126,6 +134,7 @@ class Multimedia_Downloader:
         self.frm.place(x=7, y=258)
         self.label7 = Label(
             self.frm,
+
             text="多媒体地址:",
             bg='#bbdefb',
             font=(
@@ -133,11 +142,12 @@ class Multimedia_Downloader:
                 11)).place(
             x=0,
             y=15)
-        self.button_url = Entry(self.frm, width=50)
+        self.button_url =Entry(self.frm, width=50)
         self.button_url.place(x=0, y=40)
 
         self.label8 = Label(
             self.frm,
+
             bg='#bbdefb',
             text="媒体命名为:(无需后缀名)",
             font=(
@@ -222,8 +232,8 @@ class Multimedia_Downloader:
             font=(
                 "黑体",
                 11)).place(
-            x=70,
-            y=160)
+            x=78,
+            y=175)
         self.progress = ttk.Progressbar(
             self.frm,
             orient="horizontal",
@@ -278,6 +288,7 @@ class Multimedia_Downloader:
         # 定义表格界面
         self.tree_date = ttk.Treeview(
             self.ff,
+            style="myname.Treeview",
             columns=(
                 'name',
                 'url',),
@@ -320,14 +331,14 @@ class Multimedia_Downloader:
         self.load5 = Image.open("../image/左.jpg").resize((150, 150))
         self.render5= ImageTk.PhotoImage(self.load5)
         self.img5 = Label(self.f3, image=self.render5, bg='#bbdefb')
-        floating_window.CreateToolTip(self.img5, text='Hello')
+        floating_window.CreateToolTip(self.img5, text='Github')
         self.img5.place(x=40, y=140)
 
 
         self.load6 = Image.open("../image/右.jpg").resize((150, 150))
         self.render6 = ImageTk.PhotoImage(self.load6)
         self.img6 = Label(self.f3, image=self.render6, bg='#bbdefb')
-        floating_window.CreateToolTip(self.img6, text='Hi')
+        floating_window.CreateToolTip(self.img6, text='Github')
         self.img6.place(x=355, y=150)
 
 
