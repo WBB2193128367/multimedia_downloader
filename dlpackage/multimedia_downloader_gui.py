@@ -61,7 +61,7 @@ class Multimedia_Downloader:
                 "map": {"background": [("selected","#00FFFF")],"font": [("selected", '黑体')],
                         }
             },
-            "myname.Treeview":{
+            "Treeview":{
                 "map": {"background": [("selected","#00FFFF")],"font": [("selected", '黑体')],}
             },
         })

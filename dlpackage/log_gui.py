@@ -29,7 +29,9 @@ def log_gui(root):
     scrollBarx.pack(side=BOTTOM, fill=X)
     # 定义表格界面
     tree_date = ttk.Treeview(
+
         top1,
+        style="myname.Treeview",
         columns=(
             'time',
             'link',
