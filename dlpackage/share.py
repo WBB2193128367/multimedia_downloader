@@ -24,17 +24,6 @@ def file_walker(path):
     return file_list
 
 
-# 获取视频文件数量
-def count_file(file_name):
-    video_name = get_save_path(file_name)
-    file_num = 0
-    for f_path, f_dir_name, f_names in os.walk(video_name):
-        for name in f_names:
-            if name.endswith(".ts"):
-                file_num += 1
-    return file_num
-
-
 # 返回一个经过出处理的文件名
 def check_video_name(name):
     return name.replace("\t", "").replace("\n", "")

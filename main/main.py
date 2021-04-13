@@ -244,6 +244,6 @@ def run():
     # 手动加入消息队列
     share.m3.root.mainloop()
 
-
+#主函数
 if __name__ == "__main__":
     run()

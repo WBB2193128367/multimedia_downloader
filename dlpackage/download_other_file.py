@@ -7,25 +7,17 @@ import threading
 import shutil
 import os
 
-
 # 定义的全局变量
 video_path = None
-url_path=None
+url_path = None
 cancel_flag = False
 pause_flag = False
 content_length = None  # 用来存储待下载文件的大小
 start = [0, ]  # 用来存储断点续传的开始点
 end = []  # 用来存储断点续传的结束点
 download_fail_list1 = []  # 用来存储下载失败的视频的开始点，结束点，视频名称
+downloaded_clip = 0  # 已经下载视频片段的数量
 
-
-# 计算已下载文件的总大小
-def calculate(folder_path):
-    full_size = 0
-    for parent, dirs, files in os.walk(folder_path):
-        full_size = sum(os.path.getsize(os.path.join(parent, file))
-                        for file in files)
-    return full_size
 
 # def cancel_thread():
 #     t = threading.Thread(
@@ -46,32 +38,33 @@ def calculate(folder_path):
 #     share.m3.show_info("取消成功！")
 
 # 下载文件
-def download_to_file1(start, end, file_name):
+def download_to_file1(start1, end, file_name):
     global download_fail_list1
+    global downloaded_clip
     response = dm.easy_download(
         url=url_path,
         stream=True,
         # proxies=proxy_ip_pool.get_proxy(),
         header=requests_header.get_user_agent2(
-            start,
+            start1,
             end))
     if response is None:
         download_fail_list1.append(
-            ([start, end, file_name], None))  # 将下载失败的视频连接加入列表
+            ([start1, end, file_name], None))  # 将下载失败的视频连接加入列表
         return
     else:
 
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            print(share.get_save_path(file_name))
-            p = (calculate(share.get_save_path(file_name)) / content_length) * 100
-            print(p)
-            share.set_progress(p)  # 设置进度条
-            share.m3.str.set('%.2f%%' % p)
+            downloaded_clip += 1
+            m = (downloaded_clip / len(start)) * 100
+            share.set_progress(m)  # 设置进度条
+            share.m3.str.set('%.2f%%' % m)
 
 
 def try_again_download(start, end, file_name):
     global download_fail_list1
+    global downloaded_clip
     share.m3.alert("正在尝试重新下载%s" % file_name)
     response = dm.easy_download(
         url=url_path,
@@ -88,11 +81,10 @@ def try_again_download(start, end, file_name):
         download_fail_list1.remove(([start, end, file_name], None))
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            p = calculate(share.get_save_path(file_name)) / \
-                content_length * 100
-            share.set_progress(p)
-            share.m3.str.set('%.2f%%' % p)
-
+            downloaded_clip += 1
+            m = (downloaded_clip / len(start)) * 100
+            share.set_progress(m)  # 设置进度条
+            share.m3.str.set('%.2f%%' % m)
 
 
 # 再次下载失败的文件
@@ -123,7 +115,6 @@ def download_fail_file1():
             share.m3.show_info("有部分文件没有下载完成，请点击重试！")
     else:
         share.m3.show_info("还没有下载失败的文件噢！")
-
 
 
 # 进行文件的拼接
@@ -161,7 +152,8 @@ def start_download_in_pool1(function, params):
 
     pool.wait()
 
-#对文件进行区间大小为1MB的分割
+
+# 对文件进行区间大小为1MB的分割
 def file_divide(content_lenths):
     for i in range(0, content_lenths, 1048576):
         if int(i) != 0:
@@ -186,18 +178,19 @@ def check_file_count1(dir_name):
     return file_num
 
 
-def start_one(content_size, video_name,m3u8_href):
+def start_one(content_size, video_name, m3u8_href):
     global content_length
     global download_fail_list1
     global start
     global end
     global video_path
     global url_path
+    global p
     content_length = content_size
     video_name = share.check_video_name(video_name)
     video_name = setting_gui.path + "/" + video_name
     video_path = video_name
-    url_path=m3u8_href
+    url_path = m3u8_href
     link = share.m3.button_url.get().rstrip()
     if not os.path.exists(video_name):
         os.makedirs(video_name)
@@ -211,7 +204,7 @@ def start_one(content_size, video_name,m3u8_href):
     # while len(download_fail_list1)!=0:
     #     download_fail_file1()
     # 用来检查文件片段是否都下载完成
-    if check_file_count1(video_name)== len(start):
+    if check_file_count1(video_name) == len(start):
         share.log_content = {
             'time': share.get_time(),
             'link': url_path,
@@ -232,6 +225,7 @@ def start_one(content_size, video_name,m3u8_href):
         share.m3.str.set('')
         share.m3.clear_alert()
         download_fail_list1 = []
+        p = 0
         share.running = False
     else:
         share.m3.alert("有部分文件没有下载完成，请点击重试！")
@@ -241,14 +235,14 @@ def start_one(content_size, video_name,m3u8_href):
     end = []
 
 
-
-def start_list(content_size, video_name,m3u8_href):
+def start_list(content_size, video_name, m3u8_href):
     global content_length
     global download_fail_list1
     global start
     global end
     global video_path
     global url_path
+    global downloaded_clip
     content_length = content_size
     video_name = share.check_video_name(video_name)
     video_name = setting_gui.path + "/" + video_name
@@ -263,10 +257,10 @@ def start_list(content_size, video_name,m3u8_href):
     share.m3.alert('[文件大小]:%0.2f MB' % (content_size / 1024 / 1024))
     # 启动线程池进行下载
     start_download_in_pool1(download_to_file1, params)
-    while len(download_fail_list1)!=0:
+    while len(download_fail_list1) != 0:
         start_download_in_pool1(try_again_download, download_fail_list1)
-    #用来检查文件片段是否都下载完成
-    if check_file_count1(video_name)== len(start):
+    # 用来检查文件片段是否都下载完成
+    if check_file_count1(video_name) == len(start):
         share.log_content = {
             'time': share.get_time(),
             'link': url_path,
@@ -286,8 +280,10 @@ def start_list(content_size, video_name,m3u8_href):
         share.m3.str.set('')
         share.m3.clear_alert()
         download_fail_list1 = []
+        downloaded_clip = 0
         share.running = False
     # 清空下载失败视频列表
     start = [0, ]
     end = []
+
     return True

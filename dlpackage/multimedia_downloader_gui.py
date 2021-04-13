@@ -64,6 +64,9 @@ class Multimedia_Downloader:
             "Treeview":{
                 "map": {"background": [("selected","#00FFFF")],"font": [("selected", '黑体')],}
             },
+            "my.Horizontal.TProgressbar": {
+                "configure": {"background":"#912CEE"},
+            },
         })
 
 
@@ -236,6 +239,7 @@ class Multimedia_Downloader:
             y=175)
         self.progress = ttk.Progressbar(
             self.frm,
+            style='my.Horizontal.TProgressbar',
             orient="horizontal",
             length=430,
             mode="determinate")

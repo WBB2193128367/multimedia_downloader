@@ -21,11 +21,11 @@ url_host = None
 url_path = None
 key = None  # 用来存储秘钥，用于视频的解码
 iv = None
-
+downloaded_clip=0
 
 def try_again_download(url, file_name):
     global download_fail_list
-
+    global downloaded_clip
     share.m3.alert("正在尝试重新下载%s" % file_name)
     response = dm.easy_download(
         url=url, stream=False, header=requests_header.get_user_agent(),
@@ -37,9 +37,10 @@ def try_again_download(url, file_name):
         download_fail_list.remove(([url, file_name], None))
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            p = (share.count_file(file_name) / len(url_list)) * 100
-            share.set_progress(p)
-            share.m3.str.set('%.2f%%' % p)
+            downloaded_clip+=1
+            m=(downloaded_clip / len(url_list)) * 100
+            share.set_progress(m)
+            share.m3.str.set('%.2f%%' % m)
 
 
 # 重复下载失败的.ts文件
@@ -280,7 +281,7 @@ def save_source():
 def download_to_file(url, file_name):
     global download_fail_list
     global url_list
-
+    global downloaded_clip
     response = dm.easy_download(
         url=url,
         stream=False,
@@ -291,9 +292,10 @@ def download_to_file(url, file_name):
     else:
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            p = (share.count_file(file_name) / len(url_list)) * 100
-            share.set_progress(p)  # 设置进度条
-            share.m3.str.set('%.2f%%' % p)
+            downloaded_clip+=1
+            m=(downloaded_clip/ len(url_list)) * 100
+            share.set_progress(m)  # 设置进度条
+            share.m3.str.set('%.2f%%' % m)
 
 
 def start_one1(m3u8_href, video_name):
@@ -304,6 +306,7 @@ def start_one1(m3u8_href, video_name):
     global url_path
     global url_host
     global video_path
+    global p
     # 清空消息框中的消息
     share.m3.clear_alert()
     # 进度条归零
@@ -311,11 +314,11 @@ def start_one1(m3u8_href, video_name):
     link = m3u8_href
     # 格式化文件名
     video_name = share.check_video_name(video_name)
-    # 任务开始标志，防止重复开启下载任务
     # 获取所有ts视频下载地址
     url_list = get_ts_add(m3u8_href)
     if len(url_list) == 0:
         share.m3.waring_info("获取地址失败!")
+        share.m3.clear_alert()
         share.log_content = {
             'time': share.get_time(),
             'link': link,
@@ -385,6 +388,7 @@ def start_one1(m3u8_href, video_name):
             share.m3.str.set('')
             share.m3.clear_alert()
             share.running = False
+            p=0
             # 清空下载失败视频列表
             url_list = []
             download_fail_list = []
@@ -406,6 +410,7 @@ def start_list1(m3u8_href, video_name):
     global url_path
     global url_host
     global video_path
+    global downloaded_clip
     # 清空消息框中的消息
     share.m3.clear_alert()
     # 进度条归零
@@ -483,6 +488,7 @@ def start_list1(m3u8_href, video_name):
             share.m3.str.set('')
             share.m3.clear_alert()
             share.running = False
+            downloaded_clip=0
             # 清空下载失败视频列表
             url_list = []
             download_fail_list = []
