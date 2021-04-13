@@ -1,7 +1,6 @@
 from dlpackage import model_requests as dm
 from dlpackage import requests_header
 from dlpackage import setting_gui
-from dlpackage import proxy_ip_pool
 from dlpackage import share
 import threadpool
 import threading
@@ -47,8 +46,6 @@ def calculate(folder_path):
 #     share.m3.show_info("取消成功！")
 
 # 下载文件
-
-
 def download_to_file1(start, end, file_name):
     global download_fail_list1
     response = dm.easy_download(
@@ -96,9 +93,9 @@ def try_again_download(start, end, file_name):
             share.set_progress(p)
             share.m3.str.set('%.2f%%' % p)
 
+
+
 # 再次下载失败的文件
-
-
 def download_fail_file1():
     global download_fail_list1
     if len(download_fail_list1) > 0:
@@ -127,9 +124,9 @@ def download_fail_file1():
     else:
         share.m3.show_info("还没有下载失败的文件噢！")
 
+
+
 # 进行文件的拼接
-
-
 def merge_file1(dir_name):
     file_list = share.file_walker(dir_name)
     with open(dir_name + url_path[url_path.rfind('.'):url_path.rfind('.') + 4], 'wb+') as fw:
@@ -164,20 +161,8 @@ def start_download_in_pool1(function, params):
 
     pool.wait()
 
-
+#对文件进行区间大小为1MB的分割
 def file_divide(content_lenths):
-    # if content_lenths <=209715200:
-    #     divide_length=2097152
-    # elif content_lenths >209715200 and content_lenths <=419430400:
-    #     divide_length=4094304
-    # elif content_lenths >419430400 and content_lenths <=629145600:
-    #     divide_length = 6291456
-    # elif content_lenths >629145600 and content_lenths <=838860800:
-    #     divide_length = 8388608
-    # elif content_lenths >838860800 and content_lenths <=1048576000:
-    #     divide_length = 10485760
-    # else:
-    #     divide_length = 10485760
     for i in range(0, content_lenths, 1048576):
         if int(i) != 0:
             end.append(i)
