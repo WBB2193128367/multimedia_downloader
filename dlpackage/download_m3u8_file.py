@@ -452,6 +452,14 @@ def start_list1(m3u8_href, video_name):
         params = get_download_params('', dir_name=video_name)
         # 线程池开启线程下载视频
         start_download_in_pool(download_to_file, params)
+    elif test_download_url(url_list[0]):
+        params = get_download_params('', dir_name=video_name)
+        # 线程池开启线程下载视频
+        start_download_in_pool(download_to_file, params)
+    elif test_download_url(url_list[0]):
+        params = get_download_params(head='', dir_name=video_name)
+        # 线程池开启线程下载视频
+        start_download_in_pool(download_to_file, params)
     else:
         share.m3.alert("地址连接失败!")
         share.log_content = {
