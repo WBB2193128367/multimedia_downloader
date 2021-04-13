@@ -6,9 +6,8 @@ import time
 import re
 import os
 
-
 # 定义的全局变量
-exeing_id=None #用来保存下载链表中正在下载链接的id
+exeing_id = None  # 用来保存下载链表中正在下载链接的id
 m3 = None  # 定义的一个Multimedia_Downloader的对象
 running = False  # 开始下载的标志
 log_content = {}  # 用来存储给日志文件中写入的内容
@@ -48,6 +47,7 @@ def get_save_path(video_name):
     else:
         return video_name[0:video_name.rfind("\\")]
 
+
 # 设置进度条
 
 
@@ -59,8 +59,8 @@ def set_progress(v):
 # 关闭主窗口时进行提示
 def close_windows(root):
     if os.path.exists(
-        setting_gui.path +
-        '/' +
+            setting_gui.path +
+            '/' +
             m3.button_video_name.get().strip()) and m3.button_video_name.get().strip() != '':
         if tkinter.messagebox.askokcancel('退出', '已经下载部分文件，确认退出吗？'):
             root.destroy()
@@ -68,6 +68,7 @@ def close_windows(root):
 
         if tkinter.messagebox.askokcancel('退出', '确认要退出吗？'):
             root.destroy()
+
 
 # 获取当前电脑上的时间，并且进行格式话
 
@@ -84,16 +85,17 @@ def write(file):
         f.write('\n')
 
 
-#检验用户输入的网址是否正确
+# 检验用户输入的网址是否正确
 def check_href(m3u8_href):
     if re.match(
-        r'^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)([A-Za-z0-9]|-)+\.([A-Za-z0-9]|-)+\.([A-Za-z0-9]|-)+/(.*?)$',
-        m3u8_href,
+            r'^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)([A-Za-z0-9]|-)+(\.([A-Za-z0-9]|-)+){2,}(:([0-9])+){0,1}/(.*?)$',
+            m3u8_href,
             re.S):
         return True
     else:
         return False
 
+
 def get_image(filename, width, height):
-    im =Image.open(filename).resize((width, height))
+    im = Image.open(filename).resize((width, height))
     return ImageTk.PhotoImage(im)

@@ -198,7 +198,7 @@ def check_file_count1(dir_name):
         for name in f_names:
             if name.endswith(".ts"):
                 file_num += 1
-    return file_num == len(start)
+    return file_num
 
 
 def start_one(content_size, video_name,m3u8_href):
@@ -226,7 +226,7 @@ def start_one(content_size, video_name,m3u8_href):
     # while len(download_fail_list1)!=0:
     #     download_fail_file1()
     # 用来检查文件片段是否都下载完成
-    if check_file_count1(video_name):
+    if check_file_count1(video_name)== len(start):
         share.log_content = {
             'time': share.get_time(),
             'link': url_path,
@@ -281,7 +281,7 @@ def start_list(content_size, video_name,m3u8_href):
     while len(download_fail_list1)!=0:
         start_download_in_pool1(try_again_download, download_fail_list1)
     #用来检查文件片段是否都下载完成
-    if check_file_count1(video_name):
+    if check_file_count1(video_name)== len(start):
         share.log_content = {
             'time': share.get_time(),
             'link': url_path,

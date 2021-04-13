@@ -1,15 +1,13 @@
-from dlpackage import model_requests as dm
-from dlpackage import requests_header
-from Crypto.Cipher import AES
-from dlpackage import proxy_ip_pool
-from dlpackage import setting_gui
-from dlpackage import share
-import threadpool
-import threading
-import shutil
 import os
 import re
-
+import shutil
+import threading
+import threadpool
+from Crypto.Cipher import AES
+from dlpackage import model_requests as dm
+from dlpackage import requests_header
+from dlpackage import setting_gui
+from dlpackage import share
 
 # 定义的全局变量
 video_path = None
@@ -78,6 +76,7 @@ def download_fail_file():
     else:
         share.m3.show_info("还没有下载失败的文件噢！")
 
+
 # 合并.ts文件片段
 
 
@@ -132,7 +131,7 @@ def check_file(dir_name):
         for name in f_names:
             if name.endswith(".ts"):
                 file_num += 1
-    return file_num == len(url_list)
+    return file_num
 
 
 # 测试拼接的下载地址是否正确
@@ -143,7 +142,8 @@ def test_download_url(url):
         stream=False,
         header=requests_header.get_user_agent(),
         max_retry_time=5)
-    return res is not None
+    return res
+
 
 # 进行速度优先和画质优先的触发事件
 
@@ -155,6 +155,7 @@ def order_type(type_):
         share.m3.alert("设置速度优先")
     else:
         share.m3.alert("设置画质优先")
+
 
 # 获取域名
 
@@ -183,6 +184,7 @@ def get_band_width(info):
 def order_list(o_type, o_list):
     o_list.sort(key=get_band_width, reverse=o_type)
     return o_list
+
 
 # 获得域名路径
 
@@ -255,8 +257,11 @@ def get_ts_add(m3u8_href):
         ts_add = get_ts_add(url_path + file)
         if len(ts_add) == 0:
             ts_add = get_ts_add(url_host + file)
+            if len(ts_add) == 0:
+                ts_add = get_ts_add(file)
 
     return ts_add
+
 
 # 是否保存源文件的事件
 
@@ -320,7 +325,7 @@ def start_one1(m3u8_href, video_name):
         # 设置守护线程，进程退出不用等待子线程完成
         t.setDaemon(True)
         t.start()
-        share.running = False        # 重置任务开始标志
+        share.running = False  # 重置任务开始标志
         return
     video_name = setting_gui.path + "/" + video_name
     video_path = video_name
@@ -337,6 +342,11 @@ def start_one1(m3u8_href, video_name):
         params = get_download_params(head=url_path, dir_name=video_name)
         # 线程池开启线程下载视频
         start_download_in_pool(download_to_file, params)
+    elif test_download_url(url_list[0]):
+        params = get_download_params('', dir_name=video_name)
+        # 线程池开启线程下载视频
+        start_download_in_pool(download_to_file, params)
+
     else:
         share.m3.waring_info("地址连接失败!")
         share.log_content = {
@@ -354,7 +364,7 @@ def start_one1(m3u8_href, video_name):
     # while len(download_fail_file())!=0:
     #     download_fail_file()
     # 检查ts文件总数是否对应
-    if check_file(video_name):
+    if check_file(video_name) == len(url_list):
         share.log_content = {
             'time': share.get_time(),
             'link': link,
@@ -376,7 +386,7 @@ def start_one1(m3u8_href, video_name):
             share.m3.clear_alert()
             share.running = False
             # 清空下载失败视频列表
-            url_list=[]
+            url_list = []
             download_fail_list = []
         else:
             share.m3.alert("视频文件合并失败,请查看消息列表")
@@ -433,6 +443,10 @@ def start_list1(m3u8_href, video_name):
         params = get_download_params(head=url_path, dir_name=video_name)
         # 线程池开启线程下载视频
         start_download_in_pool(download_to_file, params)
+    elif test_download_url(url_list[0]):
+        params = get_download_params('', dir_name=video_name)
+        # 线程池开启线程下载视频
+        start_download_in_pool(download_to_file, params)
     else:
         share.m3.alert("地址连接失败!")
         share.log_content = {
@@ -446,10 +460,10 @@ def start_list1(m3u8_href, video_name):
         t.start()
         return False
     # 重新下载先前下载失败的.ts文件
-    while len(download_fail_list)!=0:
+    while len(download_fail_list) != 0:
         start_download_in_pool(try_again_download, download_fail_list)
     # 检查ts文件总数是否对应
-    if check_file(video_name):
+    if check_file(video_name) == len(url_list):
         share.log_content = {
             'time': share.get_time(),
             'link': link,
@@ -470,7 +484,7 @@ def start_list1(m3u8_href, video_name):
             share.m3.clear_alert()
             share.running = False
             # 清空下载失败视频列表
-            url_list=[]
+            url_list = []
             download_fail_list = []
         else:
             share.m3.alert("视频文件合并失败,请查看消息列表")

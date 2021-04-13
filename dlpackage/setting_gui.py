@@ -1,18 +1,19 @@
-from tkinter import messagebox
-import tkinter.filedialog
-from tkinter import ttk
-from dlpackage import share
-from dlpackage import right_kye
-from tkinter import *
 import os
+import tkinter.filedialog
+from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk
+
 from PIL import ImageTk, Image
 
+from dlpackage import right_kye
+
 # 默认的媒体文件存储位置
-path = os.path.abspath(os.path.join(os.getcwd(),"..")).replace('\\','/')+'/downloads'
+path = os.path.abspath(os.path.join(os.getcwd(), "..")).replace('\\', '/') + '/downloads'
 # 默认的线程数
 threading_count = 60
-download_model1='单例下载'
-download_model=0
+download_model1 = '单例下载'
+download_model = 0
 
 
 # 关于的驱动方法
@@ -22,6 +23,7 @@ download_model=0
 
 def guanyu():
     tkinter.messagebox.showinfo('关于', '该软件由WBB开发，仅供学习使用！！！')
+
 
 # 生成线程数范围列表
 
@@ -34,7 +36,7 @@ def generate_list(arg):
 
 
 # 点击确认按钮时的事件
-def print_selection(root,button_url,button_video_name,top1, entry, combobox, combobox1,v):
+def print_selection(root, button_url, button_video_name, top1, entry, combobox, combobox1, v):
     global path
     global threading_count
     global download_model
@@ -44,13 +46,13 @@ def print_selection(root,button_url,button_video_name,top1, entry, combobox, com
         pass
     else:
         path = entry.get()
-    if combobox1.get()=='列表下载':
-        download_model=1
-        download_model1='列表下载'
+    if combobox1.get() == '列表下载':
+        download_model = 1
+        download_model1 = '列表下载'
         button_url['state'] = 'disabled'
-        button_video_name['state']='disabled'
+        button_video_name['state'] = 'disabled'
     else:
-        download_model=0
+        download_model = 0
         download_model1 = '单例下载'
         button_url['state'] = 'normal'
         button_video_name['state'] = 'normal'
@@ -65,7 +67,7 @@ def liulan(str4):
 
 
 # 设置页面
-def set(root,button_url,button_video_name):
+def set(root, button_url, button_video_name):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     # top1.attributes("-toolwindow", 1)
     # top1.wm_attributes("-topmost", 1)
@@ -86,14 +88,14 @@ def set(root,button_url,button_video_name):
     top1.configure(bg='#bbdefb')
 
     # 设置透明度
-    lb0 = Label(top1, text="透明度设置:",bg='#bbdefb')
+    lb0 = Label(top1, text="透明度设置:", bg='#bbdefb')
     lb0.place(x=3, y=10)
-    lb2 = Label(top1, text="通过拖动下面滑块改变窗口透明度",bg='#bbdefb')
+    lb2 = Label(top1, text="通过拖动下面滑块改变窗口透明度", bg='#bbdefb')
     lb2.place(x=100, y=10)
 
-    lb = Label(top1, text="清晰",bg='#bbdefb')
+    lb = Label(top1, text="清晰", bg='#bbdefb')
     lb.place(x=100, y=40)
-    lb1 = Label(top1, text="模糊",bg='#bbdefb')
+    lb1 = Label(top1, text="模糊", bg='#bbdefb')
     lb1.place(x=290, y=40)
     S = Scale(
         top1,
@@ -107,9 +109,9 @@ def set(root,button_url,button_video_name):
         length=150)
     S.place(x=132, y=40)
 
-    lb0 = Label(top1, text="下载目录:",bg='#bbdefb')
+    lb0 = Label(top1, text="下载目录:", bg='#bbdefb')
     lb0.place(x=3, y=80)
-    lb2 = Label(top1, text="使用指定的视频下载目录",bg='#bbdefb')
+    lb2 = Label(top1, text="使用指定的视频下载目录", bg='#bbdefb')
     lb2.place(x=100, y=80)
 
     # 存储路径
@@ -122,15 +124,15 @@ def set(root,button_url,button_video_name):
     entry.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, entry))
     load1 = Image.open("../image/9.png")
     render1 = ImageTk.PhotoImage(load1)
-    img1 = Label(top1, image=render1,bg='#bbdefb')
+    img1 = Label(top1, image=render1, bg='#bbdefb')
     img1.place(x=250, y=105)
     img1.bind("<Button-1>", lambda x: liulan(str3))
     # 线程数
-    lb0 = Label(top1, text="线程数设置:",bg='#bbdefb')
+    lb0 = Label(top1, text="线程数设置:", bg='#bbdefb')
     lb0.place(x=3, y=150)
-    lb2 = Label(top1, text="通过下面设置线程的最大数量",bg='#bbdefb')
+    lb2 = Label(top1, text="通过下面设置线程的最大数量", bg='#bbdefb')
     lb2.place(x=100, y=150)
-    lb3 = Label(top1, text="最大线程数为",bg='#bbdefb')
+    lb3 = Label(top1, text="最大线程数为", bg='#bbdefb')
     lb3.place(x=100, y=180)
     combobox = ttk.Combobox(top1, width=5)
     combobox.bind(
@@ -142,14 +144,13 @@ def set(root,button_url,button_video_name):
     combobox['values'] = generate_list(100)
     combobox.current(threading_count - 1)
     combobox.place(x=180, y=180)
-    lb3 = Label(top1, text="(1-100)",bg='#bbdefb')
+    lb3 = Label(top1, text="(1-100)", bg='#bbdefb')
     lb3.place(x=238, y=180)
 
-
-    #下载模式设置
-    lb4 = Label(top1, text="下载模式设置:",bg='#bbdefb')
+    # 下载模式设置
+    lb4 = Label(top1, text="下载模式设置:", bg='#bbdefb')
     lb4.place(x=3, y=220)
-    combobox1 = ttk.Combobox(top1,width=10,state='readonly')
+    combobox1 = ttk.Combobox(top1, width=10, state='readonly')
     combobox1['values'] = ['单例下载', '列表下载']
     combobox1.current(download_model)
     combobox1.place(x=100, y=225)
@@ -157,7 +158,8 @@ def set(root,button_url,button_video_name):
     # 确认按钮
     load = Image.open("../image/7.png")
     render = ImageTk.PhotoImage(load)
-    img = Label(top1, image=render,bg='#bbdefb')
+    img = Label(top1, image=render, bg='#bbdefb')
     img.place(x=165, y=260)
-    img.bind("<Button-1>",lambda x: print_selection(root, button_url,button_video_name,top1, entry, combobox,combobox1, S.get()))
+    img.bind("<Button-1>",
+             lambda x: print_selection(root, button_url, button_video_name, top1, entry, combobox, combobox1, S.get()))
     top1.mainloop()

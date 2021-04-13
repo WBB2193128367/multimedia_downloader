@@ -12,7 +12,7 @@ def easy_download(
             12,
             30),
         max_retry_time=5):
-    i = 1
+    i = 0
     while i <= max_retry_time:
         try:
             share.m3.alert("连接:%s" % url)
