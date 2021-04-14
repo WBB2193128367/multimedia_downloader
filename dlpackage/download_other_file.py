@@ -168,14 +168,14 @@ def file_divide(content_lenths):
 
 
 # 检查文件是否都下载完成
-def check_file_count1(dir_name):
-    path = dir_name
-    file_num = 0
-    for f_path, f_dir_name, f_names in os.walk(path):
-        for name in f_names:
-            if name.endswith(".ts"):
-                file_num += 1
-    return file_num
+# def check_file_count1(dir_name):
+#     path = dir_name
+#     file_num = 0
+#     for f_path, f_dir_name, f_names in os.walk(path):
+#         for name in f_names:
+#             if name.endswith(".ts"):
+#                 file_num += 1
+#     return file_num
 
 
 def start_one(content_size, video_name, m3u8_href):
@@ -204,7 +204,7 @@ def start_one(content_size, video_name, m3u8_href):
     # while len(download_fail_list1)!=0:
     #     download_fail_file1()
     # 用来检查文件片段是否都下载完成
-    if check_file_count1(video_name) == len(start):
+    if downloaded_clip == len(start):
         share.log_content = {
             'time': share.get_time(),
             'link': url_path,
@@ -260,7 +260,7 @@ def start_list(content_size, video_name, m3u8_href):
     while len(download_fail_list1) != 0:
         start_download_in_pool1(try_again_download, download_fail_list1)
     # 用来检查文件片段是否都下载完成
-    if check_file_count1(video_name) == len(start):
+    if downloaded_clip== len(start):
         share.log_content = {
             'time': share.get_time(),
             'link': url_path,

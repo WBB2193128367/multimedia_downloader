@@ -125,14 +125,14 @@ def start_download_in_pool(function, params):
 
 
 # 检查.ts文件是否都下载完成
-def check_file(dir_name):
-    path = dir_name
-    file_num = 0
-    for f_path, f_dir_name, f_names in os.walk(path):
-        for name in f_names:
-            if name.endswith(".ts"):
-                file_num += 1
-    return file_num
+# def check_file(dir_name):
+#     path = dir_name
+#     file_num = 0
+#     for f_path, f_dir_name, f_names in os.walk(path):
+#         for name in f_names:
+#             if name.endswith(".ts"):
+#                 file_num += 1
+#     return file_num
 
 
 # 测试拼接的下载地址是否正确
@@ -367,7 +367,7 @@ def start_one1(m3u8_href, video_name):
     # while len(download_fail_file())!=0:
     #     download_fail_file()
     # 检查ts文件总数是否对应
-    if check_file(video_name) == len(url_list):
+    if downloaded_clip== len(url_list):
         share.log_content = {
             'time': share.get_time(),
             'link': link,
@@ -476,7 +476,7 @@ def start_list1(m3u8_href, video_name):
     while len(download_fail_list) != 0:
         start_download_in_pool(try_again_download, download_fail_list)
     # 检查ts文件总数是否对应
-    if check_file(video_name) == len(url_list):
+    if downloaded_clip == len(url_list):
         share.log_content = {
             'time': share.get_time(),
             'link': link,
