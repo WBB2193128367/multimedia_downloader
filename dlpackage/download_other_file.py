@@ -90,6 +90,7 @@ def try_again_download(start, end, file_name):
 # 再次下载失败的文件
 def download_fail_file1():
     global download_fail_list1
+    global downloaded_clip
     if len(download_fail_list1) > 0:
         start_download_in_pool1(try_again_download, download_fail_list1)
         if len(download_fail_list1) == 0:
@@ -110,6 +111,7 @@ def download_fail_file1():
             share.m3.str.set('')
             share.m3.clear_alert()
             share.running = False
+            downloaded_clip=0
         else:
             share.m3.alert("有部分文件没有下载完成，请点击重试！")
             share.m3.show_info("有部分文件没有下载完成，请点击重试！")
@@ -185,7 +187,7 @@ def start_one(content_size, video_name, m3u8_href):
     global end
     global video_path
     global url_path
-    global p
+    global downloaded_clip
     content_length = content_size
     video_name = share.check_video_name(video_name)
     video_name = setting_gui.path + "/" + video_name
@@ -225,7 +227,7 @@ def start_one(content_size, video_name, m3u8_href):
         share.m3.str.set('')
         share.m3.clear_alert()
         download_fail_list1 = []
-        p = 0
+        downloaded_clip = 0
         share.running = False
     else:
         share.m3.alert("有部分文件没有下载完成，请点击重试！")

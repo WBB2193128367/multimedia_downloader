@@ -21,7 +21,8 @@ url_host = None
 url_path = None
 key = None  # 用来存储秘钥，用于视频的解码
 iv = None
-downloaded_clip=0
+downloaded_clip = 0
+
 
 def try_again_download(url, file_name):
     global download_fail_list
@@ -37,8 +38,8 @@ def try_again_download(url, file_name):
         download_fail_list.remove(([url, file_name], None))
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            downloaded_clip+=1
-            m=(downloaded_clip / len(url_list)) * 100
+            downloaded_clip += 1
+            m = (downloaded_clip / len(url_list)) * 100
             share.set_progress(m)
             share.m3.str.set('%.2f%%' % m)
 
@@ -46,6 +47,7 @@ def try_again_download(url, file_name):
 # 重复下载失败的.ts文件
 def download_fail_file():
     global download_fail_list
+    global downloaded_clip
     if len(download_fail_list) > 0:
         start_download_in_pool(try_again_download, download_fail_list)
         if len(download_fail_list) == 0:
@@ -68,6 +70,7 @@ def download_fail_file():
                 share.set_progress(0)
                 share.m3.str.set('')
                 share.m3.clear_alert()
+                downloaded_clip=0
                 share.running = False
             else:
                 share.m3.alert("视频文件合并失败,请查看消息列表")
@@ -292,8 +295,8 @@ def download_to_file(url, file_name):
     else:
         with open(file_name, 'wb') as file:
             file.write(response.content)
-            downloaded_clip+=1
-            m=(downloaded_clip/ len(url_list)) * 100
+            downloaded_clip += 1
+            m = (downloaded_clip / len(url_list)) * 100
             share.set_progress(m)  # 设置进度条
             share.m3.str.set('%.2f%%' % m)
 
@@ -306,7 +309,7 @@ def start_one1(m3u8_href, video_name):
     global url_path
     global url_host
     global video_path
-    global p
+    global downloaded_clip
     # 清空消息框中的消息
     share.m3.clear_alert()
     # 进度条归零
@@ -367,7 +370,7 @@ def start_one1(m3u8_href, video_name):
     # while len(download_fail_file())!=0:
     #     download_fail_file()
     # 检查ts文件总数是否对应
-    if downloaded_clip== len(url_list):
+    if downloaded_clip == len(url_list):
         share.log_content = {
             'time': share.get_time(),
             'link': link,
@@ -388,7 +391,7 @@ def start_one1(m3u8_href, video_name):
             share.m3.str.set('')
             share.m3.clear_alert()
             share.running = False
-            p=0
+            downloaded_clip = 0
             # 清空下载失败视频列表
             url_list = []
             download_fail_list = []
@@ -496,7 +499,7 @@ def start_list1(m3u8_href, video_name):
             share.m3.str.set('')
             share.m3.clear_alert()
             share.running = False
-            downloaded_clip=0
+            downloaded_clip = 0
             # 清空下载失败视频列表
             url_list = []
             download_fail_list = []
