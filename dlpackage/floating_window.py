@@ -1,5 +1,6 @@
 from tkinter import *
 
+#对该控件的定义
 class ToolTip(object):
 
     def __init__(self, widget):
@@ -7,7 +8,7 @@ class ToolTip(object):
         self.tipwindow = None
         self.id = None
         self.x = self.y = 0
-
+    #当光标移动指定控件是显示消息
     def showtip(self, text):
         "Display text in tooltip window"
         self.text = text
@@ -23,13 +24,20 @@ class ToolTip(object):
                       background="white", relief=SOLID, borderwidth=1,
                       font=("仿宋", "10"))
         label.pack(side=BOTTOM)
-
+    #当光标移开时提示消息隐藏
     def hidetip(self):
         tw = self.tipwindow
         self.tipwindow = None
         if tw:
             tw.destroy()
 
+
+
+#创建该控件的函数
+"""
+第一个参数：是定义的控件的名称
+第二个参数，是要显示的文字信息
+"""
 def CreateToolTip(widget, text):
     toolTip = ToolTip(widget)
     def enter(event):

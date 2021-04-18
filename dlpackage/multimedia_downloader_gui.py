@@ -57,7 +57,7 @@ class Multimedia_Downloader:
 
         self.style.theme_create("wbb", parent="alt", settings={
             "TNotebook.Tab": {
-                "configure": {"padding": [10, 10], "background":"#bbdefb",'font':'仿宋'},
+                "configure": {"padding": [20, 12], "background":"#bbdefb",'font':'仿宋'},
                 "map": {"background": [("selected","#00FFFF")],"font": [("selected", '黑体')],
                         }
             },

@@ -221,7 +221,6 @@ def get_ts_add(m3u8_href):
     response_list = response.split("#")
     ts_add = []
     m3u8_href_list_new = []
-    count = 1
     for res_obj in response_list:
         # 说明m3u8文件加密
         if res_obj.startswith("EXT-X-KEY"):
