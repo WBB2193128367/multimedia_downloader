@@ -122,7 +122,7 @@ def download_fail_file1():
 # 进行文件的拼接
 def merge_file1(dir_name):
     file_list = share.file_walker(dir_name)
-    with open(dir_name + url_path[url_path.rfind('.'):url_path.rfind('.') + 4], 'wb+') as fw:
+    with open(dir_name + get_filename_postfix(), 'wb+') as fw:
         for i in range(len(file_list)):
             fw.write(open(file_list[i], 'rb').read())
 
@@ -139,6 +139,18 @@ def get_download_params1(dir_name):
         params.append(param)
         i += 1
     return params
+
+
+#从链接中获得文件的后缀
+def get_filename_postfix():
+    url_path2=1
+    url_path1=url_path.rfind('.')
+    for i in range(url_path1+1,len(url_path)):
+        if url_path[i] !='?':
+            url_path2=url_path2+1
+    return url_path[url_path1:url_path1+url_path2]
+
+
 
 
 # 进行线程池的创建

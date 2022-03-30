@@ -1,6 +1,6 @@
-from dlpackage import share
 from dlpackage import log_gui
 from dlpackage import setting_gui
+from dlpackage import share
 from dlpackage import floating_window
 import tkinter.messagebox
 from tkinter import ttk
@@ -24,7 +24,7 @@ class Multimedia_Downloader:
         self.root.deiconify()
         self.title = title  # 主窗口的标题
         self.root.title("%s" % (self.title))
-        self.root.configure( bg='#bbdefb')
+        self.root.configure( bg=setting_gui.color)
         self.root.iconbitmap(r'../image/主窗口.ico')  # 对主窗口图标进行设置
         self.root.resizable(0, 0)  # 固定主窗口的大小
         self.root.protocol(
@@ -57,12 +57,12 @@ class Multimedia_Downloader:
 
         self.style.theme_create("wbb", parent="alt", settings={
             "TNotebook.Tab": {
-                "configure": {"padding": [20, 12], "background":"#bbdefb",'font':'仿宋'},
-                "map": {"background": [("selected","#00FFFF")],"font": [("selected", '黑体')],
+                "configure": {"padding": [20, 12], "background":setting_gui.color,'font':'仿宋'},
+                "map": {"background": [("selected",setting_gui.color1)],"font": [("selected", '黑体')],
                         }
             },
             "Treeview":{
-                "map": {"background": [("selected","#00FFFF")],"font": [("selected", '黑体')],}
+                "map": {"background": [("selected",setting_gui.color1)],"font": [("selected", '黑体')],}
             },
             "my.Horizontal.TProgressbar": {
                 "configure": {"background":"#912CEE"},
@@ -72,7 +72,7 @@ class Multimedia_Downloader:
 
         self.style.theme_use("wbb")
 
-        self.style.configure('my.TNotebook', tabposition='wn',background='#bbdefb')
+        self.style.configure('my.TNotebook', tabposition='wn',background=setting_gui.color)
         self.style.configure("Treeview", background="white",
                         foreground="black", )
         self.notebook = ttk.Notebook(
@@ -87,11 +87,11 @@ class Multimedia_Downloader:
 
 
 ################################################   首页的界面         ####################################################################
-        self.f1 = Frame(self.notebook, bg='#bbdefb')
+        self.f1 = Frame(self.notebook, bg=setting_gui.color)
         self.label = Label(
             self.f1,
             text="多媒体下载器",
-            bg='#bbdefb',
+            bg=setting_gui.color,
             font=(
                 '华文彩云',
                40))
@@ -99,7 +99,7 @@ class Multimedia_Downloader:
         self.label = Label(
             self.f1,
             text="作者:王保保",
-            bg='#bbdefb',
+            bg=setting_gui.color,
             font=(
                 '方正舒体',
                 18))
@@ -107,7 +107,7 @@ class Multimedia_Downloader:
         self.label = Label(
             self.f1,
             text="指导老师:李慧旻",
-            bg='#bbdefb',
+            bg=setting_gui.color,
             font=(
                 '方正舒体',
                 18))
@@ -123,12 +123,12 @@ class Multimedia_Downloader:
 ##############################################   下载页面           #######################################################################
 
 ############################    功能区界面的设计     ###########################
-        self.f2 = Frame(self.notebook, bg='#bbdefb')
+        self.f2 = Frame(self.notebook, bg=setting_gui.color)
         self.frm = LabelFrame(
             self.f2,
             width=528,
             height=260,
-            bg='#bbdefb',
+            bg=setting_gui.color,
             padx=10,
             text="功能区",
             font = (
@@ -139,7 +139,7 @@ class Multimedia_Downloader:
             self.frm,
 
             text="多媒体地址:",
-            bg='#bbdefb',
+            bg=setting_gui.color,
             font=(
                 "黑体",
                 11)).place(
@@ -151,7 +151,7 @@ class Multimedia_Downloader:
         self.label8 = Label(
             self.frm,
 
-            bg='#bbdefb',
+            bg=setting_gui.color,
             text="媒体命名为:(无需后缀名)",
             font=(
                 "黑体",
@@ -167,7 +167,7 @@ class Multimedia_Downloader:
         self.rb1 = Radiobutton(
             self.frm,
             text='速度优先',
-            bg='#bbdefb',
+            bg=setting_gui.color,
             variable=self.v,
             value=1,
             font=(
@@ -176,7 +176,7 @@ class Multimedia_Downloader:
         self.rb2 = Radiobutton(
             self.frm,
             text='画质优先',
-            bg='#bbdefb',
+            bg=setting_gui.color,
             variable=self.v,
             value=2,
             font=(
@@ -185,7 +185,7 @@ class Multimedia_Downloader:
         self.cb = Checkbutton(
             self.frm,
             text='保存源文件',
-            bg='#bbdefb',
+            bg=setting_gui.color,
             variable=self.cb_status,
             font=(
                 "黑体",
@@ -204,7 +204,7 @@ class Multimedia_Downloader:
         #开始下载按钮
         self.load = Image.open("../image/3.png")
         self.render = ImageTk.PhotoImage(self.load)
-        self.img = Label(self.frm, image=self.render,bg='#bbdefb')
+        self.img = Label(self.frm, image=self.render,bg=setting_gui.color)
         self.img.place(x=380, y=23)
 
         self.button_cancel = Button(
@@ -214,13 +214,13 @@ class Multimedia_Downloader:
 
         self.load1 = Image.open("../image/4.png")
         self.render1 = ImageTk.PhotoImage(self.load1)
-        self.img1 = Label(self.frm, image=self.render1, bg='#bbdefb')
+        self.img1 = Label(self.frm, image=self.render1, bg=setting_gui.color)
         self.img1.place(x=398, y=83)
 
         Label(
             self.frm,
             text="下载进度:",
-            bg='#bbdefb',
+            bg=setting_gui.color,
             font=(
                 "黑体",
                 11)).place(
@@ -229,7 +229,7 @@ class Multimedia_Downloader:
         self.c = StringVar()
         Label(
             self.frm,
-            bg='#bbdefb',
+            bg=setting_gui.color,
             fg='blue',
             textvariable=self.c,
             font=(
@@ -247,7 +247,7 @@ class Multimedia_Downloader:
         self.progress["maximum"] = 100
         self.progress["value"] = 0
         self.str = StringVar()
-        self.lb = Label(self.frm, textvariable=self.str, bg='#bbdefb',fg='blue', font=(
+        self.lb = Label(self.frm, textvariable=self.str, bg=setting_gui.color,fg='blue', font=(
             "黑体",
             11))
         self.lb.place(x=440, y=200)
@@ -257,7 +257,7 @@ class Multimedia_Downloader:
 
         self.message_frm = LabelFrame(
             self.f2,
-            bg='#bbdefb',
+            bg=setting_gui.color,
             width=528,
             height=255,
             padx=10,
@@ -288,7 +288,7 @@ class Multimedia_Downloader:
 
 
 ################################################    列表管理界面的设计   ######################################################
-        self.ff = Frame(self.notebook, bg='#bbdefb')
+        self.ff = Frame(self.notebook, bg=setting_gui.color)
         # 定义表格界面
         self.tree_date = ttk.Treeview(
             self.ff,
@@ -317,11 +317,11 @@ class Multimedia_Downloader:
         self.tree_date.config(xscrollcommand=self.scrollBarx.set)
         self.load2 = Image.open("../image/6.png")
         self.render2 = ImageTk.PhotoImage(self.load2)
-        self.img2 = Label(self.ff, image=self.render2, bg='#bbdefb')
+        self.img2 = Label(self.ff, image=self.render2, bg=setting_gui.color)
         self.img2.place(x=145, y=450)
         self.load3 = Image.open("../image/5.png")
         self.render3 = ImageTk.PhotoImage(self.load3)
-        self.img3 = Label(self.ff, image=self.render3, bg='#bbdefb')
+        self.img3 = Label(self.ff, image=self.render3, bg=setting_gui.color)
         self.img3.place(x=315, y=450)
 
         self.notebook.add(self.ff, text='列表管理')
@@ -331,24 +331,24 @@ class Multimedia_Downloader:
 
 
 ############################################    源码地址界面的设计      ####################################################
-        self.f3 = Frame(self.notebook ,bg='#bbdefb')
+        self.f3 = Frame(self.notebook ,bg=setting_gui.color)
         self.load5 = Image.open("../image/左.jpg").resize((150, 150))
         self.render5= ImageTk.PhotoImage(self.load5)
-        self.img5 = Label(self.f3, image=self.render5, bg='#bbdefb')
+        self.img5 = Label(self.f3, image=self.render5, bg=setting_gui.color)
         floating_window.CreateToolTip(self.img5, text='Github')
         self.img5.place(x=40, y=140)
 
 
         self.load6 = Image.open("../image/右.jpg").resize((150, 150))
         self.render6 = ImageTk.PhotoImage(self.load6)
-        self.img6 = Label(self.f3, image=self.render6, bg='#bbdefb')
+        self.img6 = Label(self.f3, image=self.render6, bg=setting_gui.color)
         floating_window.CreateToolTip(self.img6, text='Github')
         self.img6.place(x=355, y=150)
 
 
         self.load7 = Image.open("../image/链接.png").resize((150, 150))
         self.render7 = ImageTk.PhotoImage(self.load7)
-        self.img7 = Label(self.f3, image=self.render7, bg='#bbdefb')
+        self.img7 = Label(self.f3, image=self.render7, bg=setting_gui.color)
         self.img7.place(x=190, y=120)
         self.notebook.add(self.f3, text='源码地址')
         floating_window.CreateToolTip(self.img7, text='点我/扫我')
@@ -356,23 +356,23 @@ class Multimedia_Downloader:
 
 
 ###########################################    问题反馈界面的设计        ###################################################
-        self.f4 = Frame(self.notebook, bg='#bbdefb')
+        self.f4 = Frame(self.notebook, bg=setting_gui.color)
         self.load4 = Image.open("../image/微信.png").resize((100,100))
         self.render4 = ImageTk.PhotoImage(self.load4)
-        self.img4 = Label(self.f4, image=self.render4, bg='#bbdefb')
+        self.img4 = Label(self.f4, image=self.render4, bg=setting_gui.color)
         floating_window.CreateToolTip(self.img4, text='微信:wbb2193128367')
         self.img4.place(x=120, y=150)
 
         self.load8 = Image.open("../image/QQ.png").resize((100, 100))
         self.render8 = ImageTk.PhotoImage(self.load8)
-        self.img8 = Label(self.f4, image=self.render8, bg='#bbdefb')
+        self.img8 = Label(self.f4, image=self.render8, bg=setting_gui.color)
         floating_window.CreateToolTip(self.img8, text='QQ:2193128367')
         self.img8.place(x=320, y=150)
 
 
         self.load9= Image.open("../image/0.png").resize((30, 30))
         self.render9 = ImageTk.PhotoImage(self.load9)
-        self.img9 = Label(self.f4, image=self.render9, bg='#bbdefb')
+        self.img9 = Label(self.f4, image=self.render9, bg=setting_gui.color)
         floating_window.CreateToolTip(self.img9, text='邮箱:2193128367@qq.com')
         self.img9.place(x=440, y=470)
         self.notebook.add(self.f4, text='问题反馈')

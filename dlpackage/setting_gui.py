@@ -1,12 +1,14 @@
 import os
+import json
 import tkinter.filedialog
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
-
+from dlpackage import share
 from PIL import ImageTk, Image
 
 from dlpackage import right_kye
+
 
 # 默认的媒体文件存储位置
 path = os.path.abspath(os.path.join(os.getcwd(), "..")).replace('\\', '/') + '/downloads'
@@ -85,17 +87,17 @@ def set(root, button_url, button_video_name):
     top1.grab_set()
     top1.title('设置页面')
     top1.iconbitmap(r'../image/设置窗口.ico')
-    top1.configure(bg='#bbdefb')
+    top1.configure(bg=color)
 
     # 设置透明度
-    lb0 = Label(top1, text="透明度设置:", bg='#bbdefb')
+    lb0 = Label(top1, text="透明度设置:", bg=color)
     lb0.place(x=3, y=10)
-    lb2 = Label(top1, text="通过拖动下面滑块改变窗口透明度", bg='#bbdefb')
+    lb2 = Label(top1, text="通过拖动下面滑块改变窗口透明度", bg=color)
     lb2.place(x=100, y=10)
 
-    lb = Label(top1, text="清晰", bg='#bbdefb')
+    lb = Label(top1, text="清晰", bg=color)
     lb.place(x=100, y=40)
-    lb1 = Label(top1, text="模糊", bg='#bbdefb')
+    lb1 = Label(top1, text="模糊", bg=color)
     lb1.place(x=290, y=40)
     S = Scale(
         top1,
@@ -104,14 +106,14 @@ def set(root, button_url, button_video_name):
         resolution=0.1,
         showvalue=0,
         orient=HORIZONTAL,
-        bg='#bbdefb',
-        fg='#bbdefb',
+        bg=color,
+        fg=color,
         length=150)
     S.place(x=132, y=40)
 
-    lb0 = Label(top1, text="下载目录:", bg='#bbdefb')
+    lb0 = Label(top1, text="下载目录:", bg=color)
     lb0.place(x=3, y=80)
-    lb2 = Label(top1, text="使用指定的视频下载目录", bg='#bbdefb')
+    lb2 = Label(top1, text="使用指定的视频下载目录", bg=color)
     lb2.place(x=100, y=80)
 
     # 存储路径
@@ -124,15 +126,15 @@ def set(root, button_url, button_video_name):
     entry.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, entry))
     load1 = Image.open("../image/9.png")
     render1 = ImageTk.PhotoImage(load1)
-    img1 = Label(top1, image=render1, bg='#bbdefb')
+    img1 = Label(top1, image=render1, bg=color)
     img1.place(x=250, y=105)
     img1.bind("<Button-1>", lambda x: liulan(str3))
     # 线程数
-    lb0 = Label(top1, text="线程数设置:", bg='#bbdefb')
+    lb0 = Label(top1, text="线程数设置:", bg=color)
     lb0.place(x=3, y=150)
-    lb2 = Label(top1, text="通过下面设置线程的最大数量", bg='#bbdefb')
+    lb2 = Label(top1, text="通过下面设置线程的最大数量", bg=color)
     lb2.place(x=100, y=150)
-    lb3 = Label(top1, text="最大线程数为", bg='#bbdefb')
+    lb3 = Label(top1, text="最大线程数为", bg=color)
     lb3.place(x=100, y=180)
     combobox = ttk.Combobox(top1, width=5)
     combobox.bind(
@@ -144,11 +146,11 @@ def set(root, button_url, button_video_name):
     combobox['values'] = generate_list(100)
     combobox.current(threading_count - 1)
     combobox.place(x=180, y=180)
-    lb3 = Label(top1, text="(1-100)", bg='#bbdefb')
+    lb3 = Label(top1, text="(1-100)", bg=color)
     lb3.place(x=238, y=180)
 
     # 下载模式设置
-    lb4 = Label(top1, text="下载模式设置:", bg='#bbdefb')
+    lb4 = Label(top1, text="下载模式设置:", bg=color)
     lb4.place(x=3, y=220)
     combobox1 = ttk.Combobox(top1, width=10, state='readonly')
     combobox1['values'] = ['单例下载', '列表下载']
@@ -158,8 +160,26 @@ def set(root, button_url, button_video_name):
     # 确认按钮
     load = Image.open("../image/7.png")
     render = ImageTk.PhotoImage(load)
-    img = Label(top1, image=render, bg='#bbdefb')
+    img = Label(top1, image=render, bg=color)
     img.place(x=165, y=260)
     img.bind("<Button-1>",
              lambda x: print_selection(root, button_url, button_video_name, top1, entry, combobox, combobox1, S.get()))
     top1.mainloop()
+
+
+def change_color():
+    with open(r'../config.json', 'r+') as f:
+        #m = f.readlines()
+    #for i in range(len(m)):
+        #n = json.loads(m[i])
+        return json.load(f)
+color=change_color()["bgcolor"]  #界面的颜色
+color1=change_color()["ntcolor"]#notebook被选中的颜色
+
+# data={"bgcolor": "green",
+#   "ntcolor": "pink"}
+#
+#
+# def change_config():
+#     with open(r'../config.json', 'w') as f:
+#         json.dump(data,f)

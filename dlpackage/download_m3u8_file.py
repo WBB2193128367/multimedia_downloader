@@ -155,10 +155,10 @@ def test_download_url(url):
 def order_type(type_):
     global order_increase
     order_increase = type_
-    if type_:
-        share.m3.alert("设置速度优先")
+    if type_ == True:
+        share.m3.alert("已设置为画质优先")
     else:
-        share.m3.alert("设置画质优先")
+        share.m3.alert("已设置为速度优先")
 
 
 # 获取域名
