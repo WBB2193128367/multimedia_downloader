@@ -9,6 +9,11 @@ from dlpackage import requests_header
 from dlpackage import setting_gui
 from dlpackage import share
 
+
+
+
+
+
 # 定义的全局变量
 video_path = None
 link = None
@@ -80,7 +85,13 @@ def download_fail_file():
     else:
         share.m3.show_info("还没有下载失败的文件噢！")
 
-
+def legth(value):
+    l=len(value)
+    flag=l%16
+    if flag !=0:
+        add = 16 - (l % 16)
+        value = value+ ('\0'*add).encode('utf-8')
+    return value
 # 合并.ts文件片段
 
 
@@ -95,7 +106,7 @@ def merge_file(dir_name):
                 cryptor = AES.new(key, AES.MODE_CBC, key)
                 fw.write(cryptor.decrypt(open(file_list[i], 'rb').read()))
             elif key is not None and iv is not None:
-                cryptor = AES.new(key, AES.MODE_CBC, iv)
+                cryptor = AES.new(key, AES.MODE_CBC,iv)
                 fw.write(cryptor.decrypt(open(file_list[i], 'rb').read()))
             else:
                 fw.write(open(file_list[i], 'rb').read())
@@ -115,7 +126,6 @@ def get_download_params(head, dir_name):
         params.append(param)
         i += 1
     return params
-
 
 # 设置线程池开始下载
 def start_download_in_pool(function, params):
@@ -223,24 +233,29 @@ def get_ts_add(m3u8_href):
     m3u8_href_list_new = []
     for res_obj in response_list:
         # 说明m3u8文件加密
+
+
+
+
         if res_obj.startswith("EXT-X-KEY"):
             # 利用正则表达式获得秘钥链接
             url = re.findall(r'URI=\"(.*?)\"', res_obj, re.S)[0]
             if len(re.findall(r'IV=(.*?)', res_obj, re.S)) != 0:
                 iv = re.findall(r'IV=(.*?)', res_obj, re.S)[0]
+                iv=iv.replace('0x', '')[:16].encode()
             else:
                 iv = None
-
-            if url.startswith('key'):
+            if url.startswith('http'):
+                response = dm.easy_download(
+                    url, stream=False, header=requests_header.get_user_agent())
+                key = response.content
+            else :
                 response = dm.easy_download(
                     url_path + url,
                     stream=False,
                     header=requests_header.get_user_agent())
                 key = response.content
-            elif url.startswith('http'):
-                response = dm.easy_download(
-                    url, stream=False, header=requests_header.get_user_agent())
-                key = response.content
+
 
         # 说明有二级m3u8文件
         elif res_obj.startswith("EXT-X-STREAM-INF"):
