@@ -239,10 +239,10 @@ def get_ts_add(m3u8_href):
 
         if res_obj.startswith("EXT-X-KEY"):
             # 利用正则表达式获得秘钥链接
-            url = re.findall(r'URI=\"(.*?)\"', res_obj, re.S)[0]
-            if len(re.findall(r'IV=(.*?)', res_obj, re.S)) != 0:
-                iv = re.findall(r'IV=(.*?)', res_obj, re.S)[0]
-                iv=iv.replace('0x', '')[:16].encode()
+            url = re.findall(r'URI=\"(.*)\"', res_obj, re.S)[0]
+            if len(re.findall(r'IV=(.*)', res_obj, re.S)) != 0:
+                iv = re.findall(r'IV=(.*)', res_obj, re.S)[0].replace('0x', '')[:16].encode()
+
             else:
                 iv = None
             if url.startswith('http'):
