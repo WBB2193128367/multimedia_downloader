@@ -8,6 +8,7 @@ from dlpackage import model_requests as dm
 from dlpackage import requests_header
 from dlpackage import setting_gui
 from dlpackage import share
+from Crypto.Util.Padding import pad
 
 
 
@@ -102,14 +103,32 @@ def merge_file(dir_name):
     file_list = share.file_walker(dir_name)
     with open(dir_name + ".mp4", 'wb+') as fw:
         for i in range(len(file_list)):
-            if key is not None and iv is None:
-                cryptor = AES.new(key, AES.MODE_CBC, key)
-                fw.write(cryptor.decrypt(open(file_list[i], 'rb').read()))
-            elif key is not None and iv is not None:
-                cryptor = AES.new(key, AES.MODE_CBC,iv)
-                fw.write(cryptor.decrypt(open(file_list[i], 'rb').read()))
-            else:
-                fw.write(open(file_list[i], 'rb').read())
+            fw.write(open(file_list[i], 'rb').read())
+
+        if key is not None and iv is None:
+            cryptor = AES.new(key, AES.MODE_CBC, key)
+            with open(dir_name + "1.mp4", 'wb+') as fw:
+                with open(dir_name + ".mp4", 'rb') as f:
+                    data=f.read()
+                    data_len = len(data)
+                    if data_len % 16 != 0:
+                        data = pad(data, 16)
+                fw.write(cryptor.decrypt(data))
+            #os.remove(dir_name + ".mp4")
+        elif key is not None and iv is not None:
+            cryptor = AES.new(key, AES.MODE_CBC,iv)
+            with open(dir_name + "1.mp4", 'wb+') as fw:
+                with open(dir_name + ".mp4", 'rb') as f:
+                    data = f.read()
+                    data_len = len(data)
+                    if data_len % 16 != 0:
+                        data = pad(data, 16)
+                fw.write(cryptor.decrypt(data))
+            #os.remove(dir_name + ".mp4")
+        elif key is None and iv is not None:
+            share.m3.show_info("找不到key文件的地址，请自行分析！")
+        else:
+           pass
     iv = None
     key = None
     return True
@@ -240,8 +259,14 @@ def get_ts_add(m3u8_href):
         if res_obj.startswith("EXT-X-KEY"):
             # 利用正则表达式获得秘钥链接
             url = re.findall(r'URI=\"(.*)\"', res_obj, re.S)[0]
-            if len(re.findall(r'IV=(.*)', res_obj, re.S)) != 0:
-                iv = re.findall(r'IV=(.*)', res_obj, re.S)[0].replace('0x', '')[:16].encode()
+            iv_list=re.findall(r'IV=(.*)', res_obj, re.S)
+            if len( iv_list) != 0:
+                if len( iv_list[0])>16:
+                    iv =  iv_list[0].replace('0x', '')[:16].encode()
+                elif len( iv_list[0])==16:
+                    iv =  iv_list[0]
+                else:
+                    iv=legth( iv_list[0])
 
             else:
                 iv = None
@@ -513,6 +538,7 @@ def start_list1(m3u8_href, video_name):
             share.m3.str.set('')
             share.m3.clear_alert()
             share.running = False
+
             downloaded_clip = 0
             # 清空下载失败视频列表
             url_list = []
