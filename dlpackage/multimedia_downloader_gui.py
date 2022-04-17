@@ -8,6 +8,10 @@ from tkinter import *
 import tkinter.font as tf
 from PIL import ImageTk, Image
 
+
+
+
+
 class Multimedia_Downloader:
     def __init__(self, title="多媒体下载器"):
         #########################################      对主窗口的设置     ###############################################################
@@ -386,30 +390,38 @@ class Multimedia_Downloader:
 
 
 
-    # 给消息框输入消息并且保证消息一直在底部
 
-    def alert(self, m):
-        print("%s" % m)
-        if m:
-            self.message.config(state=NORMAL)
-            self.message.insert(END, m + "\n")
-            # 确保scrollbar在底部
-            self.message.see(END)
-            self.message.config(state=DISABLED)
-        self.root.update()
 
-    # 清空消息框
-    def clear_alert(self):
+ # 给消息框输入消息并且保证消息一直在底部
+def alert(self, m):
+    print("%s" % m)
+    if m:
         self.message.config(state=NORMAL)
-        self.message.delete('1.0', 'end')
+        self.message.insert(END, m + "\n")
+        # 确保scrollbar在底部
+        self.message.see(END)
         self.message.config(state=DISABLED)
-        self.root.update()
+    self.root.update()
 
-    # 弹出提示框
 
-    def show_info(self, m):
-        tkinter.messagebox.showinfo("提示", m)
-    # 弹出警告框
 
-    def waring_info(self, m):
-        tkinter.messagebox.showwarning('警告！', m)
+
+ # 清空消息框
+def clear_alert(self):
+    self.message.config(state=NORMAL)
+    self.message.delete('1.0', 'end')
+    self.message.config(state=DISABLED)
+    self.root.update()
+
+
+
+
+# 弹出提示框
+def show_info(self, m):
+    tkinter.messagebox.showinfo("提示", m)
+
+
+
+# 弹出警告框t
+def waring_info(self, m):
+    tkinter.messagebox.showwarning('警告！', m)

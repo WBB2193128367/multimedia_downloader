@@ -23,6 +23,8 @@ user_agent_list = [
     "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"]
 
 
+
+
 def get_user_agent():
     header = {
         'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -33,9 +35,10 @@ def get_user_agent():
         'User-Agent': random.choice(user_agent_list)}
     return header
 
+
+
+
 # 进行断点续传的请求头
-
-
 def get_user_agent1(length):
     header = {
         'Range': 'bytes=%d-' % length,
@@ -46,6 +49,8 @@ def get_user_agent1(length):
         'User-Agent': random.choice(user_agent_list)
     }
     return header
+
+
 
 
 def get_user_agent2(m, n):

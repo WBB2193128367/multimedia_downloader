@@ -7,6 +7,9 @@ import threading
 import shutil
 import os
 
+
+
+
 # 定义的全局变量
 video_path = None
 url_path = None
@@ -37,6 +40,8 @@ downloaded_clip = 0  # 已经下载视频片段的数量
 #     cancel_flag=False
 #     share.m3.show_info("取消成功！")
 
+
+
 # 下载文件
 def download_to_file1(start1, end, file_name):
     global download_fail_list1
@@ -62,6 +67,8 @@ def download_to_file1(start1, end, file_name):
             share.m3.str.set('%.2f%%' % m)
 
 
+
+
 def try_again_download(start, end, file_name):
     global download_fail_list1
     global downloaded_clip
@@ -85,6 +92,8 @@ def try_again_download(start, end, file_name):
             m = (downloaded_clip / len(start)) * 100
             share.set_progress(m)  # 设置进度条
             share.m3.str.set('%.2f%%' % m)
+
+
 
 
 # 再次下载失败的文件
@@ -249,6 +258,8 @@ def start_one(content_size, video_name, m3u8_href):
     end = []
 
 
+
+
 def start_list(content_size, video_name, m3u8_href):
     global content_length
     global download_fail_list1
@@ -288,7 +299,6 @@ def start_list(content_size, video_name, m3u8_href):
         merge_file1(video_name)
         # 删除下载的视频片段
         shutil.rmtree(video_name)
-
         share.m3.alert("下载完成")
         share.set_progress(0)
         share.m3.str.set('')

@@ -4,6 +4,8 @@ import threading
 import json
 
 
+
+
 def log_gui(root):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     top1.withdraw()
@@ -61,6 +63,8 @@ def log_gui(root):
     t.start()
 
     top1.mainloop()
+
+
 
 
 def read_log(tree_date):

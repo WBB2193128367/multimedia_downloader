@@ -1,8 +1,9 @@
 from tkinter import *
 
+
+
 #对该控件的定义
 class ToolTip(object):
-
     def __init__(self, widget):
         self.widget = widget
         self.tipwindow = None
@@ -29,6 +30,8 @@ class ToolTip(object):
         self.tipwindow = None
         if tw:
             tw.destroy()
+
+
 
 
 

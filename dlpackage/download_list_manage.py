@@ -12,6 +12,8 @@ i=1
 m=[]
 
 
+
+
 def add_url(root,tree_date):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     top1.withdraw()
@@ -62,6 +64,8 @@ def add_url(root,tree_date):
 #             m.remove(item_text[0])
 
 
+
+
 def add(top1,tree_date,entry1,entry2):
     global name
     global url
@@ -83,7 +87,6 @@ def add(top1,tree_date,entry1,entry2):
         t.setDaemon(True)
         t.start()
         return
-
     name['I%03d' %i]=entry1.get().strip()
     url['I%03d'%i]=entry2.get().strip()
     id_list.append('I%03d' %i)
@@ -91,6 +94,7 @@ def add(top1,tree_date,entry1,entry2):
     # tree_date.tag_bind(i, '<Button-1>', lambda x:treeviewClick(tree_date))
     i+=1
     top1.destroy()
+
 
 
 
@@ -115,11 +119,17 @@ def delete(tree_date):
                     id_list.remove(item)
             m=[]
 
+
+
+
 def delete_item(tree_date,item):
     selection = tree_date.get_children()
     for i in selection:
         if i==item:
            tree_date.delete(i)
+
+
+
 
 
 def delete_thread():

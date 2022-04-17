@@ -30,6 +30,8 @@ iv = None
 downloaded_clip = 0
 
 
+
+
 def try_again_download(url, file_name):
     global download_fail_list
     global downloaded_clip
@@ -48,6 +50,8 @@ def try_again_download(url, file_name):
             m = (downloaded_clip / len(url_list)) * 100
             share.set_progress(m)
             share.m3.str.set('%.2f%%' % m)
+
+
 
 
 # 重复下载失败的.ts文件
@@ -72,7 +76,6 @@ def download_fail_file():
                     shutil.rmtree(video_path)
                 share.m3.alert("下载完成")
                 share.m3.show_info("下载完成")
-
                 share.set_progress(0)
                 share.m3.str.set('')
                 share.m3.clear_alert()
@@ -86,6 +89,9 @@ def download_fail_file():
     else:
         share.m3.show_info("还没有下载失败的文件噢！")
 
+
+
+
 def legth(value):
     l=len(value)
     flag=l%16
@@ -93,9 +99,11 @@ def legth(value):
         add = 16 - (l % 16)
         value = value+ ('\0'*add).encode('utf-8')
     return value
+
+
+
+
 # 合并.ts文件片段
-
-
 def merge_file(dir_name):
     global iv
     global key
@@ -104,7 +112,6 @@ def merge_file(dir_name):
     with open(dir_name + ".mp4", 'wb+') as fw:
         for i in range(len(file_list)):
             fw.write(open(file_list[i], 'rb').read())
-
         if key is not None and iv is None:
             cryptor = AES.new(key, AES.MODE_CBC, key)
             with open(dir_name + "1.mp4", 'wb+') as fw:
@@ -134,6 +141,9 @@ def merge_file(dir_name):
     return True
 
 
+
+
+
 # 拼接下载用的参数
 def get_download_params(head, dir_name):
     global url_list
@@ -145,6 +155,9 @@ def get_download_params(head, dir_name):
         params.append(param)
         i += 1
     return params
+
+
+
 
 # 设置线程池开始下载
 def start_download_in_pool(function, params):
@@ -179,8 +192,6 @@ def test_download_url(url):
 
 
 # 进行速度优先和画质优先的触发事件
-
-
 def order_type(type_):
     global order_increase
     order_increase = type_
@@ -191,8 +202,6 @@ def order_type(type_):
 
 
 # 获取域名
-
-
 def get_host(url):
     url_param = url.split("//")
     return url_param[0] + "//" + url_param[1].split("/")[0] + "/"
@@ -220,8 +229,6 @@ def order_list(o_type, o_list):
 
 
 # 获得域名路径
-
-
 def get_path(url):
     if url.rfind("/") != -1:
         return url[0:url.rfind("/")] + "/"
@@ -252,22 +259,15 @@ def get_ts_add(m3u8_href):
     m3u8_href_list_new = []
     for res_obj in response_list:
         # 说明m3u8文件加密
-
-
-
-
         if res_obj.startswith("EXT-X-KEY"):
             # 利用正则表达式获得秘钥链接
             url = re.findall(r'URI=\"(.*)\"', res_obj, re.S)[0]
             iv_list=re.findall(r'IV=(.*)', res_obj, re.S)
             if len( iv_list) != 0:
-                if len( iv_list[0])>16:
+                if len( iv_list[0])>16 or len(iv_list[0])==16:
                     iv =  iv_list[0].replace('0x', '')[:16].encode()
-                elif len( iv_list[0])==16:
-                    iv =  iv_list[0]
                 else:
                     iv=legth( iv_list[0])
-
             else:
                 iv = None
             if url.startswith('http'):
@@ -280,8 +280,6 @@ def get_ts_add(m3u8_href):
                     stream=False,
                     header=requests_header.get_user_agent())
                 key = response.content
-
-
         # 说明有二级m3u8文件
         elif res_obj.startswith("EXT-X-STREAM-INF"):
             # m3u8 作为主播放列表（Master Playlist），其内部提供的是同一份媒体资源的多份流列表资源（Variant Stream）
@@ -306,9 +304,10 @@ def get_ts_add(m3u8_href):
     return ts_add
 
 
+
+
+
 # 是否保存源文件的事件
-
-
 def save_source():
     global save_source_file
     if share.m3.cb_status.get() == 0:
@@ -338,6 +337,8 @@ def download_to_file(url, file_name):
             m = (downloaded_clip / len(url_list)) * 100
             share.set_progress(m)  # 设置进度条
             share.m3.str.set('%.2f%%' % m)
+
+
 
 
 def start_one1(m3u8_href, video_name):
@@ -391,7 +392,6 @@ def start_one1(m3u8_href, video_name):
         params = get_download_params('', dir_name=video_name)
         # 线程池开启线程下载视频
         start_download_in_pool(download_to_file, params)
-
     else:
         share.m3.waring_info("地址连接失败!")
         share.log_content = {
@@ -441,7 +441,7 @@ def start_one1(m3u8_href, video_name):
         share.m3.alert("有部分文件没有下载完成，请点击重试！")
         share.m3.show_info("有部分文件没有下载完成，请点击重试！")
 
-    # 重置任务开始标志
+
 
 
 def start_list1(m3u8_href, video_name):
@@ -538,7 +538,6 @@ def start_list1(m3u8_href, video_name):
             share.m3.str.set('')
             share.m3.clear_alert()
             share.running = False
-
             downloaded_clip = 0
             # 清空下载失败视频列表
             url_list = []

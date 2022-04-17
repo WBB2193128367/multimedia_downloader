@@ -6,8 +6,9 @@ from tkinter import messagebox
 from tkinter import ttk
 from dlpackage import share
 from PIL import ImageTk, Image
-
 from dlpackage import right_kye
+
+
 
 
 # 默认的媒体文件存储位置
@@ -18,18 +19,15 @@ download_model1 = '单例下载'
 download_model = 0
 
 
-# 关于的驱动方法
+
 
 # 关于的事件
-
-
 def guanyu():
     tkinter.messagebox.showinfo('关于', '该软件由WBB开发，仅供学习使用！！！')
 
 
+
 # 生成线程数范围列表
-
-
 def generate_list(arg):
     a = []
     for i in range(1, arg + 1):
@@ -62,10 +60,14 @@ def print_selection(root, button_url, button_video_name, top1, entry, combobox, 
     top1.destroy()
 
 
+
+
 # 浏览的事件
 def liulan(str4):
     m = tkinter.filedialog.askdirectory()
     str4.set(m)
+
+
 
 
 # 设置页面
@@ -88,13 +90,11 @@ def set(root, button_url, button_video_name):
     top1.title('设置页面')
     top1.iconbitmap(r'../image/设置窗口.ico')
     top1.configure(bg=color)
-
     # 设置透明度
     lb0 = Label(top1, text="透明度设置:", bg=color)
     lb0.place(x=3, y=10)
     lb2 = Label(top1, text="通过拖动下面滑块改变窗口透明度", bg=color)
     lb2.place(x=100, y=10)
-
     lb = Label(top1, text="清晰", bg=color)
     lb.place(x=100, y=40)
     lb1 = Label(top1, text="模糊", bg=color)
@@ -110,12 +110,10 @@ def set(root, button_url, button_video_name):
         fg=color,
         length=150)
     S.place(x=132, y=40)
-
     lb0 = Label(top1, text="下载目录:", bg=color)
     lb0.place(x=3, y=80)
     lb2 = Label(top1, text="使用指定的视频下载目录", bg=color)
     lb2.place(x=100, y=80)
-
     # 存储路径
     str3 = StringVar()
     str3.set(path)
@@ -148,7 +146,6 @@ def set(root, button_url, button_video_name):
     combobox.place(x=180, y=180)
     lb3 = Label(top1, text="(1-100)", bg=color)
     lb3.place(x=238, y=180)
-
     # 下载模式设置
     lb4 = Label(top1, text="下载模式设置:", bg=color)
     lb4.place(x=3, y=220)
@@ -156,7 +153,6 @@ def set(root, button_url, button_video_name):
     combobox1['values'] = ['单例下载', '列表下载']
     combobox1.current(download_model)
     combobox1.place(x=100, y=225)
-
     # 确认按钮
     load = Image.open("../image/7.png")
     render = ImageTk.PhotoImage(load)
@@ -165,6 +161,8 @@ def set(root, button_url, button_video_name):
     img.bind("<Button-1>",
              lambda x: print_selection(root, button_url, button_video_name, top1, entry, combobox, combobox1, S.get()))
     top1.mainloop()
+
+
 
 
 def change_color():

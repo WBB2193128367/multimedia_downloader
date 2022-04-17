@@ -17,7 +17,7 @@ import re
 running1=False
 content_size = None
 
-# 利用正则表达式检查输入的地址是否正确
+
 
 
 
@@ -45,7 +45,7 @@ def test_network():
         return False
 
 
-
+# 利用正则表达式检查输入的地址是否正确
 def inspect_user_input1():
     global running1
     count=0
@@ -112,6 +112,7 @@ def inspect_user_input1():
 
 
 
+
 # 用来检查用书输入的链接类型并作出响应
 def inspect_user_input():
     m3u8_href = share.m3.button_url.get().strip()
@@ -151,15 +152,18 @@ def inspect_user_input():
         share.m3.show_info('文件名不能为空')
 
 
+
+
 # 打开Githu链接
 def open_github_url():
     webbrowser.open(
         'https://github.com/WBB2193128367/multimedia_downloader',
         new=0)
 
+
+
+
 # 用来检查是否已经有任务开始下载
-
-
 def check_tesk_repeat_open():
     global running1
     # 如果没有任务执行
@@ -181,6 +185,10 @@ def check_tesk_repeat_open():
                  share.m3.show_info('下载列表为空！')
          else:
              share.m3.show_info('列表已经开始下载,请勿重复开启!')
+
+
+
+
 # 开始下载
 def start_download():
     t = threading.Thread(
@@ -188,6 +196,9 @@ def start_download():
     # 设置守护线程，进程退出不用等待子线程完成
     t.setDaemon(True)
     t.start()
+
+
+
 
 
 # 重试触发的事件
@@ -207,19 +218,14 @@ def try_again_download():
         t.start()
 
 
-def run():
 
+
+
+def run():
     share.m3 = multimedia_downloader_gui.Multimedia_Downloader()
     # 绑定点击事件
-    #
-    share.m3.rb1.bind(
-        "<Button-1>",
-        lambda x: download_m3u8_file.order_type(False))
-    #share.m3.button_cancel.bind('<Button-1>',lambda x:download_small_other_file.cancel_thread())
-    #share.m3.button_pause.bind('<Button-1>', lambda x: download_small_other_file.pause_or_continue())
-    share.m3.rb2.bind(
-        "<Button-1>",
-        lambda x: download_m3u8_file.order_type(True))
+    share.m3.rb1.bind("<Button-1>", lambda x: download_m3u8_file.order_type(False))
+    share.m3.rb2.bind("<Button-1>",lambda x: download_m3u8_file.order_type(True))
     # 点击将进行源文件的保存
     share.m3.cb.bind("<Button-1>", lambda x: download_m3u8_file.save_source())
     # 开始下载的事件
@@ -228,21 +234,13 @@ def run():
     share.m3.img7.bind("<Button-1>", lambda x: open_github_url())
     share.m3.img2.bind("<Button-1>", lambda x: download_list_manage.add_url(share.m3.root,share.m3.tree_date))
     share.m3.img3.bind("<Button-1>", lambda x: download_list_manage.delete_thread())
-    share.m3.button_url.bind(
-        "<Button-3>",
-        lambda x: right_kye.rightKey(
-            share.m3.menubar,
-            x,
-            share.m3.button_url))
-    share.m3.button_video_name.bind(
-        "<Button-3>",
-        lambda x: right_kye.rightKey(
-            share.m3.menubar,
-            x,
-            share.m3.button_video_name))
-    #share.m3.button_exit.bind("<Button-1>", lambda x: e())
+    share.m3.button_url.bind("<Button-3>",lambda x: right_kye.rightKey( share.m3.menubar,x,share.m3.button_url))
+    share.m3.button_video_name.bind( "<Button-3>",lambda x: right_kye.rightKey(share.m3.menubar,x,share.m3.button_video_name))
     # 手动加入消息队列
     share.m3.root.mainloop()
+
+
+
 
 #主函数
 if __name__ == "__main__":

@@ -1,16 +1,24 @@
 from tkinter import *
 
+
+
 #剪切功能的实现
 def cut(editor, event=None):
     editor.event_generate("<<Cut>>")
+
+
 
 #复制功能的实现
 def copy(editor, event=None):
     editor.event_generate("<<Copy>>")
 
+
+
 #粘贴功能的实现
 def paste(editor, event=None):
     editor.event_generate('<<Paste>>')
+
+
 
 #右键帮定的函数
 '''
