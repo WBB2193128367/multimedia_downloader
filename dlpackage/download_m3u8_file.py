@@ -103,6 +103,26 @@ def legth(value):
 
 
 
+#对大文件进行分块读取
+def read_in_chunks(filePath, chunk_size=1024*1024):
+    """
+    Lazy function (generator) to read a file piece by piece.
+    Default chunk size: 1M
+    You can set your own chunk size
+    """
+    #打开一个大文件
+    file_object = open(filePath,'rb')
+    while True:
+        #每次读取1MB
+        chunk_data = file_object.read(chunk_size)
+        if not chunk_data:
+            break
+        yield chunk_data
+
+
+
+
+
 # 合并.ts文件片段
 def merge_file(dir_name):
     global iv
@@ -115,22 +135,14 @@ def merge_file(dir_name):
         if key is not None and iv is None:
             cryptor = AES.new(key, AES.MODE_CBC, key)
             with open(dir_name + "1.mp4", 'wb+') as fw:
-                with open(dir_name + ".mp4", 'rb') as f:
-                    data=f.read()
-                    data_len = len(data)
-                    if data_len % 16 != 0:
-                        data = pad(data, 16)
-                fw.write(cryptor.decrypt(data))
+                for chunk in read_in_chunks(dir_name + ".mp4"):
+                    fw.write(cryptor.decrypt(chunk))
             #os.remove(dir_name + ".mp4")
         elif key is not None and iv is not None:
             cryptor = AES.new(key, AES.MODE_CBC,iv)
             with open(dir_name + "1.mp4", 'wb+') as fw:
-                with open(dir_name + ".mp4", 'rb') as f:
-                    data = f.read()
-                    data_len = len(data)
-                    if data_len % 16 != 0:
-                        data = pad(data, 16)
-                fw.write(cryptor.decrypt(data))
+                for chunk in read_in_chunks(dir_name + ".mp4"):
+                    fw.write(cryptor.decrypt(chunk))
             #os.remove(dir_name + ".mp4")
         elif key is None and iv is not None:
             share.m3.show_info("找不到key文件的地址，请自行分析！")
