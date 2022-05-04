@@ -136,18 +136,22 @@ def merge_file(dir_name):
             cryptor = AES.new(key, AES.MODE_CBC, key)
             with open(dir_name + "1.mp4", 'wb+') as fw:
                 for chunk in read_in_chunks(dir_name + ".mp4"):
+                    if len(chunk) % 16 != 0:
+                        chunk = pad(chunk, 16)
                     fw.write(cryptor.decrypt(chunk))
             #os.remove(dir_name + ".mp4")
         elif key is not None and iv is not None:
             cryptor = AES.new(key, AES.MODE_CBC,iv)
             with open(dir_name + "1.mp4", 'wb+') as fw:
                 for chunk in read_in_chunks(dir_name + ".mp4"):
+                    if len(chunk) % 16 != 0:
+                        chunk = pad(chunk, 16)
                     fw.write(cryptor.decrypt(chunk))
             #os.remove(dir_name + ".mp4")
         elif key is None and iv is not None:
             share.m3.show_info("找不到key文件的地址，请自行分析！")
         else:
-           pass
+            pass
     iv = None
     key = None
     return True
@@ -273,7 +277,7 @@ def get_ts_add(m3u8_href):
         # 说明m3u8文件加密
         if res_obj.startswith("EXT-X-KEY"):
             # 利用正则表达式获得秘钥链接
-            url = re.findall(r'URI=\"(.*)\"', res_obj, re.S)[0]
+            url = re.findall(r'URI=\"(.*)\"', res_obj, re.S)
             iv_list=re.findall(r'IV=(.*)', res_obj, re.S)
             if len( iv_list) != 0:
                 if len( iv_list[0])>16 or len(iv_list[0])==16:
@@ -282,16 +286,19 @@ def get_ts_add(m3u8_href):
                     iv=legth( iv_list[0])
             else:
                 iv = None
-            if url.startswith('http'):
-                response = dm.easy_download(
-                    url, stream=False, header=requests_header.get_user_agent())
-                key = response.content
-            else :
-                response = dm.easy_download(
-                    url_path + url,
-                    stream=False,
-                    header=requests_header.get_user_agent())
-                key = response.content
+            if len(url)!=0:
+                if url[0].startswith('http'):
+                    response = dm.easy_download(
+                        url[0], stream=False, header=requests_header.get_user_agent())
+                    key = response.content
+                else :
+                    response = dm.easy_download(
+                        url_path + url[0],
+                        stream=False,
+                        header=requests_header.get_user_agent())
+                    key = response.content
+            else:
+                key=None
         # 说明有二级m3u8文件
         elif res_obj.startswith("EXT-X-STREAM-INF"):
             # m3u8 作为主播放列表（Master Playlist），其内部提供的是同一份媒体资源的多份流列表资源（Variant Stream）
