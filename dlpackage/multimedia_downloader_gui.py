@@ -35,7 +35,6 @@ class Multimedia_Downloader:
             "WM_DELETE_WINDOW",
             lambda: share.close_windows(
                 self.root))  # 关闭窗口时进行提示是否关闭，防止误操作
-        self.style = ttk.Style(self.root)
 ######################################################################################################################################
 
 
@@ -58,31 +57,29 @@ class Multimedia_Downloader:
 
 #################################################    对主界面的布局    ###################################################################
 
-
+        self.style = ttk.Style(self.root)
         self.style.theme_create("wbb", parent="alt", settings={
             "TNotebook.Tab": {
                 "configure": {"padding": [20, 12], "background":setting_gui.color,'font':'仿宋'},
-                "map": {"background": [("selected",setting_gui.color1)],"font": [("selected", '黑体')],
-                        }
-            },
+                "map": {"background":[("selected",setting_gui.color1)],"font": [("selected", '黑体')]}
+                 },
+            "TNotebook":{
+                "configure":{"tabposition":'wn', "background":setting_gui.color}
+                 },
             "Treeview":{
+                "configure":{"background" :"white","foreground":"black"},
                 "map": {"background": [("selected",setting_gui.color1)],"font": [("selected", '黑体')],}
-            },
-            "my.Horizontal.TProgressbar": {
+                 },
+            "Horizontal.TProgressbar": {
                 "configure": {"background":"#912CEE"},
-            },
+                 },
         })
-
-
         self.style.theme_use("wbb")
 
-        self.style.configure('my.TNotebook', tabposition='wn',background=setting_gui.color)
-        self.style.configure("Treeview", background="white",
-                        foreground="black", )
+
         self.notebook = ttk.Notebook(
             self.root,
             padding=2,
-            style='my.TNotebook',
             width='470',
             height='425')
         self.notebook.pack(fill=tkinter.BOTH,expand=True)
@@ -243,7 +240,6 @@ class Multimedia_Downloader:
             y=175)
         self.progress = ttk.Progressbar(
             self.frm,
-            style='my.Horizontal.TProgressbar',
             orient="horizontal",
             length=430,
             mode="determinate")
@@ -296,7 +292,6 @@ class Multimedia_Downloader:
         # 定义表格界面
         self.tree_date = ttk.Treeview(
             self.ff,
-            style="myname.Treeview",
             columns=(
                 'name',
                 'url',),
