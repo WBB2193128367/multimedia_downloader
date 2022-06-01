@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 from dlpackage import share
 from dlpackage import right_kye
 import tkinter.messagebox
@@ -33,11 +34,11 @@ def add_url(root,tree_date):
     top1.configure(bg='#bbdefb')
     label1=Label(top1,text='媒体名称:',bg='#bbdefb')
     label1.place(x=10,y=20)
-    entry1=Entry(top1)
+    entry1=ttk.Entry(top1)
     entry1.place(x=70,y=20)
     label2 = Label(top1, text='URL:',bg='#bbdefb')
     label2.place(x=10, y=70)
-    entry2 = Entry(top1)
+    entry2 = ttk.Entry(top1)
     entry2.place(x=70, y=70)
     load3 = Image.open("../image/8.png")
     render3 = ImageTk.PhotoImage(load3)

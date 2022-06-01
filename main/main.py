@@ -229,13 +229,15 @@ def run():
     # 点击将进行源文件的保存
     share.m3.cb.bind("<Button-1>", lambda x: download_m3u8_file.save_source())
     # 开始下载的事件
+    share.m3.root.bind("<KeyPress-Shift_R>", lambda x: start_download())
     share.m3.img.bind("<Button-1>", lambda x: start_download())
     share.m3.img1.bind("<Button-1>", lambda x: try_again_download())
     share.m3.img7.bind("<Button-1>", lambda x: open_github_url())
     share.m3.img2.bind("<Button-1>", lambda x: download_list_manage.add_url(share.m3.root,share.m3.tree_date))
     share.m3.img3.bind("<Button-1>", lambda x: download_list_manage.delete_thread())
-    share.m3.button_url.bind("<Button-3>",lambda x: right_kye.rightKey( share.m3.menubar,x,share.m3.button_url))
-    share.m3.button_video_name.bind( "<Button-3>",lambda x: right_kye.rightKey(share.m3.menubar,x,share.m3.button_video_name))
+    # share.m3.root.bind_class("Entry","<Button-3>","<<Cut>>")
+    share.m3.button_url.bind("<Button-3>",lambda x: right_kye.rightKey( x,share.m3.root,share.m3.button_url))
+    share.m3.button_video_name.bind( "<Button-3>",lambda x: right_kye.rightKey(x,share.m3.root,share.m3.button_video_name))
     # 手动加入消息队列
     share.m3.root.mainloop()
 

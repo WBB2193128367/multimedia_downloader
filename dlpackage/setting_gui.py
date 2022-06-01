@@ -75,6 +75,7 @@ def set(root, button_url, button_video_name):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     # top1.attributes("-toolwindow", 1)
     # top1.wm_attributes("-topmost", 1)
+    top1.resizable(0, 0)
     top1.withdraw()
     top1.update()
     w = 400

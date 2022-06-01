@@ -5,7 +5,6 @@ from dlpackage import floating_window
 import tkinter.messagebox
 from tkinter import ttk
 from tkinter import *
-import tkinter.font as tf
 from PIL import ImageTk, Image
 
 
@@ -55,34 +54,45 @@ class Multimedia_Downloader:
 
 
 
-#################################################    对主界面的布局    ###################################################################
+#################################################    对主界面的布局以及相关样式的配置   ###################################################################
 
+################################样式的配置########################################
         self.style = ttk.Style(self.root)
         self.style.theme_create("wbb", parent="alt", settings={
             "TNotebook.Tab": {
-                "configure": {"padding": [20, 12], "background":setting_gui.color,'font':'仿宋'},
-                "map": {"background":[("selected",setting_gui.color1)],"font": [("selected", '黑体')]}
+                "configure": {"padding": [5,12],"background":setting_gui.color,'font':["仿宋"]},
+                "map": {"background":[("selected",setting_gui.color1),("active","#00C5CD")],"font": [("selected", '黑体'),("active",'黑体')]}
                  },
             "TNotebook":{
                 "configure":{"tabposition":'wn', "background":setting_gui.color}
                  },
             "Treeview":{
                 "configure":{"background" :"white","foreground":"black"},
-                "map": {"background": [("selected",setting_gui.color1)],"font": [("selected", '黑体')],}
+                "map": {"background":[("selected","#00C5CD")],"font": [("selected", '黑体')]}
+                 },
+            "Treeview.Heading":{
+                "configure": {"font":("宋体", 12),"background":setting_gui.color}
                  },
             "Horizontal.TProgressbar": {
-                "configure": {"background":"#912CEE"},
+                "configure": {"background":"#912CEE","orient":"horizontal","mode":"determinate"}
                  },
+            "TEntry":{
+                "configure":{"relief":"flat"},
+                "map": {"highlight":[("disabled","red")]}
+                 }
         })
         self.style.theme_use("wbb")
+################################################################################
 
-
+###############################全局的布局##########################################
         self.notebook = ttk.Notebook(
             self.root,
-            padding=2,
-            width='470',
+            padding=[0,0,0,0],
+            width='440',
             height='425')
         self.notebook.pack(fill=tkinter.BOTH,expand=True)
+##################################################################################
+
 ########################################################################################################################################
 
 
@@ -113,9 +123,10 @@ class Multimedia_Downloader:
                 '方正舒体',
                 18))
         self.label.place(x=300, y=320)
-
-
-        self.notebook.add(self.f1, text='首页')
+#################################################################################
+        self.ico2 = Image.open(r"D:\Microsoft edge download\首页.png").resize((30, 25))
+        self.icos2= ImageTk.PhotoImage(self.ico2)
+        self.notebook.add(self.f1, text="首页",image=self.icos2,compound="left")
 #########################################################################################################################################
 
 
@@ -123,19 +134,45 @@ class Multimedia_Downloader:
 
 ##############################################   下载页面           #######################################################################
 
-############################    功能区界面的设计     ###########################
+#####################    消息区界面的设计   #################################
         self.f2 = Frame(self.notebook, bg=setting_gui.color)
-        self.frm = LabelFrame(
+        self.message_frm = LabelFrame(
             self.f2,
-            width=528,
+            width=514,
+            height=255,
+            bg=setting_gui.color,
+            padx=10,
+            pady=10,
+            #relief="flat",
+            text="消息")
+        self.message_frm.place(x=9, y=3)
+
+        self.scrollbar = Scrollbar(self.message_frm)
+        self.scrollbar.pack(side='right', fill='y')
+        self.message_v = StringVar()
+        self.message_s = ""
+        self.message_v.set(self.message_s)
+
+        self.message = Text(self.message_frm, width=65, height=16)
+        self.message.insert('insert', self.message_s)
+        self.message.pack(side='left', fill='y')
+        # 以下两行代码绑定text和scrollbar
+        self.scrollbar.config(command=self.message.yview)
+        self.message.config(yscrollcommand=self.scrollbar.set)
+        self.message.config(state=DISABLED)
+
+############################    功能区界面的设计     ###########################
+        self.frm =LabelFrame(
+            self.f2,
+            width=514,
             height=260,
             bg=setting_gui.color,
             padx=10,
+            pady=0,
+            relief="flat",
             text="功能区",
-            font = (
-            "黑体",10)
                )
-        self.frm.place(x=7, y=258)
+        self.frm.place(x=9, y=258)
         self.label7 = Label(
             self.frm,
 
@@ -146,7 +183,7 @@ class Multimedia_Downloader:
                 11)).place(
             x=0,
             y=15)
-        self.button_url =Entry(self.frm, width=50)
+        self.button_url =ttk.Entry(self.frm, width=50)
         self.button_url.place(x=0, y=40)
 
         self.label8 = Label(
@@ -159,7 +196,7 @@ class Multimedia_Downloader:
                 11)).place(
             x=0,
             y=80)
-        self.button_video_name = Entry(self.frm, width=50)
+        self.button_video_name = ttk.Entry(self.frm, width=50)
         self.button_video_name.place(x=0, y=105)
 
         self.v = IntVar()
@@ -240,9 +277,9 @@ class Multimedia_Downloader:
             y=175)
         self.progress = ttk.Progressbar(
             self.frm,
-            orient="horizontal",
-            length=430,
-            mode="determinate")
+            length=430
+
+            )
         self.progress.place(x=0, y=200)
         self.progress["maximum"] = 100
         self.progress["value"] = 0
@@ -252,37 +289,9 @@ class Multimedia_Downloader:
             11))
         self.lb.place(x=440, y=200)
 ##########################################################################
-
-#####################    消息区界面的设计   #################################
-
-        self.message_frm = LabelFrame(
-            self.f2,
-            bg=setting_gui.color,
-            width=528,
-            height=255,
-            padx=10,
-            font=(
-                "黑体",
-                10),
-            text="消息")
-        self.message_frm.place(x=7, y=3)
-
-        self.scrollbar = Scrollbar(self.message_frm)
-        self.scrollbar.pack(side='right', fill='y')
-        self.message_v = StringVar()
-        self.message_s = ""
-        self.message_v.set(self.message_s)
-
-        self.message = Text(self.message_frm, width=69, height=18)
-        self.message.insert('insert', self.message_s)
-        self.message.pack(side='left', fill='y')
-        # 以下两行代码绑定text和scrollbar
-        self.scrollbar.config(command=self.message.yview)
-        self.message.config(yscrollcommand=self.scrollbar.set)
-        self.message.config(state=DISABLED)
-########################################################################
-
-        self.notebook.add(self.f2,text='下载页面')
+        self.ico1 = Image.open(r"D:\Microsoft edge download\1.ico").resize((30, 25))
+        self.icos1 = ImageTk.PhotoImage(self.ico1)
+        self.notebook.add(self.f2, text='下载页面', image=self.icos1, compound="left")
 ############################################################################################################################
 
 
@@ -322,9 +331,10 @@ class Multimedia_Downloader:
         self.render3 = ImageTk.PhotoImage(self.load3)
         self.img3 = Label(self.ff, image=self.render3, bg=setting_gui.color)
         self.img3.place(x=315, y=450)
-
-        self.notebook.add(self.ff, text='列表管理')
-
+########################################################################
+        self.ico5 = Image.open(r"D:\Microsoft edge download\列表管理.png").resize((30, 25))
+        self.icos5 = ImageTk.PhotoImage(self.ico5)
+        self.notebook.add(self.ff, text='列表管理',image=self.icos5,compound="left")
 ########################################################################################################################
 
 
@@ -337,20 +347,21 @@ class Multimedia_Downloader:
         floating_window.CreateToolTip(self.img5, text='Github')
         self.img5.place(x=40, y=140)
 
+        self.load7 = Image.open("../image/链接.png").resize((150, 150))
+        self.render7 = ImageTk.PhotoImage(self.load7)
+        self.img7 = Label(self.f3, image=self.render7, bg=setting_gui.color)
+        floating_window.CreateToolTip(self.img7, text='点我/扫我')
+        self.img7.place(x=190, y=120)
 
         self.load6 = Image.open("../image/右.jpg").resize((150, 150))
         self.render6 = ImageTk.PhotoImage(self.load6)
         self.img6 = Label(self.f3, image=self.render6, bg=setting_gui.color)
         floating_window.CreateToolTip(self.img6, text='Github')
         self.img6.place(x=355, y=150)
-
-
-        self.load7 = Image.open("../image/链接.png").resize((150, 150))
-        self.render7 = ImageTk.PhotoImage(self.load7)
-        self.img7 = Label(self.f3, image=self.render7, bg=setting_gui.color)
-        self.img7.place(x=190, y=120)
-        self.notebook.add(self.f3, text='源码地址')
-        floating_window.CreateToolTip(self.img7, text='点我/扫我')
+########################################################################
+        self.ico4 = Image.open(r"D:\Microsoft edge download\源码地址.png").resize((30, 25))
+        self.icos4 = ImageTk.PhotoImage(self.ico4)
+        self.notebook.add(self.f3, text='源码地址',image=self.icos4,compound="left")
 ########################################################################################################################
 
 
@@ -368,26 +379,20 @@ class Multimedia_Downloader:
         floating_window.CreateToolTip(self.img8, text='QQ:2193128367')
         self.img8.place(x=320, y=150)
 
-
         self.load9= Image.open("../image/0.png").resize((30, 30))
         self.render9 = ImageTk.PhotoImage(self.load9)
         self.img9 = Label(self.f4, image=self.render9, bg=setting_gui.color)
         floating_window.CreateToolTip(self.img9, text='邮箱:2193128367@qq.com')
         self.img9.place(x=440, y=470)
-        self.notebook.add(self.f4, text='问题反馈')
 
+########################################################################
+        self.ico3 = Image.open(r"D:\Microsoft edge download\问题反馈.png").resize((30, 25))
+        self.icos3 = ImageTk.PhotoImage(self.ico3)
+        self.notebook.add(self.f4, text='问题反馈',image=self.icos3,compound="left")
 #######################################################################################################################
 
-        #右键点击弹出框
-        self.menubar = Menu(self.root, tearoff=False)
 
-
-
-
-
-
-
-     # 给消息框输入消息并且保证消息一直在底部
+    # 给消息框输入消息并且保证消息一直在底部
     def alert(self, m):
         print("%s" % m)
         if m:
