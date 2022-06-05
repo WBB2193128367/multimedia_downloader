@@ -5,7 +5,7 @@ import json
 
 
 
-
+#日志的界面
 def log_gui(root):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     top1.withdraw()
@@ -54,14 +54,8 @@ def log_gui(root):
     scrollBarx.config(command=tree_date.xview)
     tree_date.config(yscrollcommand=scrollBary.set)
     tree_date.config(xscrollcommand=scrollBarx.set)
-    # 将日志数据写入界面(使用一个线程，防止日志界面卡死)
-    t = threading.Thread(
-        target=read_log, args=(
-            tree_date,))
-    # 设置守护线程，进程退出不用等待子线程完成
-    t.setDaemon(True)
-    t.start()
-
+    #读取日志的函数
+    start_download(tree_date)
     top1.mainloop()
 
 
@@ -73,3 +67,14 @@ def read_log(tree_date):
     for i in range(len(m)):
         n = json.loads(m[i])
         tree_date.insert('', i, values=(n["time"], n["link"], n["status"]))
+
+
+
+def start_download(tree_date):
+    # 将日志数据写入界面(使用一个线程，防止日志界面卡死)
+    t = threading.Thread(
+        target=read_log, args=(
+            tree_date,))
+    # 设置守护线程，进程退出不用等待子线程完成
+    t.setDaemon(True)
+    t.start()

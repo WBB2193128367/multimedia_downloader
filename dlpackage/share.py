@@ -94,13 +94,13 @@ def write(file):
 
 # 检验用户输入的网址是否正确
 def check_href(m3u8_href):
-    if re.match(
-            r'^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)([A-Za-z0-9]|-)+(\.([A-Za-z0-9]|-)+){2,}(:([0-9])+){0,1}/(.*?)$',
-            m3u8_href,
-            re.S):
+    # if re.match(
+    #         r'^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)([A-Za-z0-9]|-)+(\.([A-Za-z0-9]|-)+){2,}(:([0-9])+){0,1}/(.*?)$',
+    #         m3u8_href,
+    #         re.S):
         return True
-    else:
-        return False
+    # else:
+    #     return False
 
 
 
