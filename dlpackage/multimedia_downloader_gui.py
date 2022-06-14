@@ -7,10 +7,6 @@ from tkinter import ttk
 from tkinter import *
 from PIL import ImageTk, Image
 
-
-
-
-
 class Multimedia_Downloader:
     def __init__(self, title="多媒体下载器"):
 #########################################      对主窗口的设置     ##########################################################################
@@ -65,8 +61,8 @@ class Multimedia_Downloader:
         self.style = ttk.Style(self.root)
         self.style.theme_create("wbb", parent="alt", settings={
             "TNotebook.Tab": {
-                "configure": {"padding": [9,12],"background":setting_gui.color,'font':["仿宋"]},
-                "map": {"background":[("selected",setting_gui.color1),("active","#00C5CD")],"font": [("selected", '黑体'),("active",'黑体')]}
+                "configure": {"padding": [18,12],"background":setting_gui.color,'font':("仿宋")},
+                "map": {"background":[("selected",setting_gui.color1),("active","#00C5CD")],"font": [("selected", '黑体'),("active",'黑体')],"foreground":[("selected",'purple'),("active","purple")]}
                  },
             "TNotebook":{
                 "configure":{"tabposition":'wn', "background":setting_gui.color}
@@ -129,9 +125,9 @@ class Multimedia_Downloader:
                 18))
         self.label.place(x=300, y=320)
 #################################################################################
-        self.ico2 = Image.open(r"D:\Microsoft edge download\首页.png").resize((22, 20))
-        self.icos2= ImageTk.PhotoImage(self.ico2)
-        self.notebook.add(self.f1, text="首页",image=self.icos2,compound="left")
+        # self.ico2 = Image.open(r"D:\Microsoft edge download\首页.png").resize((22, 20))
+        # self.icos2= ImageTk.PhotoImage(self.ico2)
+        self.notebook.add(self.f1, text=u'\uf54e'+' '+'首页')
 #########################################################################################################################################
 
 
@@ -146,11 +142,11 @@ class Multimedia_Downloader:
             #width=514,
             #height=255,
             bg=setting_gui.color,
-            padx=12,
+            padx=10,
             pady=10,
             #relief="flat",
             text="消息")
-        self.message_frm.place(x=9, y=3)
+        self.message_frm.place(x=10, y=3)
 
         self.scrollbar = Scrollbar(self.message_frm)
         self.scrollbar.pack(side='right', fill='y')
@@ -172,7 +168,7 @@ class Multimedia_Downloader:
             width=514,
             height=260,
             bg=setting_gui.color,
-            padx=15,
+            padx=10,
             pady=0,
             relief="flat",
             text="功能区",
@@ -294,9 +290,9 @@ class Multimedia_Downloader:
             11))
         self.lb.place(x=440, y=200)
 ##########################################################################
-        self.ico1 = Image.open(r"D:\Microsoft edge download\1.ico").resize((22, 20))
-        self.icos1 = ImageTk.PhotoImage(self.ico1)
-        self.notebook.add(self.f2, text='下载页面', image=self.icos1, compound="left")
+        # self.ico1 = Image.open(r"D:\Microsoft edge download\1.ico").resize((22, 20))
+        # self.icos1 = ImageTk.PhotoImage(self.ico1)
+        self.notebook.add(self.f2, text=u'\uf019'+' '+'下载页面')
 ############################################################################################################################
 
 
@@ -337,9 +333,9 @@ class Multimedia_Downloader:
         self.img3 = Label(self.ff, image=self.render3, bg=setting_gui.color)
         self.img3.place(x=315, y=450)
 ########################################################################
-        self.ico5 = Image.open(r"D:\Microsoft edge download\列表管理.png").resize((22, 20))
-        self.icos5 = ImageTk.PhotoImage(self.ico5)
-        self.notebook.add(self.ff, text='列表管理',image=self.icos5,compound="left")
+        # self.ico5 = Image.open(r"D:\Microsoft edge download\列表管理.png").resize((22, 20))
+        # self.icos5 = ImageTk.PhotoImage(self.ico5)
+        self.notebook.add(self.ff, text=u'\uf0ca'+' '+'列表管理')
 ########################################################################################################################
 
 
@@ -364,9 +360,9 @@ class Multimedia_Downloader:
         floating_window.CreateToolTip(self.img6, text='Github')
         self.img6.place(x=355, y=150)
 ########################################################################
-        self.ico4 = Image.open(r"D:\Microsoft edge download\源码地址.png").resize((22, 20))
-        self.icos4 = ImageTk.PhotoImage(self.ico4)
-        self.notebook.add(self.f3, text='源码地址',image=self.icos4,compound="left")
+        # self.ico4 = Image.open(r"D:\Microsoft edge download\源码地址.png").resize((22, 20))
+        # self.icos4 = ImageTk.PhotoImage(self.ico4)
+        self.notebook.add(self.f3, text=u'\uf09b'+' '+'源码地址')
 ########################################################################################################################
 
 
@@ -391,9 +387,9 @@ class Multimedia_Downloader:
         self.img9.place(x=440, y=470)
 
 ########################################################################
-        self.ico3 = Image.open(r"D:\Microsoft edge download\问题反馈.png").resize((22, 20))
-        self.icos3 = ImageTk.PhotoImage(self.ico3)
-        self.notebook.add(self.f4, text='问题反馈',image=self.icos3,compound="left")
+        # self.ico3 = Image.open(r"D:\Microsoft edge download\问题反馈.png").resize((22, 20))
+        # self.icos3 = ImageTk.PhotoImage(self.ico3)
+        self.notebook.add(self.f4, text=u'\uf075'+' '+'问题反馈')
 #######################################################################################################################
 
 
