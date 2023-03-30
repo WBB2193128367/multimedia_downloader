@@ -14,7 +14,7 @@ class Multimedia_Downloader:
         #设置窗口是否全屏
         #self.root.attributes("-fullscreen",1)
         #设置窗口是否置顶
-        self.root.attributes('-topmost', 1)
+        # self.root.attributes('-topmost', 1)
         self.root.withdraw()
         self.root.update()
         self.w = 650
@@ -61,7 +61,7 @@ class Multimedia_Downloader:
         self.style = ttk.Style(self.root)
         self.style.theme_create("wbb", parent="alt", settings={
             "TNotebook.Tab": {
-                "configure": {"padding": [18,12],"background":setting_gui.color,'font':("仿宋")},
+                "configure": {"padding": [7,12],"background":setting_gui.color,'font':("仿宋")},
                 "map": {"background":[("selected",setting_gui.color1),("active","#00C5CD")],"font": [("selected", '黑体'),("active",'黑体')],"foreground":[("selected",'purple'),("active","purple")]}
                  },
             "TNotebook":{
@@ -144,7 +144,7 @@ class Multimedia_Downloader:
             bg=setting_gui.color,
             padx=10,
             pady=10,
-            #relief="flat",
+            # relief="flat",
             text="消息")
         self.message_frm.place(x=10, y=3)
 
