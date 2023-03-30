@@ -10,11 +10,15 @@ def log_gui(root):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     top1.withdraw()
     top1.update()
-    w = 400
-    h = 300
-    ws, hs = top1.winfo_screenwidth(), top1.winfo_screenheight()
-    top1.geometry("%dx%d+%d+%d" %
-                  (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
+    # w = 400
+    # h = 300
+    # ws, hs = top1.winfo_screenwidth(), top1.winfo_screenheight()
+    # top1.geometry("%dx%d+%d+%d" %
+    #               (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
+    ws, hs = root.winfo_rootx(), root.winfo_rooty()
+    wss = ws + 125
+    hss = hs + 65
+    top1.geometry("400x320" + "+" + str(wss) + "+" + str(hss))
     top1.deiconify()
     # top1.attributes("-toolwindow", 1)
     # top1.wm_attributes("-topmost", 1)

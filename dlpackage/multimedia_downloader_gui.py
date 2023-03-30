@@ -144,7 +144,7 @@ class Multimedia_Downloader:
             bg=setting_gui.color,
             padx=10,
             pady=10,
-            # relief="flat",
+            #relief="flat",
             text="消息")
         self.message_frm.place(x=10, y=3)
 
@@ -165,12 +165,12 @@ class Multimedia_Downloader:
 ############################    功能区界面的设计     ###########################
         self.frm =LabelFrame(
             self.f2,
-            width=514,
+            width=502,
             height=260,
             bg=setting_gui.color,
             padx=10,
             pady=0,
-            relief="flat",
+            #relief="flat",
             text="功能区",
                )
         self.frm.place(x=9, y=258)
