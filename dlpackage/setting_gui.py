@@ -78,8 +78,6 @@ def set(root, button_url, button_video_name):
     top1.resizable(0, 0)
     top1.withdraw()
     top1.update()
-    #w = 400
-    #h = 320
     #获取主窗口的位置
     ws, hs = root.winfo_rootx(), root.winfo_rooty()
     #弹出窗口相对于主窗口的宽，高偏移量
@@ -88,7 +86,7 @@ def set(root, button_url, button_video_name):
     #设置弹出窗口的大小和位置
     top1.geometry("400x320"+"+"+str(wss)+"+"+str(hss))
     #top1.geometry("%dx%d+%d+%d" %
-        #          (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
+    #          (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
     top1.deiconify()
     # 使弹出窗口一直处于主窗口前面
     top1.transient(root)
@@ -128,7 +126,7 @@ def set(root, button_url, button_video_name):
     entry.place(x=100, y=110)
     menubar = Menu(top1, tearoff=False)
     # 将entry和rightkey事件绑定
-    entry.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, entry))
+    entry.bind("<Button-3>", lambda x: right_kye.rightKey(x,menubar, entry))
     load1 = Image.open("../image/9.png")
     render1 = ImageTk.PhotoImage(load1)
     img1 = Label(top1, image=render1, bg=color)

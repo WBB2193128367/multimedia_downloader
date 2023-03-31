@@ -19,11 +19,15 @@ def add_url(root,tree_date):
     top1 = Toplevel(master=root)  # 创建弹出式窗体
     top1.withdraw()
     top1.update()
-    w = 250
-    h = 180
-    ws, hs = top1.winfo_screenwidth(), top1.winfo_screenheight()
-    top1.geometry("%dx%d+%d+%d" %
-                  (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
+    # w = 250
+    # h = 180
+    # ws, hs = top1.winfo_screenwidth(), top1.winfo_screenheight()
+    # top1.geometry("%dx%d+%d+%d" %
+    #               (w, h, (ws / 2) - (w / 2), (hs / 2) - (h / 2)))
+    ws, hs = root.winfo_rootx(), root.winfo_rooty()
+    wss = ws + 200
+    hss = hs + 85
+    top1.geometry("250x180" + "+" + str(wss) + "+" + str(hss))
     top1.deiconify()
     # 使弹出窗口一直处于主窗口前面
     top1.transient(root)
@@ -47,8 +51,8 @@ def add_url(root,tree_date):
     img3.bind("<Button-1>", lambda x:add(top1,tree_date,entry1,entry2) )
     menubar = Menu(top1, tearoff=False)
     # 将entry和rightkey事件绑定
-    entry1.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, entry1))
-    entry2.bind("<Button-3>", lambda x: right_kye.rightKey(menubar, x, entry2))
+    entry1.bind("<Button-3>", lambda x: right_kye.rightKey(x,menubar,entry1))
+    entry2.bind("<Button-3>", lambda x: right_kye.rightKey(x,menubar,entry2))
     top1.mainloop()
 
 
