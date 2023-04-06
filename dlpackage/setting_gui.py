@@ -143,8 +143,8 @@ def set(root, button_url, button_video_name):
     combobox.bind(
         "<Button-3>",
         lambda x: right_kye.rightKey(
-            menubar,
             x,
+            menubar,
             combobox))
     combobox['values'] = generate_list(100)
     combobox.current(threading_count - 1)
