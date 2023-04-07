@@ -84,10 +84,13 @@ def get_time():
 
 # 将log_content中临时存储的日志信息写入json文件中
 def write(file):
-    ff = json.dumps(file)  # 将字典转换为字符串
-    with open(r'../log.json', 'a+') as f:
-        f.write(ff)
-        f.write('\n')
+    b = json.load(open('../log.json', 'r'))
+    b.append(file)
+    json.dump(b, open('../log.json', 'w'), sort_keys=True, indent=4)
+    # ff = json.dumps(file)  # 将字典转换为字符串
+    # with open(r'../log.json', 'a+') as f:
+    #     f.write(ff)
+    #     f.write('\n')
 
 
 

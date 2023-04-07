@@ -66,11 +66,9 @@ def log_gui(root):
 
 
 def read_log(tree_date):
-    with open(r'../log.json', 'r+') as f:
-        m = f.readlines()
+    m= json.load(open('../log.json', 'r'))
     for i in range(len(m)):
-        n = json.loads(m[i])
-        tree_date.insert('', i, values=(n["time"], n["link"], n["status"]))
+        tree_date.insert('', i, values=(m[i]["time"], m[i]["link"], m[i]["status"]))
 
 
 
