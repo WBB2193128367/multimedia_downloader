@@ -3,7 +3,7 @@ import tkinter.messagebox
 from PIL import Image, ImageTk
 import json
 import time
-import re
+import base64
 import os
 
 
@@ -85,6 +85,9 @@ def get_time():
 # 将log_content中临时存储的日志信息写入json文件中
 def write(file):
     b = json.load(open('../log.json', 'r'))
+    file["time"] = base64.b64encode(file["time"].encode('utf-8')).decode('utf-8')
+    file["link"] = base64.b64encode(file["link"].encode('utf-8')).decode('utf-8')
+    file["status"] = base64.b64encode(file["status"].encode('utf-8')).decode('utf-8')
     b.append(file)
     json.dump(b, open('../log.json', 'w'), sort_keys=True, indent=4)
     # ff = json.dumps(file)  # 将字典转换为字符串

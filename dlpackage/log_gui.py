@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import threading
 import json
-
+import base64
 
 
 #日志的界面
@@ -68,7 +68,12 @@ def log_gui(root):
 def read_log(tree_date):
     m= json.load(open('../log.json', 'r'))
     for i in range(len(m)):
-        tree_date.insert('', i, values=(m[i]["time"], m[i]["link"], m[i]["status"]))
+
+        tree_date.insert('', i, values=(base64.b64decode(m[i]["time"].encode('utf-8')).decode('utf-8'),
+                                        base64.b64decode(m[i]["link"].encode('utf-8')).decode('utf-8'),
+                                        base64.b64decode(m[i]["status"].encode('utf-8')).decode('utf-8')
+                                        )
+                         )
 
 
 
